@@ -1,0 +1,27 @@
+#convo-list-pane {
+    background-color: #ddd;
+}
+
+.convo-in-list {
+    border-bottom: solid 1px black;
+}
+
+#convo-list-pane .selected {
+    background-color: #bbb;
+}
+
+#convo-pane {
+    background-color: #eee;
+}
+
+#user-list-pane {
+    background-color: #ddd;
+}
+
+.user-in-list {
+    border-bottom: solid 1px black;
+}
+
+#user-list-pane .selected {
+    background-color: #bbb;
+}

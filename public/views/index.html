@@ -1,0 +1,121 @@
+<!doctype html>
+
+<html ng-app="Braid">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Braid</title>
+
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/index.css">
+
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="js/controllers/main.js"></script>
+    <script src="js/services/convos.js"></script>
+    <script src="js/services/messages.js"></script>
+    <script src="js/services/users.js"></script>
+    <script src="js/core.js"></script>
+
+</head>
+
+<body ng-controller="mainController">
+
+    <div class="container-fluid">
+        <div class="row">
+
+            <div id="convo-list-pane" class="col-sm-2">
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="convo-in-list" ng-class="{selected: convo._id==selected_convo._id}" ng-click="selectConvo(convo)" ng-repeat="convo in convos">
+                            <p>Convo between <b>{{ convo.user_id_0 }}</b> and <b>{{ convo.user_id_1 }}</b></p>
+                            <button ng-click="deleteConvo(convo._id); $event.stopPropagation();">X</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="convo-form" class="row">
+                    <form>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control" ng-model="newConvoFormData.name">
+                            </div>
+                        </div>
+                        <!-- TODO: have a way of selecting the other user (dropdown populated by $scope.users) -->
+                        <div class="col-sm-6">
+                            <button type="submit" class="btn btn-primary" ng-click="createConvo()">+ Add Convo</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+
+            <div id="convo-pane" class="col-sm-8">
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h3>{{ selected_convo.user_id_0 }} and {{ selected_convo.user_id_1 }}</h3>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div ng-repeat="message in messages">
+                            <button ng-click="deleteMessage(message._id, selected_convo._id)">X</button><p> {{ message.sender_id }}: {{ message.text }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <form>
+                            <div class="col-sm-8">
+                                <div class="form-group">
+                                    <input type="text" class="form-control input-lg" ng-model="newMessageFormData.text">
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <button type="submit" class="btn btn-primary btn-lg" ng-click="createMessage()">Send</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+
+            <div id="user-list-pane" class="col-sm-2">
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="user-in-list" ng-class="{selected: user._id==selected_user._id}" ng-click="selectUser(user)" ng-repeat="user in users">
+                            <p>User: <b>{{ user.username }}</b></p>
+                            <button ng-click="deleteUser(user._id); $event.stopPropagation();">X</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="user-form" class="row">
+                    <form>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control" ng-model="newUserFormData.username">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <button type="submit" class="btn btn-primary" ng-click="createUser()">+ Add User</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</body>
+
+</html>
