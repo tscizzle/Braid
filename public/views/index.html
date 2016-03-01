@@ -26,22 +26,30 @@
 
     <nav class="navbar navbar-default">
         <div class="container-fluid">
-            <div class="navbar-header">
+            <div class="navbar-header navbar-right">
                 <a class="navbar-brand">{{ selected_user.username }}</a>
             </div>
         </div>
     </nav>
 
     <div class="container-fluid">
+    <div id="margin-fixer-grid-wrapper">
+
         <div class="row">
 
             <div id="convo-list-pane" class="col-sm-2">
 
                 <div class="row">
                     <div class="col-sm-12">
+                        <h3>Convos</h3>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12">
                         <div class="convo-in-list" ng-class="{selected: convo._id==selected_convo._id}" ng-click="selectConvo(convo)" ng-repeat="convo in convos">
                             <p>Convo between <b>{{ convo.user_id_0 }}</b> and <b>{{ convo.user_id_1 }}</b></p>
-                            <button ng-click="deleteConvo(convo._id); $event.stopPropagation();">X</button>
+                            <button ng-click="deleteConvo(convo._id, selected_user._id); $event.stopPropagation();">X</button>
                         </div>
                     </div>
                 </div>
@@ -55,7 +63,7 @@
                         </div>
 
                         <div class="col-sm-3">
-                            <button type="submit" class="btn btn-primary" ng-click="createConvo()">+ Add Convo</button>
+                            <button type="submit" class="btn btn-primary" ng-click="createConvo()">+</button>
                         </div>
                     </form>
                 </div>
@@ -66,7 +74,13 @@
 
                 <div class="row">
                     <div class="col-sm-12">
-                        <h3>{{ selected_convo.user_id_0 }} and {{ selected_convo.user_id_1 }}</h3>
+                        <h3>Messages</h3>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h4>{{ selected_convo.user_id_0 }} and {{ selected_convo.user_id_1 }}</h4>
                     </div>
                 </div>
 
@@ -99,6 +113,12 @@
 
                 <div class="row">
                     <div class="col-sm-12">
+                        <h3>Users</h3>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12">
                         <div class="user-in-list" ng-class="{selected: user._id==selected_user._id}" ng-click="selectUser(user)" ng-repeat="user in users">
                             <p>User: <b>{{ user.username }}</b></p>
                             <button ng-click="deleteUser(user._id); $event.stopPropagation();">X</button>
@@ -108,13 +128,13 @@
 
                 <div id="user-form" class="row">
                     <form>
-                        <div class="col-sm-6">
+                        <div class="col-sm-9">
                             <div class="form-group">
                                 <input type="text" class="form-control" ng-model="newUserFormData.username">
                             </div>
                         </div>
-                        <div class="col-sm-6">
-                            <button type="submit" class="btn btn-primary" ng-click="createUser()">+ Add User</button>
+                        <div class="col-sm-3">
+                            <button type="submit" class="btn btn-primary" ng-click="createUser()">+</button>
                         </div>
                     </form>
                 </div>
@@ -122,6 +142,8 @@
             </div>
 
         </div>
+
+    </div>
     </div>
 
 </body>

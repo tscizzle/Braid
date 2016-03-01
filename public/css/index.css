@@ -1,3 +1,7 @@
+#margin-fixer-grid-wrapper {
+    padding: 0 15px;
+}
+
 #convo-list-pane {
     background-color: #ddd;
 }

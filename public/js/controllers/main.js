@@ -54,16 +54,13 @@ angular.module('convoController', [])
                     .success(function(data) {
                         $scope.newConvoFormData = {};
                         $scope.convos = data;
+                        $scope.selected_convo = $scope.convos[0];
 
-                        if ($scope.convos.length == 1) {
-                            $scope.selected_convo = $scope.convos[0];
+                        Messages.get($scope.selected_convo._id)
+                            .success(function(data) {
+                                $scope.messages = data;
+                            });
 
-                            Messages.get($scope.selected_convo._id)
-                                .success(function(data) {
-                                    $scope.messages = data;
-                                });
-
-                        };
                     });
 
             };
@@ -71,7 +68,7 @@ angular.module('convoController', [])
 
         $scope.deleteConvo = function(convo_id, user_id) {
 
-            Convos.delete(convo_id)
+            Convos.delete(convo_id, user_id)
                 .success(function(data) {
                     $scope.convos = data;
 
@@ -83,6 +80,11 @@ angular.module('convoController', [])
                                 $scope.messages = data;
                             });
 
+                    };
+
+                    if ($scope.convos.length == 0) {
+                        $scope.messages = [];
+                        $scope.selected_convo = undefined;
                     };
                 });
 
