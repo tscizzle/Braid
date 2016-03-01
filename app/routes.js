@@ -8,9 +8,15 @@ var ObjectId = mongoose.Types.ObjectId;
 module.exports = function(app, passport) {
 
     // --- get all convos
-    app.get('/api/convos', function(req, res) {
+    app.get('/api/convos/:user_id', function(req, res) {
 
-        Convo.find(function(err, convos) {
+        Convo.find({
+            $or: [{
+                user_id_0: req.params.user_id
+            }, {
+                user_id_1: req.params.user_id
+            }]
+        }, function(err, convos) {
             if (err) {
                 res.send(err);
             }
@@ -22,8 +28,6 @@ module.exports = function(app, passport) {
 
     // --- create convo and send back all convos after creation
     app.post('/api/convos', function(req, res) {
-
-        // TODO: make the creation of a convo include the users
 
         Convo.create({
             user_id_0: req.body.user_id_0,
@@ -45,7 +49,7 @@ module.exports = function(app, passport) {
     });
 
     // --- delete convo and send back all convos after deletion
-    app.delete('/api/convos/:convo_id', function(req, res) {
+    app.delete('/api/convos/:convo_id/:user_id', function(req, res) {
 
         Convo.remove({
             _id: req.params.convo_id
@@ -54,7 +58,13 @@ module.exports = function(app, passport) {
                 res.send(err);
             }
 
-            Convo.find(function(err, convos) {
+            Convo.find({
+                $or: [{
+                    user_id_0: req.params.user_id
+                }, {
+                    user_id_1: req.params.user_id
+                }]
+            }, function(err, convos) {
                 if (err) {
                     res.send(err)
                 }

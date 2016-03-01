@@ -35,3 +35,6 @@ jspm_packages
 
 # environment variables
 envs/
+
+# TODO tasks
+TODO.txt

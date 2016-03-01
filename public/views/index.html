@@ -24,6 +24,14 @@
 
 <body ng-controller="mainController">
 
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand">{{ selected_user.username }}</a>
+            </div>
+        </div>
+    </nav>
+
     <div class="container-fluid">
         <div class="row">
 
@@ -40,13 +48,13 @@
 
                 <div id="convo-form" class="row">
                     <form>
-                        <div class="col-sm-6">
+                        <div class="col-sm-9">
                             <div class="form-group">
-                                <input type="text" class="form-control" ng-model="newConvoFormData.name">
+                                <select ng-model="newConvoFormData.user_id_1" ng-options="convo_partner._id as convo_partner.username for convo_partner in users"></select>
                             </div>
                         </div>
-                        <!-- TODO: have a way of selecting the other user (dropdown populated by $scope.users) -->
-                        <div class="col-sm-6">
+
+                        <div class="col-sm-3">
                             <button type="submit" class="btn btn-primary" ng-click="createConvo()">+ Add Convo</button>
                         </div>
                     </form>
