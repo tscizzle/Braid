@@ -7,7 +7,7 @@ var ObjectId = mongoose.Types.ObjectId;
 
 module.exports = function(app, passport) {
 
-    // --- get all convos
+    // --- get convos for a user
     app.get('/api/convos/:user_id', function(req, res) {
 
         Convo.find({
@@ -26,7 +26,7 @@ module.exports = function(app, passport) {
 
     });
 
-    // --- create convo and send back all convos after creation
+    // --- create a convo and send back convos for a user after creation
     app.post('/api/convos', function(req, res) {
 
         Convo.create({
@@ -37,7 +37,13 @@ module.exports = function(app, passport) {
                 res.send(err);
             }
 
-            Convo.find(function(err, convos) {
+            Convo.find({
+                $or: [{
+                    user_id_0: req.body.user_id_0
+                }, {
+                    user_id_1: req.body.user_id_0
+                }]
+            }, function(err, convos) {
                 if (err) {
                     res.send(err);
                 }
@@ -48,7 +54,7 @@ module.exports = function(app, passport) {
 
     });
 
-    // --- delete convo and send back all convos after deletion
+    // --- delete a convo and send back convos for a user after deletion
     app.delete('/api/convos/:convo_id/:user_id', function(req, res) {
 
         Convo.remove({
@@ -92,8 +98,6 @@ module.exports = function(app, passport) {
 
     // --- create a message and send back messages for a convo after creation
     app.post('/api/messages', function(req, res) {
-
-        // TODO: make the creation of a message include the right sender and receiver
 
         Message.create({
             'text': req.body.text,

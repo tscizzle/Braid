@@ -1,6 +1,9 @@
-angular.module('convoController', [])
+angular.module('braidController', [])
 
-    .controller('mainController', function($scope, $http, Convos, Messages, Users) {
+    .controller('mainController', ['$scope', '$http', 'Convos', 'Messages', 'Users', function($scope, $http, Convos, Messages, Users) {
+
+
+        // initialize variables
 
         $scope.convos = [];
         $scope.messages = [];
@@ -9,40 +12,19 @@ angular.module('convoController', [])
         $scope.selected_user = undefined;
         $scope.newConvoFormData = {};
         $scope.newMessageFormData = {};
+        $scope.newUserFormData = {};
 
         Users.get()
             .success(function (data) {
                 $scope.users = data;
-
-                if ($scope.users.length > 0) {
-                    $scope.selected_user = $scope.users[0];
-
-                    Convos.get($scope.selected_user._id)
-                        .success(function(data) {
-                            $scope.convos = data;
-
-                            if ($scope.convos.length > 0) {
-                                $scope.selected_convo = $scope.convos[0];
-
-                                Messages.get($scope.selected_convo._id)
-                                    .success(function(data) {
-                                        $scope.messages = data;
-                                    });
-
-                            };
-                        });
-
-                };
+                $scope.selected_user = $scope.users[0];
             });
+
+
+        // define functions used in the template
 
         $scope.selectConvo = function(convo) {
             $scope.selected_convo = convo;
-
-            Messages.get($scope.selected_convo._id)
-                .success(function(data) {
-                    $scope.messages = data;
-                });
-
         };
 
         $scope.createConvo = function() {
@@ -54,13 +36,9 @@ angular.module('convoController', [])
                     .success(function(data) {
                         $scope.newConvoFormData = {};
                         $scope.convos = data;
-                        $scope.selected_convo = $scope.convos[0];
-
-                        Messages.get($scope.selected_convo._id)
-                            .success(function(data) {
-                                $scope.messages = data;
-                            });
-
+                        if (!$scope.selected_convo) {
+                            $scope.selected_convo = $scope.convos[0];
+                        };
                     });
 
             };
@@ -72,19 +50,8 @@ angular.module('convoController', [])
                 .success(function(data) {
                     $scope.convos = data;
 
-                    if (convo_id == $scope.selected_convo._id && $scope.convos.length > 0) {
+                    if (convo_id == $scope.selected_convo._id) {
                         $scope.selected_convo = $scope.convos[0];
-
-                        Messages.get($scope.selected_convo._id)
-                            .success(function(data) {
-                                $scope.messages = data;
-                            });
-
-                    };
-
-                    if ($scope.convos.length == 0) {
-                        $scope.messages = [];
-                        $scope.selected_convo = undefined;
                     };
                 });
 
@@ -122,21 +89,6 @@ angular.module('convoController', [])
 
         $scope.selectUser = function(user) {
             $scope.selected_user = user;
-
-            Convos.get($scope.selected_user._id)
-                .success(function(data) {
-                    $scope.convos = data;
-
-                    if ($scope.convos.length > 0) {
-                        $scope.selected_convo = $scope.convos[0];
-
-                        Messages.get($scope.selected_convo._id)
-                            .success(function(data) {
-                                $scope.messages = data;
-                            });
-
-                    };
-                });
         }
 
         $scope.createUser = function() {
@@ -151,33 +103,51 @@ angular.module('convoController', [])
             };
         };
 
-        $scope.deleteUser = function(id) {
+        $scope.deleteUser = function(user_id) {
 
-            Users.delete(id)
+            Users.delete(user_id)
                 .success(function(data) {
                     $scope.users = data;
 
-                    if (id == $scope.selected_user._id && $scope.users.length > 0) {
+                    if (user_id == $scope.selected_user._id) {
                         $scope.selected_user = $scope.users[0];
-
-                        Convos.get($scope.selected_user._id)
-                            .success(function(data) {
-                                $scope.convos = data;
-
-                                if ($scope.convos.length > 0) {
-                                    $scope.selected_convo = $scope.convos[0];
-
-                                    Messages.get($scope.selected_convo._id)
-                                        .success(function(data) {
-                                            $scope.messages = data;
-                                        });
-
-                                };
-                            });
-                        };
-
+                    };
                 });
 
         };
 
-    });
+
+        // register listeners
+
+        var refreshMessages = function() {
+            if ($scope.selected_convo) {
+
+                Messages.get($scope.selected_convo._id)
+                    .success(function(data) {
+                        $scope.messages = data;
+                    });
+
+            } else {
+                $scope.messages = [];
+            };
+        };
+
+        var refreshConvos = function() {
+            if ($scope.selected_user) {
+
+                Convos.get($scope.selected_user._id)
+                    .success(function(data) {
+                        $scope.convos = data;
+                        $scope.selected_convo = $scope.convos[0];
+                    });
+
+            } else {
+                $scope.convos = [];
+                $scope.selected_convo = undefined;
+            };
+        };
+
+        $scope.$watch('selected_convo', refreshMessages);
+        $scope.$watch('selected_user', refreshConvos);
+
+    }]);
