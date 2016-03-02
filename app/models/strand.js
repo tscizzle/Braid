@@ -1,7 +1,10 @@
 var mongoose = require('mongoose');
 
-var ObjectId = mongoose.Schema.ObjectId;
+var Schema = mongoose.Schema;
+var ObjectId = Schema.ObjectId;
 
-module.exports = mongoose.model('Strand', {
+var strandSchema = new Schema({
     convo_id: {type: ObjectId, ref: 'Convo', required: true}
 });
+
+module.exports = mongoose.model('Strand', strandSchema);

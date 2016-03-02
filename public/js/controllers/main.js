@@ -98,6 +98,10 @@ angular.module('braidController', [])
                     .success(function(data) {
                         $scope.newUserFormData = {};
                         $scope.users = data;
+
+                        if (!$scope.selected_user) {
+                            $scope.selected_user = $scope.users[0];
+                        };
                     });
 
             };

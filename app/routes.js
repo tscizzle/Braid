@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
-var Convo = require('./models/convo');
 var Message = require('./models/message');
+var Convo = require('./models/convo');
 var User = require('./models/user');
 
 var ObjectId = mongoose.Types.ObjectId;
@@ -183,12 +183,13 @@ module.exports = function(app, passport) {
     // --- delete user and send back all users after deletion
     app.delete('/api/users/:user_id', function(req, res) {
 
-        User.remove({
+        User.findOneAndRemove({
             _id: req.params.user_id
         }, function(err, user) {
             if (err) {
                 res.send(err);
             }
+            user.remove();
 
             User.find(function(err, users) {
                 if (err) {
