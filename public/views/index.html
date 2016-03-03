@@ -12,9 +12,10 @@
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/index.css">
 
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
     <script src="js/controllers/main.js"></script>
+    <script src="js/filters/main.js"></script>
     <script src="js/services/convos.js"></script>
     <script src="js/services/messages.js"></script>
     <script src="js/services/users.js"></script>
@@ -48,7 +49,7 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="convo-in-list" ng-class="{selected: convo._id==selected_convo._id}" ng-click="selectConvo(convo)" ng-repeat="convo in convos">
-                            <p>Convo between <b>{{ convo.user_id_0 }}</b> and <b>{{ convo.user_id_1 }}</b></p>
+                            <b>{{ convo | partner:selected_user }}</b>
                             <button ng-click="deleteConvo(convo._id, selected_user._id); $event.stopPropagation();">X</button>
                         </div>
                     </div>
@@ -58,7 +59,7 @@
                     <form>
                         <div class="col-sm-9">
                             <div class="form-group">
-                                <select ng-model="newConvoFormData.user_id_1" ng-options="convo_partner._id as convo_partner.username for convo_partner in users"></select>
+                                <select ng-model="newConvoFormData.user_id_1" ng-options="convo_partner._id as convo_partner.username for convo_partner in potential_partners"></select>
                             </div>
                         </div>
 
@@ -70,7 +71,7 @@
 
             </div>
 
-            <div id="convo-pane" class="col-sm-8">
+            <div id="message-list-pane" class="col-sm-8">
 
                 <div class="row">
                     <div class="col-sm-12">
@@ -80,7 +81,7 @@
 
                 <div class="row">
                     <div class="col-sm-12">
-                        <h4>{{ selected_convo.user_id_0 }} and {{ selected_convo.user_id_1 }}</h4>
+                        <h4>{{ selected_convo | partner:selected_user }}</h4>
                     </div>
                 </div>
 

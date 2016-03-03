@@ -5,13 +5,14 @@ angular.module('braidController', [])
 
         // initialize variables
 
-        $scope.convos = [];
         $scope.messages = [];
+        $scope.convos = [];
         $scope.users = [];
         $scope.selected_convo = undefined;
         $scope.selected_user = undefined;
-        $scope.newConvoFormData = {};
+        $scope.potential_partners = [];
         $scope.newMessageFormData = {};
+        $scope.newConvoFormData = {};
         $scope.newUserFormData = {};
 
         Users.get()
@@ -22,40 +23,6 @@ angular.module('braidController', [])
 
 
         // define functions used in the template
-
-        $scope.selectConvo = function(convo) {
-            $scope.selected_convo = convo;
-        };
-
-        $scope.createConvo = function() {
-            $scope.newConvoFormData.user_id_0 = $scope.selected_user._id;
-
-            if ($scope.newConvoFormData.user_id_1) {
-
-                Convos.create($scope.newConvoFormData)
-                    .success(function(data) {
-                        $scope.newConvoFormData = {};
-                        $scope.convos = data;
-                        if (!$scope.selected_convo) {
-                            $scope.selected_convo = $scope.convos[0];
-                        };
-                    });
-
-            };
-        };
-
-        $scope.deleteConvo = function(convo_id, user_id) {
-
-            Convos.delete(convo_id, user_id)
-                .success(function(data) {
-                    $scope.convos = data;
-
-                    if (convo_id == $scope.selected_convo._id) {
-                        $scope.selected_convo = $scope.convos[0];
-                    };
-                });
-
-        };
 
         $scope.createMessage = function() {
             $scope.newMessageFormData.convo_id = $scope.selected_convo._id;
@@ -83,6 +50,41 @@ angular.module('braidController', [])
             Messages.delete(message_id, convo_id)
                 .success(function(data) {
                     $scope.messages = data;
+                });
+
+        };
+
+        $scope.selectConvo = function(convo) {
+            $scope.selected_convo = convo;
+        };
+
+        $scope.createConvo = function() {
+            $scope.newConvoFormData.user_id_0 = $scope.selected_user._id;
+
+            if ($scope.newConvoFormData.user_id_1) {
+
+                Convos.create($scope.newConvoFormData)
+                    .success(function(data) {
+                        $scope.newConvoFormData = {};
+                        $scope.convos = data;
+
+                        if (!$scope.selected_convo) {
+                            $scope.selected_convo = $scope.convos[0];
+                        };
+                    });
+
+            };
+        };
+
+        $scope.deleteConvo = function(convo_id, user_id) {
+
+            Convos.delete(convo_id, user_id)
+                .success(function(data) {
+                    $scope.convos = data;
+
+                    if (convo_id == $scope.selected_convo._id) {
+                        $scope.selected_convo = $scope.convos[0];
+                    };
                 });
 
         };
@@ -151,7 +153,19 @@ angular.module('braidController', [])
             };
         };
 
+        var refreshPotentialPartners = function() {
+            var already_convod = [];
+            for (var i = 0; i < $scope.convos.length; i++) {
+                var convo = $scope.convos[i];
+                already_convod.push(convo.user_id_0, convo.user_id_1);
+            };
+            $scope.potential_partners = $scope.users.filter(function(user) {
+                return (($.inArray(user._id, already_convod) == -1) && (user._id != $scope.selected_user._id));
+            });
+        };
+
         $scope.$watch('selected_convo', refreshMessages);
         $scope.$watch('selected_user', refreshConvos);
+        $scope.$watchGroup(['convos', 'users', 'selected_convo'], refreshPotentialPartners);
 
     }]);
