@@ -17,8 +17,9 @@
     <script src="/bower_components/underscore/underscore-min.js"></script>
     <script src="/js/controllers/main.js"></script>
     <script src="/js/filters/main.js"></script>
-    <script src="/js/services/convos.js"></script>
     <script src="/js/services/messages.js"></script>
+    <script src="/js/services/strands.js"></script>
+    <script src="/js/services/convos.js"></script>
     <script src="/js/services/users.js"></script>
     <script src="/js/core.js"></script>
 
@@ -50,7 +51,7 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="convo-in-list" ng-class="{selected: convo._id==selected_convo._id}" ng-click="selectConvo(convo)" ng-repeat="convo in convos">
-                            <b>{{ convo | partner:selected_user | username:username_map }}</b>
+                            <b>{{ convo | partner:selected_user | username:user_map }}</b>
                             <button ng-click="deleteConvo(convo._id, selected_user._id); $event.stopPropagation();">X</button>
                         </div>
                     </div>
@@ -82,14 +83,15 @@
 
                 <div class="row">
                     <div class="col-sm-12">
-                        <h4>{{ selected_convo | partner:selected_user | username:username_map }}</h4>
+                        <h4>{{ selected_convo | partner:selected_user | username:user_map }}</h4>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-sm-12">
-                        <div ng-repeat="message in messages">
-                            <button ng-click="deleteMessage(message._id, selected_convo._id)">X</button><p> {{ message.sender_id }}: {{ message.text }}</p>
+                        <div class="message-in-list" ng-class="{primed: messageIsPrimed(message), stranded: message.strand_id}" ng-click="toggleMessage(message)" ng-repeat="message in messages">
+                            <p><b>{{ message.sender_id | username:user_map }}</b>: {{ message.text }}</p>
+                            <button ng-click="deleteMessage(message._id, selected_convo._id); $event.stopPropagation();">X</button>
                         </div>
                     </div>
                 </div>

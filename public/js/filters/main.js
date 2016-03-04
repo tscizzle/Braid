@@ -12,9 +12,9 @@ angular.module('braidFilters', [])
         };
     })
     .filter('username', function() {
-        return function(user_id, username_map) {
+        return function(user_id, user_map) {
             if (user_id) {
-                return username_map[user_id];
+                return user_map[user_id].username;
             };
         };
     });

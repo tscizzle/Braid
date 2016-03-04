@@ -6,16 +6,28 @@
     background-color: #ddd;
 }
 
-.convo-in-list {
-    border-bottom: solid 1px black;
-}
-
 #convo-list-pane .selected {
     background-color: #bbb;
 }
 
+.convo-in-list {
+    border-bottom: solid 1px black;
+}
+
 #message-list-pane {
     background-color: #eee;
+}
+
+#message-list-pane .primed {
+    background-color: red !important;
+}
+
+#message-list-pane .stranded {
+    background-color: blue !important;
+}
+
+.message-in-list {
+    border-bottom: solid 1px black;
 }
 
 #user-list-pane {

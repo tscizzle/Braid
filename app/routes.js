@@ -1,11 +1,116 @@
 var mongoose = require('mongoose');
 var Message = require('./models/message');
+var Strand = require('./models/strand');
 var Convo = require('./models/convo');
 var User = require('./models/user');
 
 var ObjectId = mongoose.Types.ObjectId;
 
 module.exports = function(app, passport) {
+
+    // --- get messages for a convo
+    app.get('/api/messages/:convo_id', function(req, res) {
+
+        Message.find({
+            'convo_id': req.params.convo_id
+        }, function(err, messages) {
+            if (err) {
+                res.send(err)
+            }
+
+            res.json(messages);
+        });
+
+    });
+
+    // --- create a message and send back messages for a convo after creation
+    app.post('/api/messages', function(req, res) {
+
+        Message.create({
+            'text': req.body.text,
+            'convo_id': req.body.convo_id,
+            'sender_id': req.body.sender_id,
+            'receiver_id': req.body.receiver_id,
+            'time_sent': Date.parse(req.body.time_sent),
+            'strand_id': req.body.strand_id
+        }, function(err, message) {
+            if (err) {
+                res.send(err);
+            }
+
+            Message.find({
+                'convo_id': req.body.convo_id
+            }, function(err, messages) {
+                if (err) {
+                    res.send(err);
+                }
+
+                res.json(messages);
+            });
+        });
+
+    });
+
+    // --- delete a message and send back messages for a convo after deletion
+    app.delete('/api/messages/:message_id/:convo_id', function(req, res) {
+
+        Message.remove({
+            '_id': req.params.message_id
+        }, function(err, message) {
+            if (err) {
+                res.send(err);
+            }
+
+            Message.find({
+                'convo_id': req.params.convo_id
+            }, function(err, messages) {
+                if (err) {
+                    res.send(err);
+                }
+
+                res.json(messages);
+            });
+        });
+
+    });
+
+    // --- get strands for a convo
+    app.get('/api/strands/:convo_id', function(req, res) {
+
+        Strand.find({
+            'convo_id': req.params.convo_id
+        }, function(err, strands) {
+            if (err) {
+                res.send(err)
+            }
+
+            res.json(strands);
+        });
+
+    });
+
+    // --- create a strand and send back strands for a convo after creation
+    app.post('/api/strands', function(req, res) {
+
+        Strand.create({
+            'convo_id': req.body.convo_id
+        }, function(err, strand) {
+            if (err) {
+                res.send(err);
+            }
+
+            Strand.find({
+                'convo_id': req.body.convo_id
+            }, function(err, strands) {
+                if (err) {
+                    res.send(err);
+                }
+
+                res.json(strands);
+            });
+        });
+
+    });
 
     // --- get convos for a user
     app.get('/api/convos/:user_id', function(req, res) {
@@ -76,71 +181,6 @@ module.exports = function(app, passport) {
                 }
 
                 res.json(convos);
-            });
-        });
-
-    });
-
-    // --- get messages for a convo
-    app.get('/api/messages/:convo_id', function(req, res) {
-
-        Message.find({
-            'convo_id': req.params.convo_id
-        }, function(err, messages) {
-            if (err) {
-                res.send(err)
-            }
-
-            res.json(messages);
-        });
-
-    });
-
-    // --- create a message and send back messages for a convo after creation
-    app.post('/api/messages', function(req, res) {
-
-        Message.create({
-            'text': req.body.text,
-            'convo_id': req.body.convo_id,
-            'sender_id': req.body.sender_id,
-            'receiver_id': req.body.receiver_id,
-            'time_sent': Date.parse(req.body.time_sent)
-        }, function(err, convo) {
-            if (err) {
-                res.send(err);
-            }
-
-            Message.find({
-                'convo_id': req.body.convo_id
-            }, function(err, messages) {
-                if (err) {
-                    res.send(err);
-                }
-
-                res.json(messages);
-            });
-        });
-
-    });
-
-    // --- delete a message and send back messages for a convo after deletion
-    app.delete('/api/messages/:message_id/:convo_id', function(req, res) {
-
-        Message.remove({
-            '_id': req.params.message_id
-        }, function(err, message) {
-            if (err) {
-                res.send(err);
-            }
-
-            Message.find({
-                'convo_id': req.params.convo_id
-            }, function(err, messages) {
-                if (err) {
-                    res.send(err);
-                }
-
-                res.json(messages);
             });
         });
 
