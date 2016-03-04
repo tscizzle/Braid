@@ -10,4 +10,11 @@ angular.module('braidFilters', [])
                 };
             };
         };
+    })
+    .filter('username', function() {
+        return function(user_id, username_map) {
+            if (user_id) {
+                return username_map[user_id];
+            };
+        };
     });

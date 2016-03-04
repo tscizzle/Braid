@@ -11,6 +11,7 @@ angular.module('braidController', [])
         $scope.selected_convo = undefined;
         $scope.selected_user = undefined;
         $scope.potential_partners = [];
+        $scope.username_map = {};
         $scope.newMessageFormData = {};
         $scope.newConvoFormData = {};
         $scope.newUserFormData = {};
@@ -155,17 +156,25 @@ angular.module('braidController', [])
 
         var refreshPotentialPartners = function() {
             var already_convod = [];
-            for (var i = 0; i < $scope.convos.length; i++) {
-                var convo = $scope.convos[i];
+            _.each($scope.convos, function(convo) {
                 already_convod.push(convo.user_id_0, convo.user_id_1);
-            };
+            });
             $scope.potential_partners = $scope.users.filter(function(user) {
                 return (($.inArray(user._id, already_convod) == -1) && (user._id != $scope.selected_user._id));
             });
         };
 
+        var refreshUserIdToUsernameMap = function() {
+            var temp_user_map = {};
+            _.each($scope.users, function(user) {
+                temp_user_map[user._id] = user.username;
+            });
+            $scope.username_map = temp_user_map;
+        };
+
         $scope.$watch('selected_convo', refreshMessages);
         $scope.$watch('selected_user', refreshConvos);
         $scope.$watchGroup(['convos', 'users', 'selected_convo'], refreshPotentialPartners);
+        $scope.$watch('users', refreshUserIdToUsernameMap);
 
     }]);
