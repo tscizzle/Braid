@@ -60,7 +60,7 @@
                     <form>
                         <div class="col-sm-9">
                             <div class="form-group">
-                                <select ng-model="newConvoFormData.user_id_1" ng-options="convo_partner._id as convo_partner.username for convo_partner in potential_partners"></select>
+                                <select ng-model="forms.newConvoFormData.user_id_1" ng-options="convo_partner._id as convo_partner.username for convo_partner in potential_partners"></select>
                             </div>
                         </div>
 
@@ -99,7 +99,7 @@
                         <form>
                             <div class="col-sm-8">
                                 <div class="form-group">
-                                    <input type="text" class="form-control input-lg" ng-model="newMessageFormData.text">
+                                    <input type="text" class="form-control input-lg" ng-model="forms.newMessageFormData.text">
                                 </div>
                             </div>
                             <div class="col-sm-4">
@@ -132,7 +132,7 @@
                     <form>
                         <div class="col-sm-9">
                             <div class="form-group">
-                                <input type="text" class="form-control" ng-model="newUserFormData.username">
+                                <input type="text" class="form-control" ng-model="forms.newUserFormData.username">
                             </div>
                         </div>
                         <div class="col-sm-3">

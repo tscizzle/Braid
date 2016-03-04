@@ -12,9 +12,11 @@ angular.module('braidController', [])
         $scope.selected_user = undefined;
         $scope.potential_partners = [];
         $scope.username_map = {};
-        $scope.newMessageFormData = {};
-        $scope.newConvoFormData = {};
-        $scope.newUserFormData = {};
+        $scope.forms = {
+            newMessageFormData: {},
+            newConvoFormData: {},
+            newUserFormData: {}
+        }
 
         Users.get()
             .success(function (data) {
