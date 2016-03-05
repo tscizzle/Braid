@@ -16,14 +16,14 @@ module.exports = function(app, passport) {
         }, function(err, messages) {
             if (err) {
                 res.send(err)
-            }
+            };
 
             res.json(messages);
         });
 
     });
 
-    // --- create a message and send back messages for a convo after creation
+    // --- create a message and send back the new message_id as well as messages for the convo after creation
     app.post('/api/messages', function(req, res) {
 
         Message.create({
@@ -36,22 +36,22 @@ module.exports = function(app, passport) {
         }, function(err, message) {
             if (err) {
                 res.send(err);
-            }
+            };
 
             Message.find({
                 'convo_id': req.body.convo_id
             }, function(err, messages) {
                 if (err) {
                     res.send(err);
-                }
+                };
 
-                res.json(messages);
+                res.json({messages: messages, new_message: message});
             });
         });
 
     });
 
-    // --- delete a message and send back messages for a convo after deletion
+    // --- delete a message and send back messages for the convo after deletion
     app.delete('/api/messages/:message_id/:convo_id', function(req, res) {
 
         Message.remove({
@@ -59,19 +59,44 @@ module.exports = function(app, passport) {
         }, function(err, message) {
             if (err) {
                 res.send(err);
-            }
+            };
 
             Message.find({
                 'convo_id': req.params.convo_id
             }, function(err, messages) {
                 if (err) {
                     res.send(err);
-                }
+                };
 
                 res.json(messages);
             });
         });
 
+    });
+
+    // --- assign messages to a strand and send back messages for the convo after update
+    app.post('/api/assignMessagesToStrand/:strand_id/:convo_id', function(req, res) {
+
+        Message.update({
+            _id: {$in: req.body}
+        }, {
+            $set: {
+                strand_id: req.params.strand_id
+            }
+        }, {
+            multi: true
+        }, function(err, numAffected) {
+
+            Message.find({
+                'convo_id': req.params.convo_id
+            }, function(err, messages) {
+                if (err) {
+                    res.send(err);
+                };
+
+                res.json(messages);
+            });
+        });
     });
 
     // --- get strands for a convo
@@ -82,14 +107,14 @@ module.exports = function(app, passport) {
         }, function(err, strands) {
             if (err) {
                 res.send(err)
-            }
+            };
 
             res.json(strands);
         });
 
     });
 
-    // --- create a strand and send back strands for a convo after creation
+    // --- create a strand and send back the new strand_id as well as strands for the convo after creation
     app.post('/api/strands', function(req, res) {
 
         Strand.create({
@@ -97,16 +122,16 @@ module.exports = function(app, passport) {
         }, function(err, strand) {
             if (err) {
                 res.send(err);
-            }
+            };
 
             Strand.find({
                 'convo_id': req.body.convo_id
             }, function(err, strands) {
                 if (err) {
                     res.send(err);
-                }
+                };
 
-                res.json(strands);
+                res.json({strands: strands, new_strand: strand});
             });
         });
 
@@ -124,14 +149,14 @@ module.exports = function(app, passport) {
         }, function(err, convos) {
             if (err) {
                 res.send(err);
-            }
+            };
 
             res.json(convos);
         });
 
     });
 
-    // --- create a convo and send back convos for a user after creation
+    // --- create a convo and send back the new convo_id as well as convos for the user after creation
     app.post('/api/convos', function(req, res) {
 
         Convo.create({
@@ -140,7 +165,7 @@ module.exports = function(app, passport) {
         }, function(err, convo) {
             if (err) {
                 res.send(err);
-            }
+            };
 
             Convo.find({
                 $or: [{
@@ -151,15 +176,15 @@ module.exports = function(app, passport) {
             }, function(err, convos) {
                 if (err) {
                     res.send(err);
-                }
+                };
 
-                res.json(convos);
+                res.json({convos: convos, new_convo: convo});
             });
         });
 
     });
 
-    // --- delete a convo and send back convos for a user after deletion
+    // --- delete a convo and send back convos for the user after deletion
     app.delete('/api/convos/:convo_id/:user_id', function(req, res) {
 
         Convo.remove({
@@ -167,7 +192,7 @@ module.exports = function(app, passport) {
         }, function(err, convo) {
             if (err) {
                 res.send(err);
-            }
+            };
 
             Convo.find({
                 $or: [{
@@ -178,7 +203,7 @@ module.exports = function(app, passport) {
             }, function(err, convos) {
                 if (err) {
                     res.send(err)
-                }
+                };
 
                 res.json(convos);
             });
@@ -192,14 +217,14 @@ module.exports = function(app, passport) {
         User.find(function(err, users) {
             if (err) {
                 res.send(err);
-            }
+            };
 
             res.json(users);
         });
 
     });
 
-    // --- create user and send back all users after creation
+    // --- create user and send back the new user_id as well as all users after creation
     app.post('/api/users', function(req, res) {
 
         User.create({
@@ -207,14 +232,14 @@ module.exports = function(app, passport) {
         }, function(err, user) {
             if (err) {
                 res.send(err);
-            }
+            };
 
             User.find(function(err, users) {
                 if (err) {
                     res.send(err);
-                }
+                };
 
-                res.json(users);
+                res.json({users: users, new_user: user});
             });
         });
 
@@ -228,13 +253,13 @@ module.exports = function(app, passport) {
         }, function(err, user) {
             if (err) {
                 res.send(err);
-            }
+            };
             user.remove();
 
             User.find(function(err, users) {
                 if (err) {
                     res.send(err)
-                }
+                };
 
                 res.json(users);
             });

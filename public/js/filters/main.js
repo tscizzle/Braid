@@ -14,7 +14,11 @@ angular.module('braidFilters', [])
     .filter('username', function() {
         return function(user_id, user_map) {
             if (user_id) {
-                return user_map[user_id].username;
+                if (user_map[user_id]) {
+                    return user_map[user_id].username;
+                } else {
+                    return user_id
+                };
             };
         };
     });

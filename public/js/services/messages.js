@@ -9,6 +9,9 @@ angular.module('messageService', [])
             },
             delete: function(message_id, convo_id) {
                 return $http.delete('/api/messages/' + message_id + '/' + convo_id);
+            },
+            assignMessagesToStrand: function(message_ids, strand_id, convo_id) {
+                return $http.post('/api/assignMessagesToStrand' + '/' + strand_id + '/' + convo_id, message_ids)
             }
         };
     });
