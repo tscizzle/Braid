@@ -66,7 +66,7 @@ angular.module('braidController', [])
                                         .success(function(create_messages_data) {
                                             vm.forms.newMessageFormData = {};
                                             vm.messages = create_messages_data.messages;
-                                            vm.selected_strand = strand_data.new_strand._id;
+                                            vm.selected_strand = strand_data.new_strand;
                                             vm.primed_messages = [];
                                         });
 
