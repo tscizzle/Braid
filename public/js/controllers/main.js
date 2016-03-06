@@ -4,6 +4,9 @@ angular.module('braidController', [])
 
         var vm = this;
 
+        // for debugging (can access controller variables in the SCOPE object in the browser console)
+        window.SCOPE = vm;
+
         // initialize variables
 
         vm.messages = [];
@@ -95,17 +98,26 @@ angular.module('braidController', [])
             Messages.delete(message_id, convo_id)
                 .success(function(data) {
                     vm.messages = data;
+                    vm.primed_messages = vm.primed_messages.filter(function(primed_message) {
+                        return message_id !== primed_message._id;
+                    });
+
+                    if (vm.selected_strand) {
+                        var strand_messages = vm.messages.filter(function(message) {
+                            return message.strand_id === vm.selected_strand._id;
+                        });
+
+                        if (strand_messages.length === 0) {
+                            vm.selected_strand = undefined;
+                        };
+                    };
                 });
 
-            vm.primed_messages = vm.primed_messages.filter(function(primed_message) {
-                return message_id != primed_message._id;
-            });
         };
 
         vm.createConvo = function() {
-            vm.forms.newConvoFormData.user_id_0 = vm.selected_user._id;
-
             if (vm.forms.newConvoFormData.user_id_1) {
+                vm.forms.newConvoFormData.user_id_0 = vm.selected_user._id;
 
                 Convos.create(vm.forms.newConvoFormData)
                     .success(function(data) {
@@ -127,7 +139,7 @@ angular.module('braidController', [])
                 .success(function(data) {
                     vm.convos = data;
 
-                    if (convo_id == vm.selected_convo._id) {
+                    if (convo_id === vm.selected_convo._id) {
                         vm.selected_convo = vm.convos[0];
                     };
                 });
@@ -157,7 +169,7 @@ angular.module('braidController', [])
                 .success(function(data) {
                     vm.users = data;
 
-                    if (user_id == vm.selected_user._id) {
+                    if (user_id === vm.selected_user._id) {
                         vm.selected_user = vm.users[0];
                     };
                 });
@@ -171,12 +183,12 @@ angular.module('braidController', [])
             var primed_message_ids = vm.primed_messages.map(function(primed_message) {
                 return primed_message._id;
             });
-            return $.inArray(message._id, primed_message_ids) != -1;
+            return $.inArray(message._id, primed_message_ids) !== -1;
         };
 
         vm.messageIsHidden = function(message) {
             if (vm.selected_strand) {
-                return message.strand_id != vm.selected_strand._id;
+                return message.strand_id !== vm.selected_strand._id;
             } else {
                 return vm.message_text_focus && vm.primed_messages.length > 0 && !vm.messageIsPrimed(message);
             };
@@ -193,11 +205,11 @@ angular.module('braidController', [])
                     var primed_message_ids = vm.primed_messages.map(function(primed_message) {
                         return primed_message._id;
                     });
-                    if ($.inArray(message._id, primed_message_ids) == -1) {
+                    if ($.inArray(message._id, primed_message_ids) === -1) {
                         vm.primed_messages.push(message);
                     } else {
                         vm.primed_messages = vm.primed_messages.filter(function(primed_message) {
-                            return message._id != primed_message._id;
+                            return message._id !== primed_message._id;
                         });
                     };
                 };
@@ -282,7 +294,7 @@ angular.module('braidController', [])
                 already_convod.push(convo.user_id_0, convo.user_id_1);
             });
             vm.potential_partners = vm.users.filter(function(user) {
-                return (($.inArray(user._id, already_convod) == -1) && (user._id != vm.selected_user._id));
+                return (($.inArray(user._id, already_convod) === -1) && (user._id !== vm.selected_user._id));
             });
             vm.potential_partners.unshift({_id: "", username: ""});
         };

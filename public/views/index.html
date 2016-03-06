@@ -90,9 +90,9 @@
 
                 <div class="row">
                     <div class="col-sm-12">
-                        <div class="message-in-list" ng-class="{'primed': main.messageIsPrimed(message), 'current-strand': main.selected_strand._id && message.strand_id===main.selected_strand._id}" ng-hide="main.messageIsHidden(message)" ng-click="main.toggleMessage(message)" ng-repeat="message in main.messages">
+                        <div class="message-in-list" ng-class="{'primed': main.messageIsPrimed(message), 'current-strand': main.selected_strand._id && message.strand_id===main.selected_strand._id}" ng-hide="main.messageIsHidden(message)" ng-mousedown="main.toggleMessage(message)" ng-repeat="message in main.messages">
                             <p><b>{{ message.sender_id | username:main.user_map }}</b>: {{ message.text }}</p>
-                            <button ng-click="main.deleteMessage(message._id, main.selected_convo._id); $event.stopPropagation();">X</button>
+                            <button ng-mousedown="main.deleteMessage(message._id, main.selected_convo._id); $event.stopPropagation();">X</button>
                             <p><b>Strand: </b>{{ message.strand_id || "NO STRAND" }}</p>
                         </div>
                     </div>
