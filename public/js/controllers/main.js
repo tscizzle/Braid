@@ -21,7 +21,7 @@ angular.module('braidController', [])
         vm.forms = {
             newMessageFormData: {},
             newStrandFormData: {},
-            newConvoFormData: {},
+            newConvoFormData: {user_id_1: ""},
             newUserFormData: {}
         };
 
@@ -284,6 +284,7 @@ angular.module('braidController', [])
             vm.potential_partners = vm.users.filter(function(user) {
                 return (($.inArray(user._id, already_convod) == -1) && (user._id != vm.selected_user._id));
             });
+            vm.potential_partners.unshift({_id: "", username: ""});
         };
 
         var refreshUserMap = function() {
