@@ -103,11 +103,11 @@
                         <form>
                             <div class="col-sm-8">
                                 <div class="form-group">
-                                    <input type="text" class="form-control input-lg" ng-model="main.forms.newMessageFormData.text" ng-focus="main.message_text_focus=true" ng-blur="main.message_text_focus=false">
+                                    <input type="text" class="form-control input-lg" ng-model="main.forms.newMessageFormData.text" ng-focus="main.message_text_focus=true" ng-blur="main.message_text_focus=false" ng-keyup="$event.keyCode == 13 && main.createMessage()">
                                 </div>
                             </div>
                             <div class="col-sm-4">
-                                <button type="submit" class="btn btn-primary btn-lg" ng-click="main.createMessage()">Send</button>
+                                <button type="submit" class="btn btn-primary btn-lg" ng-mousedown="main.createMessage()">Send</button>
                             </div>
                         </form>
                     </div>
