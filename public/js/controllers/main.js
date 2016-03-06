@@ -4,19 +4,19 @@ angular.module('braidController', [])
 
         var vm = this;
 
+
         // for debugging (can access controller variables in the SCOPE object in the browser console)
         window.SCOPE = vm;
 
-        // initialize variables
+
+        // initialization
 
         vm.messages = [];
         vm.strands = [];
-        vm.convos = [];
         vm.users = [];
         vm.selected_strand = undefined;
         vm.selected_convo = undefined;
         vm.selected_user = undefined;
-        vm.potential_partners = [];
         vm.strand_map = {};
         vm.user_map = {};
         vm.primed_messages = [];
@@ -24,7 +24,6 @@ angular.module('braidController', [])
         vm.forms = {
             newMessageFormData: {},
             newStrandFormData: {},
-            newConvoFormData: {user_id_1: ""},
             newUserFormData: {}
         };
 
@@ -115,37 +114,6 @@ angular.module('braidController', [])
 
         };
 
-        vm.createConvo = function() {
-            if (vm.forms.newConvoFormData.user_id_1) {
-                vm.forms.newConvoFormData.user_id_0 = vm.selected_user._id;
-
-                Convos.create(vm.forms.newConvoFormData)
-                    .success(function(data) {
-                        vm.forms.newConvoFormData = {};
-                        vm.convos = data.convos;
-                        vm.selected_convo = data.new_convo;
-
-                        if (!vm.selected_convo) {
-                            vm.selected_convo = vm.convos[0];
-                        };
-                    });
-
-            };
-        };
-
-        vm.deleteConvo = function(convo_id, user_id) {
-
-            Convos.delete(convo_id, user_id)
-                .success(function(data) {
-                    vm.convos = data;
-
-                    if (convo_id === vm.selected_convo._id) {
-                        vm.selected_convo = vm.convos[0];
-                    };
-                });
-
-        };
-
         vm.createUser = function() {
             if (vm.forms.newUserFormData.username) {
 
@@ -220,10 +188,6 @@ angular.module('braidController', [])
             };
         };
 
-        vm.selectConvo = function(convo) {
-            vm.selected_convo = convo;
-        };
-
         vm.selectUser = function(user) {
             vm.selected_user = user;
         };
@@ -273,32 +237,6 @@ angular.module('braidController', [])
             vm.strand_map = temp_strand_map;
         };
 
-        var refreshConvos = function() {
-            if (vm.selected_user) {
-
-                Convos.get(vm.selected_user._id)
-                    .success(function(data) {
-                        vm.convos = data;
-                        vm.selected_convo = vm.convos[0];
-                    });
-
-            } else {
-                vm.convos = [];
-                vm.selected_convo = undefined;
-            };
-        };
-
-        var refreshPotentialPartners = function() {
-            var already_convod = [];
-            _.each(vm.convos, function(convo) {
-                already_convod.push(convo.user_id_0, convo.user_id_1);
-            });
-            vm.potential_partners = vm.users.filter(function(user) {
-                return (($.inArray(user._id, already_convod) === -1) && (user._id !== vm.selected_user._id));
-            });
-            vm.potential_partners.unshift({_id: "", username: ""});
-        };
-
         var refreshUserMap = function() {
             var temp_user_map = {};
             _.each(vm.users, function(user) {
@@ -308,7 +246,6 @@ angular.module('braidController', [])
         };
 
         var strands_watcher = function(scope) {return vm.strands;};
-        var convos_watcher = function(scope) {return vm.convos;};
         var users_watcher = function(scope) {return vm.users;};
         var selected_strand_watcher = function(scope) {return vm.strands;};
         var selected_convo_watcher = function(scope) {return vm.selected_convo;};
@@ -318,8 +255,6 @@ angular.module('braidController', [])
         $scope.$watch(selected_convo_watcher, refreshStrands);
         $scope.$watchGroup([selected_convo_watcher, selected_user_watcher], deselectStrand);
         $scope.$watch(strands_watcher, refreshStrandMap);
-        $scope.$watchGroup([users_watcher, selected_user_watcher], refreshConvos);
-        $scope.$watchGroup([convos_watcher, users_watcher, selected_convo_watcher], refreshPotentialPartners);
         $scope.$watch(users_watcher, refreshUserMap);
 
     }]);

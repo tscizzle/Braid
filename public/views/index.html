@@ -12,11 +12,13 @@
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/index.css">
 
-    <script src="/bower_components/angular/angular.min.js"></script>
+    <script src="/bower_components/angular/angular.js"></script>
     <script src="/bower_components/jquery/dist/jquery.min.js"></script>
     <script src="/bower_components/underscore/underscore-min.js"></script>
     <script src="/bower_components/objectid.js/src/main/javascript/Objectid.js"></script>
     <script src="/js/controllers/main.js"></script>
+    <script src="/js/directives/navbar.js"></script>
+    <script src="/js/directives/convos.js"></script>
     <script src="/js/filters/main.js"></script>
     <script src="/js/services/messages.js"></script>
     <script src="/js/services/strands.js"></script>
@@ -26,15 +28,9 @@
 
 </head>
 
-<body ng-controller="mainController as main">
+<body ng-controller="mainController as mainCtrl">
 
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <div class="navbar-header navbar-right">
-                <a class="navbar-brand">{{ main.selected_user.username }}</a>
-            </div>
-        </div>
-    </nav>
+    <braid-navbar user="mainCtrl.selected_user"></braid-navbar>
 
     <div class="container-fluid">
     <div id="margin-fixer-grid-wrapper">
@@ -43,34 +39,11 @@
 
             <div id="convo-list-pane" class="col-sm-2">
 
-                <div class="row">
-                    <div class="col-sm-12">
-                        <h3>Convos</h3>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="convo-in-list" ng-class="{'selected': convo._id===main.selected_convo._id}" ng-click="main.selectConvo(convo)" ng-repeat="convo in main.convos">
-                            <b>{{ convo | partner:main.selected_user | username:main.user_map }}</b>
-                            <button ng-click="main.deleteConvo(convo._id, main.selected_user._id); $event.stopPropagation();">X</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="convo-form" class="row">
-                    <form>
-                        <div class="col-sm-9">
-                            <div class="form-group">
-                                <select ng-model="main.forms.newConvoFormData.user_id_1" ng-options="convo_partner._id as convo_partner.username for convo_partner in main.potential_partners"></select>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-3">
-                            <button type="submit" class="btn btn-primary" ng-click="main.createConvo()">+</button>
-                        </div>
-                    </form>
-                </div>
+                <braid-convos users="mainCtrl.users"
+                              selected_convo="mainCtrl.selected_convo"
+                              selected_user="mainCtrl.selected_user"
+                              user_map="mainCtrl.user_map">
+                </braid-convos>
 
             </div>
 
@@ -84,15 +57,15 @@
 
                 <div class="row">
                     <div class="col-sm-12">
-                        <h4>{{ main.selected_convo | partner:main.selected_user | username:main.user_map }}</h4>
+                        <h4>{{ mainCtrl.selected_convo | partner:mainCtrl.selected_user | username:mainCtrl.user_map }}</h4>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-sm-12">
-                        <div class="message-in-list" ng-class="{'primed': main.messageIsPrimed(message), 'current-strand': main.selected_strand._id && message.strand_id===main.selected_strand._id}" ng-hide="main.messageIsHidden(message)" ng-mousedown="main.toggleMessage(message)" ng-repeat="message in main.messages">
-                            <p><b>{{ message.sender_id | username:main.user_map }}</b>: {{ message.text }}</p>
-                            <button ng-mousedown="main.deleteMessage(message._id, main.selected_convo._id); $event.stopPropagation();">X</button>
+                        <div class="message-in-list" ng-class="{'primed': mainCtrl.messageIsPrimed(message), 'current-strand': mainCtrl.selected_strand._id && message.strand_id===mainCtrl.selected_strand._id}" ng-hide="mainCtrl.messageIsHidden(message)" ng-mousedown="mainCtrl.toggleMessage(message)" ng-repeat="message in mainCtrl.messages">
+                            <p><b>{{ message.sender_id | username:mainCtrl.user_map }}</b>: {{ message.text }}</p>
+                            <button ng-mousedown="mainCtrl.deleteMessage(message._id, mainCtrl.selected_convo._id); $event.stopPropagation();">X</button>
                             <p><b>Strand: </b>{{ message.strand_id || "NO STRAND" }}</p>
                         </div>
                     </div>
@@ -103,11 +76,11 @@
                         <form>
                             <div class="col-sm-8">
                                 <div class="form-group">
-                                    <input type="text" class="form-control input-lg" ng-model="main.forms.newMessageFormData.text" ng-focus="main.message_text_focus=true" ng-blur="main.message_text_focus=false" ng-keyup="$event.keyCode == 13 && main.createMessage()">
+                                    <input type="text" class="form-control input-lg" ng-model="mainCtrl.forms.newMessageFormData.text" ng-focus="mainCtrl.message_text_focus=true" ng-blur="mainCtrl.message_text_focus=false" ng-keyup="$event.keyCode == 13 && mainCtrl.createMessage()">
                                 </div>
                             </div>
                             <div class="col-sm-4">
-                                <button type="submit" class="btn btn-primary btn-lg" ng-mousedown="main.createMessage()">Send</button>
+                                <button type="submit" class="btn btn-primary btn-lg" ng-mousedown="mainCtrl.createMessage()">Send</button>
                             </div>
                         </form>
                     </div>
@@ -125,9 +98,9 @@
 
                 <div class="row">
                     <div class="col-sm-12">
-                        <div class="user-in-list" ng-class="{'selected': user._id===main.selected_user._id}" ng-click="main.selectUser(user)" ng-repeat="user in main.users">
+                        <div class="user-in-list" ng-class="{'selected': user._id===mainCtrl.selected_user._id}" ng-click="mainCtrl.selectUser(user)" ng-repeat="user in mainCtrl.users">
                             <p>User: <b>{{ user.username }}</b></p>
-                            <button ng-click="main.deleteUser(user._id); $event.stopPropagation();">X</button>
+                            <button ng-click="mainCtrl.deleteUser(user._id); $event.stopPropagation();">X</button>
                         </div>
                     </div>
                 </div>
@@ -136,11 +109,11 @@
                     <form>
                         <div class="col-sm-9">
                             <div class="form-group">
-                                <input type="text" class="form-control" ng-model="main.forms.newUserFormData.username">
+                                <input type="text" class="form-control" ng-model="mainCtrl.forms.newUserFormData.username">
                             </div>
                         </div>
                         <div class="col-sm-3">
-                            <button type="submit" class="btn btn-primary" ng-click="main.createUser()">+</button>
+                            <button type="submit" class="btn btn-primary" ng-click="mainCtrl.createUser()">+</button>
                         </div>
                     </form>
                 </div>
