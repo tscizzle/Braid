@@ -32,7 +32,9 @@ app.get('/', function(req, res) {
 
 // listen
 
-app.listen(8080);
-console.log("App listening on port 8080");
+var PORT = (process.env.PORT || 8080);
+app.set('port', PORT);
+app.listen(PORT);
+console.log("App listening on port " + PORT);
 
 // run server with `node server.js` (or `nodemon server.js` if nodemon is installed)
