@@ -1,0 +1,7 @@
+.convo-in-list {
+    border-bottom: solid 1px black;
+}
+
+#convo-list-pane .selected {
+    background-color: #bbb;
+}

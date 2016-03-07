@@ -2,42 +2,14 @@
     padding: 0 15px;
 }
 
-#convo-list-pane {
+#convo-list-col {
     background-color: #ddd;
 }
 
-#convo-list-pane .selected {
-    background-color: #bbb;
-}
-
-.convo-in-list {
-    border-bottom: solid 1px black;
-}
-
-#message-list-pane {
+#message-list-col {
     background-color: #eee;
 }
 
-#message-list-pane .primed {
-    background-color: red !important;
-}
-
-#message-list-pane .current-strand {
-    background-color: blue !important;
-}
-
-.message-in-list {
-    border-bottom: solid 1px black;
-}
-
-#user-list-pane {
+#user-list-col {
     background-color: #ddd;
-}
-
-.user-in-list {
-    border-bottom: solid 1px black;
-}
-
-#user-list-pane .selected {
-    background-color: #bbb;
 }

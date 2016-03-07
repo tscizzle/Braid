@@ -11,6 +11,9 @@
 
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/messages.css">
+    <link rel="stylesheet" href="/css/convos.css">
+    <link rel="stylesheet" href="/css/users.css">
 
     <script src="/bower_components/angular/angular.js"></script>
     <script src="/bower_components/jquery/dist/jquery.min.js"></script>
@@ -39,7 +42,7 @@
 
         <div class="row">
 
-            <div id="convo-list-pane" class="col-sm-2">
+            <div id="convo-list-col" class="col-sm-2">
                 <braid-convos users="mainCtrl.users"
                               selected_convo="mainCtrl.selected_convo"
                               selected_user="mainCtrl.selected_user"
@@ -47,7 +50,7 @@
                 </braid-convos>
             </div>
 
-            <div id="message-list-pane" class="col-sm-8">
+            <div id="message-list-col" class="col-sm-8">
                 <braid-messages selected_strand="mainCtrl.selected_strand"
                                 selected_convo="mainCtrl.selected_convo"
                                 selected_user="mainCtrl.selected_user"
@@ -55,7 +58,7 @@
                 </braid-messages>
             </div>
 
-            <div id="user-list-pane" class="col-sm-2">
+            <div id="user-list-col" class="col-sm-2">
                 <braid-users users="mainCtrl.users"
                              selected_user="mainCtrl.selected_user"
                              user_map="mainCtrl.user_map">

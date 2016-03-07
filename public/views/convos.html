@@ -1,28 +1,32 @@
-<div class="row">
-    <div class="col-sm-12">
-        <h3>Convos</h3>
-    </div>
-</div>
+<div id="convo-list-pane" >
 
-<div class="row">
-    <div class="col-sm-12">
-        <div class="convo-in-list" ng-class="{'selected': convo._id===convoCtrl.selected_convo._id}" ng-click="convoCtrl.selectConvo(convo)" ng-repeat="convo in convoCtrl.convos">
-            <b>{{ convo | partner:convoCtrl.selected_user | username:convoCtrl.user_map }}</b>
-            <button ng-click="convoCtrl.deleteConvo(convo._id, convoCtrl.selected_user._id); $event.stopPropagation();">X</button>
+    <div class="row">
+        <div class="col-sm-12">
+            <h3>Convos</h3>
         </div>
     </div>
-</div>
 
-<div id="convo-form" class="row">
-    <form>
-        <div class="col-sm-9">
-            <div class="form-group">
-                <select ng-model="convoCtrl.forms.newConvoFormData.user_id_1" ng-options="convo_partner._id as convo_partner.username for convo_partner in convoCtrl.potential_partners"></select>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="convo-in-list" ng-class="{'selected': convo._id===convoCtrl.selected_convo._id}" ng-click="convoCtrl.selectConvo(convo)" ng-repeat="convo in convoCtrl.convos">
+                <b>{{ convo | partner:convoCtrl.selected_user | username:convoCtrl.user_map }}</b>
+                <button ng-click="convoCtrl.deleteConvo(convo._id, convoCtrl.selected_user._id); $event.stopPropagation();">X</button>
             </div>
         </div>
+    </div>
 
-        <div class="col-sm-3">
-            <button type="submit" class="btn btn-primary" ng-click="convoCtrl.createConvo()">+</button>
-        </div>
-    </form>
+    <div id="convo-form" class="row">
+        <form>
+            <div class="col-sm-9">
+                <div class="form-group">
+                    <select ng-model="convoCtrl.forms.newConvoFormData.user_id_1" ng-options="convo_partner._id as convo_partner.username for convo_partner in convoCtrl.potential_partners"></select>
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                <button type="submit" class="btn btn-primary" ng-click="convoCtrl.createConvo()">+</button>
+            </div>
+        </form>
+    </div>
+
 </div>
