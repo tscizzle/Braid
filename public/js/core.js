@@ -1,1 +1,1 @@
-var Braid = angular.module('Braid', ['braidController', 'navbarDirective', 'convosDirective', 'braidFilters', 'messageService', 'strandService', 'convoService', 'userService']);
+var Braid = angular.module('Braid', ['braidController', 'navbarDirective', 'messagesDirective', 'convosDirective', 'usersDirective', 'braidFilters', 'messageService', 'strandService', 'convoService', 'userService']);

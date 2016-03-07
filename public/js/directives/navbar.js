@@ -1,4 +1,5 @@
 angular.module('navbarDirective', [])
+
     .directive('braidNavbar', function() {
       return {
         restrict: 'E',

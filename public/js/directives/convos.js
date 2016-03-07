@@ -5,10 +5,6 @@ angular.module('convosDirective', [])
         var vm = this;
 
 
-        // for debugging (can access controller variables in the CONVO_SCOPE object in the browser console)
-        window.CONVO_SCOPE = vm;
-
-
         // initialization
 
         vm.convos = [];

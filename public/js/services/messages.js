@@ -1,4 +1,5 @@
 angular.module('messageService', [])
+
     .factory('Messages', function($http) {
         return {
             get: function(convo_id) {

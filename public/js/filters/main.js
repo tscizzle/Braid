@@ -11,6 +11,7 @@ angular.module('braidFilters', [])
             };
         };
     })
+
     .filter('username', function() {
         return function(user_id, user_map) {
             if (user_id) {

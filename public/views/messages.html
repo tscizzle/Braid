@@ -1,0 +1,36 @@
+<div class="row">
+    <div class="col-sm-12">
+        <h3>Messages</h3>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <h4>{{ messageCtrl.selected_convo | partner:messageCtrl.selected_user | username:messageCtrl.user_map }}</h4>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="message-in-list" ng-class="{'primed': messageCtrl.messageIsPrimed(message), 'current-strand': messageCtrl.selected_strand._id && message.strand_id===messageCtrl.selected_strand._id}" ng-hide="messageCtrl.messageIsHidden(message)" ng-mousedown="messageCtrl.toggleMessage(message)" ng-repeat="message in messageCtrl.messages">
+            <p><b>{{ message.sender_id | username:messageCtrl.user_map }}</b>: {{ message.text }}</p>
+            <button ng-mousedown="messageCtrl.deleteMessage(message._id, messageCtrl.selected_convo._id); $event.stopPropagation();">X</button>
+            <p><b>Strand: </b>{{ message.strand_id || "NO STRAND" }}</p>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <form>
+            <div class="col-sm-8">
+                <div class="form-group">
+                    <input type="text" class="form-control input-lg" ng-model="messageCtrl.forms.newMessageFormData.text" ng-focus="messageCtrl.message_text_focus=true" ng-blur="messageCtrl.message_text_focus=false" ng-keyup="$event.keyCode == 13 && messageCtrl.createMessage()">
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <button type="submit" class="btn btn-primary btn-lg" ng-mousedown="messageCtrl.createMessage()">Send</button>
+            </div>
+        </form>
+    </div>
+</div>

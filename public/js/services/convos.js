@@ -1,4 +1,5 @@
 angular.module('convoService', [])
+
     .factory('Convos', function($http) {
         return {
             get: function(user_id) {
