@@ -15,5 +15,8 @@
     "body-parser": "~1.5.2",
     "method-override": "~2.1.2",
     "underscore": "~1.8.2"
+  },
+  "scripts": {
+    "postinstall": "bower install"
   }
 }
