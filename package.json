@@ -2,7 +2,8 @@
   "name": "braid",
   "version": "0.0.0",
   "engines": {
-    "node": "4.3.1"
+    "node": "4.3.1",
+    "npm": "2.4.12"
   },
   "description": "Braided messaging app.",
   "main": "server.js",
