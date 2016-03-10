@@ -213,16 +213,12 @@ module.exports = function(app, passport) {
 
     // --- get all users
     app.get('/api/users', function(req, res) {
-        console.log('getting users');
 
         User.find(function(err, users) {
-            console.log('finding mongo users in get');
             if (err) {
-                console.log('sending error get users');
                 res.send(err);
             };
 
-            console.log('sending json users get');
             res.json(users);
         });
 
@@ -230,25 +226,19 @@ module.exports = function(app, passport) {
 
     // --- create user and send back the new user_id as well as all users after creation
     app.post('/api/users', function(req, res) {
-        console.log('posting users');
 
         User.create({
             username: req.body.username,
         }, function(err, user) {
-            console.log('creating mongo users post');
             if (err) {
-                console.log('sending error create user');
                 res.send(err);
             };
 
             User.find(function(err, users) {
-                console.log('finding mongo users post');
                 if (err) {
-                    console.log('sending error find users in post');
                     res.send(err);
                 };
 
-                console.log('sending json users/new_user post');
                 res.json({users: users, new_user: user});
             });
         });
