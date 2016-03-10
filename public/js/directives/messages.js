@@ -147,16 +147,15 @@ angular.module('messagesDirective', [])
             var primed_message_ids = vm.primed_messages.map(function(primed_message) {
                 return primed_message._id;
             });
-            //add the current list of primed messages to the currently selected strand
+            //add the current list of primed messages to the strand of the clicked message
             Messages.assignMessagesToStrand(primed_message_ids, message.strand_id, vm.selected_convo._id)
                 .success(function(assign_messages_data) {
                     vm.messages = assign_messages_data;
+                    vm.primed_messages = [];
             });  
-            // //clear the primed messages list
-            vm.primed_messages = [];
         };
 
-        vm.checkboxIsHidden = function(message) {
+        vm.AddButtonIsHidden = function(message) {
             //checkboxes should only appear on stranded messages if any messages are primed
             if (vm.primed_messages.length != 0) {
                 return !message.strand_id;
