@@ -1,11 +1,12 @@
 angular.module('messageService', [])
 
-    .factory('Messages', function($http) {
+    .factory('Messages', ['$http', 'socket', function($http, socket) {
         return {
             get: function(convo_id) {
                 return $http.get('/api/messages/' + convo_id);
             },
             create: function(messageData) {
+                socket.emit('message:send', messageData);
                 return $http.post('/api/messages', messageData);
             },
             delete: function(message_id, convo_id) {
@@ -15,4 +16,4 @@ angular.module('messageService', [])
                 return $http.post('/api/assignMessagesToStrand/' + strand_id + '/' + convo_id, message_ids)
             }
         };
-    });
+    }]);

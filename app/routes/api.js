@@ -1,12 +1,12 @@
 var mongoose = require('mongoose');
-var Message = require('./models/message');
-var Strand = require('./models/strand');
-var Convo = require('./models/convo');
-var User = require('./models/user');
+var Message = require('../models/message');
+var Strand = require('../models/strand');
+var Convo = require('../models/convo');
+var User = require('../models/user');
 
 var ObjectId = mongoose.Types.ObjectId;
 
-module.exports = function(app, passport) {
+module.exports = function(app) {
 
     // --- get messages for a convo
     app.get('/api/messages/:convo_id', function(req, res) {
@@ -254,7 +254,10 @@ module.exports = function(app, passport) {
             if (err) {
                 res.send(err);
             };
-            user.remove();
+
+            if (user) {
+                user.remove();
+            };
 
             User.find(function(err, users) {
                 if (err) {

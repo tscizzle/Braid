@@ -1,6 +1,6 @@
 angular.module('usersDirective', [])
 
-    .controller('userController', ['$scope', 'Users', function($scope, Users) {
+    .controller('userController', ['$scope', 'socket', 'Users', function($scope, socket, Users) {
 
         var vm = this;
 
@@ -68,8 +68,17 @@ angular.module('usersDirective', [])
             vm.user_map = temp_user_map;
         };
 
+        var joinUserSocketRoom = function() {
+            if (vm.selected_user) {
+                // TODO: seems rooms are not joined properly at the beginning
+                socket.emit('room:join', vm.selected_user);
+            };
+        };
+
         var users_watcher = function(scope) {return vm.users;};
+        var selected_user_watcher = function(scope) {return vm.selected_user;};
         $scope.$watch(users_watcher, refreshUserMap);
+        $scope.$watch(selected_user_watcher, joinUserSocketRoom);
 
     }])
 

@@ -1,6 +1,6 @@
 angular.module('userService', [])
 
-    .factory('Users', function($http) {
+    .factory('Users', ['$http', function($http) {
         return {
             get: function() {
                 return $http.get('/api/users');
@@ -12,4 +12,4 @@ angular.module('userService', [])
                 return $http.delete('/api/users/' + user_id);
             }
         }
-    });
+    }]);

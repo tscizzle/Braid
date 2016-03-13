@@ -1,6 +1,6 @@
 angular.module('messagesDirective', [])
 
-    .controller('messageController', ['$scope', 'Messages', 'Strands', function($scope, Messages, Strands) {
+    .controller('messageController', ['$scope', 'socket', 'Messages', 'Strands', function($scope, socket, Messages, Strands) {
 
         var vm = this;
 
@@ -217,6 +217,13 @@ angular.module('messagesDirective', [])
         $scope.$watch(selected_convo_watcher, refreshStrands);
         $scope.$watchGroup([selected_convo_watcher, selected_user_watcher], deselectStrand);
         $scope.$watch(strands_watcher, refreshStrandMap);
+
+
+        // register socket listeners
+
+        socket.on('message:receive', function(message_data) {
+            refreshMessages();
+        });
 
     }])
 

@@ -7,6 +7,9 @@ var database = require('./config/database');
 
 var app = express();
 
+var server = require('http').createServer(app);
+var io = require('socket.io').listen(server);
+
 
 // other config
 
@@ -20,7 +23,7 @@ app.use(methodOverride());
 
 // routes
 
-require('./app/routes.js')(app);
+require('./app/routes/api')(app);
 
 
 // application routes
@@ -30,11 +33,18 @@ app.get('/', function(req, res) {
 });
 
 
+// socket communication
+
+io.sockets.on('connection', require('./app/routes/socket'));
+
+
 // listen
 
 var PORT = (process.env.PORT || 8080);
 app.set('port', PORT);
-app.listen(PORT);
-console.log("App listening on port " + PORT);
+server.listen(PORT);
+
+console.log("Server listening on port " + PORT);
+
 
 // run server with `node server.js` (or `nodemon server.js` if nodemon is installed)
