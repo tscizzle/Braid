@@ -1,12 +1,15 @@
 var mongoose = require('mongoose');
-var Message = require('../models/message');
-var Strand = require('../models/strand');
-var Convo = require('../models/convo');
-var User = require('../models/user');
+var _ = require('underscore');
 
-var ObjectId = mongoose.Types.ObjectId;
+module.exports = function(app, io) {
 
-module.exports = function(app) {
+    var Message = require('../models/message')(io);
+    var Strand = require('../models/strand')(io);
+    var Convo = require('../models/convo')(io);
+    var User = require('../models/user')(io);
+
+    var ObjectId = mongoose.Types.ObjectId;
+
 
     // --- get messages for a convo
     app.get('/api/messages/:convo_id', function(req, res) {
@@ -54,11 +57,16 @@ module.exports = function(app) {
     // --- delete a message and send back messages for the convo after deletion
     app.delete('/api/messages/:message_id/:convo_id', function(req, res) {
 
-        Message.remove({
+        Message.findOneAndRemove({
             '_id': req.params.message_id
         }, function(err, message) {
             if (err) {
                 res.send(err);
+            };
+
+            // to trigger the middleware
+            if (message) {
+                message.remove();
             };
 
             Message.find({
@@ -78,7 +86,7 @@ module.exports = function(app) {
     app.post('/api/assignMessagesToStrand/:strand_id/:convo_id', function(req, res) {
 
         Message.update({
-            _id: {$in: req.body}
+            _id: {$in: req.body.message_ids}
         }, {
             $set: {
                 strand_id: req.params.strand_id
@@ -86,6 +94,11 @@ module.exports = function(app) {
         }, {
             multi: true
         }, function(err, numAffected) {
+
+            // unfortunately have to call .emit() here instead of in a post hook on .update(), since mongoose doesn't have document middleware for .update()
+            _.each(req.body.user_ids, function(user_id) {
+                io.to(user_id).emit('messages:receive_update', req.params.convo_id);
+            });
 
             Message.find({
                 'convo_id': req.params.convo_id
@@ -187,11 +200,16 @@ module.exports = function(app) {
     // --- delete a convo and send back convos for the user after deletion
     app.delete('/api/convos/:convo_id/:user_id', function(req, res) {
 
-        Convo.remove({
+        Convo.findOneAndRemove({
             _id: req.params.convo_id
         }, function(err, convo) {
             if (err) {
                 res.send(err);
+            };
+
+            // to trigger the middleware
+            if (convo) {
+                convo.remove();
             };
 
             Convo.find({
@@ -255,6 +273,7 @@ module.exports = function(app) {
                 res.send(err);
             };
 
+            // to trigger the middleware
             if (user) {
                 user.remove();
             };

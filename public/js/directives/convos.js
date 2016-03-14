@@ -5,15 +5,6 @@ angular.module('convosDirective', [])
         var vm = this;
 
 
-        // initialization
-
-        vm.convos = [];
-        vm.potential_partners = [];
-        vm.forms = {
-            newConvoFormData: {user_id_1: ""}
-        };
-
-
         // define CRUD functions used in the template
 
         vm.createConvo = function() {
@@ -89,6 +80,15 @@ angular.module('convosDirective', [])
         var selected_user_watcher = function(scope) {return vm.selected_user;};
         $scope.$watchGroup([users_watcher, selected_user_watcher], refreshConvos);
         $scope.$watchGroup([convos_watcher, users_watcher, selected_convo_watcher], refreshPotentialPartners);
+
+
+        // initialization
+
+        vm.convos = [];
+        vm.potential_partners = [];
+        vm.forms = {
+            newConvoFormData: {user_id_1: ""}
+        };
 
     }])
 

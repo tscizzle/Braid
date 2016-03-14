@@ -5,19 +5,6 @@ angular.module('usersDirective', [])
         var vm = this;
 
 
-        // initialization
-
-        vm.forms = {
-            newUserFormData: {}
-        };
-
-        Users.get()
-            .success(function (data) {
-                vm.users = data;
-                vm.selected_user = vm.users[0];
-            });
-
-
         // define CRUD functions used in the template
 
         vm.createUser = function() {
@@ -70,7 +57,6 @@ angular.module('usersDirective', [])
 
         var joinUserSocketRoom = function() {
             if (vm.selected_user) {
-                // TODO: seems rooms are not joined properly at the beginning
                 socket.emit('room:join', vm.selected_user);
             };
         };
@@ -79,6 +65,20 @@ angular.module('usersDirective', [])
         var selected_user_watcher = function(scope) {return vm.selected_user;};
         $scope.$watch(users_watcher, refreshUserMap);
         $scope.$watch(selected_user_watcher, joinUserSocketRoom);
+
+
+        // initialization
+
+        vm.forms = {
+            newUserFormData: {}
+        };
+
+        Users.get()
+            .success(function (data) {
+                vm.users = data;
+                vm.selected_user = vm.users[0];
+                joinUserSocketRoom();
+            });
 
     }])
 

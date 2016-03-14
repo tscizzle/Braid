@@ -5,31 +5,13 @@ angular.module('messagesDirective', [])
         var vm = this;
 
 
-        // initialization
-
-        vm.messages = [];
-        vm.strands = [];
-        vm.selected_strand = undefined;
-        vm.strand_map = {};
-        vm.primed_messages = [];
-        vm.message_text_focus = false;
-        vm.forms = {
-            newMessageFormData: {},
-            newStrandFormData: {}
-        };
-
-
         // define CRUD functions used in the template
 
         vm.createMessage = function() {
-            if (vm.forms.newMessageFormData.text) {
+            if (vm.forms.newMessageFormData.text && vm.selected_convo && vm.selected_user) {
                 vm.forms.newMessageFormData.convo_id = vm.selected_convo._id;
                 vm.forms.newMessageFormData.sender_id = vm.selected_user._id;
-                if (vm.selected_convo.user_id_0 = vm.selected_user._id) {
-                    vm.forms.newMessageFormData.receiver_id = vm.selected_convo.user_id_1;
-                } else {
-                    vm.forms.newMessageFormData.receiver_id = vm.selected_convo.user_id_0;
-                };
+                vm.forms.newMessageFormData.receiver_id = partnerIdFromSelectedConvo();
                 vm.forms.newMessageFormData.time_sent = new Date();
 
                 // if responding to a new strand
@@ -42,9 +24,10 @@ angular.module('messagesDirective', [])
                             vm.strands = strand_data.strands;
                             vm.forms.newMessageFormData.strand_id = strand_data.new_strand._id;
                             var message_ids = vm.primed_messages.map(function(message) {return message._id});
+                            var user_ids =
 
                             // update the primed messages to be part of the new strand
-                            Messages.assignMessagesToStrand(message_ids, strand_data.new_strand._id, vm.selected_convo._id)
+                            Messages.assignMessagesToStrand(message_ids, strand_data.new_strand._id, vm.selected_convo._id, [vm.forms.newMessageFormData.sender_id, vm.forms.newMessageFormData.receiver_id])
                                 .success(function(assign_messages_data) {
                                     vm.messages = assign_messages_data;
 
@@ -143,12 +126,13 @@ angular.module('messagesDirective', [])
             };
         };
 
-        vm.addMessageToStrand = function(message) {
+        vm.addMessagesToStrand = function(message) {
             var primed_message_ids = vm.primed_messages.map(function(primed_message) {
                 return primed_message._id;
             });
+            var user_ids = [vm.selected_convo.user_id_0, vm.selected_convo.user_id_1];
 
-            Messages.assignMessagesToStrand(primed_message_ids, message.strand_id, vm.selected_convo._id)
+            Messages.assignMessagesToStrand(primed_message_ids, message.strand_id, vm.selected_convo._id, user_ids)
                 .success(function(assign_messages_data) {
                     vm.messages = assign_messages_data;
                     vm.primed_messages = [];
@@ -221,9 +205,38 @@ angular.module('messagesDirective', [])
 
         // register socket listeners
 
-        socket.on('message:receive', function(message_data) {
-            refreshMessages();
+        socket.on('messages:receive_update', function(convo_id) {
+            if (convo_id == vm.selected_convo._id) {
+                refreshMessages();
+            };
         });
+
+
+        // helpers
+
+        var partnerIdFromSelectedConvo = function() {
+            if (vm.selected_convo && vm.selected_user) {
+                if (vm.selected_convo.user_id_0 == vm.selected_user._id) {
+                    return vm.selected_convo.user_id_1;
+                } else if (vm.selected_convo.user_id_1 == vm.selected_user._id) {
+                    return vm.selected_convo.user_id_0;
+                };
+            };
+        };
+
+
+        // initialization
+
+        vm.messages = [];
+        vm.strands = [];
+        vm.selected_strand = undefined;
+        vm.strand_map = {};
+        vm.primed_messages = [];
+        vm.message_text_focus = false;
+        vm.forms = {
+            newMessageFormData: {},
+            newStrandFormData: {}
+        };
 
     }])
 

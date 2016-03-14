@@ -23,7 +23,7 @@ app.use(methodOverride());
 
 // routes
 
-require('./app/routes/api')(app);
+require('./app/routes/api')(app, io);
 
 
 // application routes
@@ -42,6 +42,7 @@ io.sockets.on('connection', require('./app/routes/socket'));
 
 var PORT = (process.env.PORT || 8080);
 app.set('port', PORT);
+
 server.listen(PORT);
 
 console.log("Server listening on port " + PORT);

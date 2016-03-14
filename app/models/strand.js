@@ -1,10 +1,14 @@
 var mongoose = require('mongoose');
 
-var Schema = mongoose.Schema;
-var ObjectId = Schema.ObjectId;
+module.exports = function(io) {
 
-var strandSchema = new Schema({
-    convo_id: {type: ObjectId, ref: 'Convo', required: true}
-});
+    var Schema = mongoose.Schema;
+    var ObjectId = Schema.ObjectId;
 
-module.exports = mongoose.model('Strand', strandSchema);
+    var strandSchema = new Schema({
+        convo_id: {type: ObjectId, ref: 'Convo', required: true}
+    });
+
+    return mongoose.model('Strand', strandSchema);
+
+};
