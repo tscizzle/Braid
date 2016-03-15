@@ -208,6 +208,7 @@ angular.module('messagesDirective', [])
         socket.on('messages:receive_update', function(convo_id) {
             if (convo_id == vm.selected_convo._id) {
                 refreshMessages();
+                refreshStrands();
             };
         });
 
