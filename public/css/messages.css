@@ -1,5 +1,6 @@
-.message-in-list {
-    border-bottom: solid 1px black;
+#message-list-wrapper {
+    max-height: 60vh;
+    overflow: auto;
 }
 
 #message-list-pane .primed {
@@ -8,4 +9,8 @@
 
 #message-list-pane .current-strand {
     background-color: blue !important;
+}
+
+.message-in-list {
+    border-bottom: solid 1px black;
 }

@@ -14,11 +14,13 @@
 
     <div class="row">
         <div class="col-sm-12">
-            <div class="message-in-list" ng-class="{'primed': messageCtrl.messageIsPrimed(message), 'current-strand': messageCtrl.selected_strand._id && message.strand_id===messageCtrl.selected_strand._id}" ng-hide="messageCtrl.messageIsHidden(message)" ng-mousedown="messageCtrl.toggleMessage(message)" ng-repeat="message in messageCtrl.messages">
-                <p><b>{{ message.sender_id | username:messageCtrl.user_map }}</b>: {{ message.text }}</p>
-                <button ng-mousedown="messageCtrl.deleteMessage(message._id, messageCtrl.selected_convo._id); $event.stopPropagation();">X</button>
-                <button ng-mousedown="messageCtrl.addMessagesToStrand(message); $event.stopPropagation();" ng-hide="messageCtrl.addButtonIsHidden(message)">ADD</button>
-                <p><b>Strand: </b>{{ message.strand_id || "NO STRAND" }}</p>
+            <div id="message-list-wrapper" scroll-glue>
+                <div class="message-in-list" ng-class="{'primed': messageCtrl.messageIsPrimed(message), 'current-strand': messageCtrl.selected_strand._id && message.strand_id===messageCtrl.selected_strand._id}" ng-hide="messageCtrl.messageIsHidden(message)" ng-mousedown="messageCtrl.toggleMessage(message)" ng-repeat="message in messageCtrl.messages">
+                    <p><b>{{ message.sender_id | username:messageCtrl.user_map }}</b>: {{ message.text }}</p>
+                    <button ng-mousedown="messageCtrl.deleteMessage(message._id, messageCtrl.selected_convo._id); $event.stopPropagation();">X</button>
+                    <button ng-mousedown="messageCtrl.addMessagesToStrand(message); $event.stopPropagation();" ng-hide="messageCtrl.addButtonIsHidden(message)">ADD</button>
+                    <p><b>Strand: </b>{{ message.strand_id || "NO STRAND" }}</p>
+                </div>
             </div>
         </div>
     </div>

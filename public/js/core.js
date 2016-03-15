@@ -14,4 +14,7 @@ var Braid = angular.module('Braid', [
     'userService',
 
     // 3rd-party dependencies
-    'btford.socket-io']);
+    'btford.socket-io',
+    'luegg.directives'
+
+]);
