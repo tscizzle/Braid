@@ -9,7 +9,7 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="user-in-list" ng-class="{'selected': user._id===userCtrl.selected_user._id}" ng-click="userCtrl.selectUser(user)" ng-repeat="user in userCtrl.users">
-                <p>User: <b>{{ user.username }}</b></p>
+                <b>{{ user.username }}</b>
                 <button ng-click="userCtrl.deleteUser(user._id); $event.stopPropagation();">X</button>
             </div>
         </div>

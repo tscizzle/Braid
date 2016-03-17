@@ -1,8 +1,3 @@
-#message-list-wrapper {
-    max-height: 60vh;
-    overflow: auto;
-}
-
 #message-list-pane .primed {
     background-color: red !important;
 }
@@ -11,6 +6,15 @@
     background-color: blue !important;
 }
 
+#message-list-wrapper {
+    max-height: 60vh;
+    overflow: auto;
+}
+
 .message-in-list {
-    border-bottom: solid 1px black;
+    border-bottom: solid 1px gray;
+}
+
+.message-text {
+    white-space: pre-wrap;
 }
