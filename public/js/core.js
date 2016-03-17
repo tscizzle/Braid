@@ -2,6 +2,7 @@ var Braid = angular.module('Braid', [
 
     // custom dependencies
     'braidController',
+    'enterSubmitDirective',
     'navbarDirective',
     'messagesDirective',
     'convosDirective',

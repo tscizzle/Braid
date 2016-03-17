@@ -13,3 +13,7 @@
 #user-list-col {
     background-color: #ddd;
 }
+
+textarea {
+    resize: none;
+}
