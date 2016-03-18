@@ -82,6 +82,35 @@ module.exports = function(app, io) {
 
     });
 
+    // --- remove a message from a strand and send back messages for the convo after update
+    app.post('/api/removeMessageFromStrand/:convo_id', function(req, res) {
+        Message.update({
+            _id: {$in: req.body.message_id}
+        }, {
+            $unset: {
+                strand_id: 1
+            }
+        }, {
+            multi: true
+        }, function(err, numAffected) {
+
+            // unfortunately have to call .emit() here instead of in a post hook on .update(), since mongoose doesn't have document middleware for .update()
+            _.each(req.body.user_ids, function(user_id) {
+                io.to(user_id).emit('messages:receive_update', req.params.convo_id);
+            });
+
+            Message.find({
+                'convo_id': req.params.convo_id
+            }, function(err, messages) {
+                if (err) {
+                    res.send(err);
+                };
+
+                res.json(messages);
+            });
+        });
+    });
+
     // --- assign messages to a strand and send back messages for the convo after update
     app.post('/api/assignMessagesToStrand/:strand_id/:convo_id', function(req, res) {
 
