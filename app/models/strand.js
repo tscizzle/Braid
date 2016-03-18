@@ -9,6 +9,7 @@ module.exports = function(io) {
         convo_id: {type: ObjectId, ref: 'Convo', required: true}
     });
 
-    return mongoose.model('Strand', strandSchema);
+    // if the model already exists, use the existing model
+    return mongoose.models.Strand || mongoose.model('Strand', strandSchema);
 
 };

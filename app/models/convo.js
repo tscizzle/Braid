@@ -3,8 +3,8 @@ var _ = require('underscore');
 
 module.exports = function(io) {
 
-    var Message = mongoose.models.Message || require('./message')(io);
-    var Strand = mongoose.models.Strand || require('./strand')(io);
+    var Message = require('./message')(io);
+    var Strand = require('./strand')(io);
 
     var Schema = mongoose.Schema;
     var ObjectId = Schema.ObjectId;
@@ -28,6 +28,7 @@ module.exports = function(io) {
         });
     });
 
-    return mongoose.model('Convo', convoSchema);
+    // if the model already exists, use the existing model
+    return mongoose.models.Convo || mongoose.model('Convo', convoSchema);
 
 };

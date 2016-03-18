@@ -25,6 +25,7 @@ module.exports = function(io) {
         io.to(this.sender_id).emit('messages:receive_update', this.convo_id);
     });
 
-    return mongoose.model('Message', messageSchema);
+    // if the model already exists, use the existing model
+    return mongoose.models.Message || mongoose.model('Message', messageSchema);
 
 };
