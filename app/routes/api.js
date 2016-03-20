@@ -85,7 +85,7 @@ module.exports = function(app, io) {
     // --- remove a message from a strand and send back messages for the convo after update
     app.post('/api/removeMessageFromStrand/:convo_id', function(req, res) {
         Message.update({
-            _id: {$eq: req.body.message_id}
+            _id: {req.body.message_id}
         }, {
             $unset: {
                 strand_id: 1
