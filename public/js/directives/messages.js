@@ -129,7 +129,7 @@ angular.module('messagesDirective', [])
         vm.removeMessageFromStrand = function(message) {
             Messages.removeMessageFromStrand(message._id, vm.selected_convo._id)
                 .success(function(assign_message_data) {
-                    vm.message = assign_message_data;
+                    vm.messages = assign_message_data;
             });
         };
 
