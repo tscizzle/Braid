@@ -6,7 +6,9 @@ module.exports = function(io) {
     var ObjectId = Schema.ObjectId;
 
     var strandSchema = new Schema({
-        convo_id: {type: ObjectId, ref: 'Convo', required: true}
+        convo_id: {type: ObjectId, ref: 'Convo', required: true},
+        color: {type: ObjectId},
+        time_created: Date
     });
 
     return mongoose.model('Strand', strandSchema);

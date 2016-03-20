@@ -19,12 +19,31 @@ angular.module('messagesDirective', [])
                     vm.forms.newStrandFormData.convo_id = vm.selected_convo._id;
 
                     // create a new strand
+                    //PREETHI: Here is where you set the color to be painted
                     Strands.create(vm.forms.newStrandFormData)
                         .success(function(strand_data) {
                             vm.strands = strand_data.strands;
                             vm.forms.newMessageFormData.strand_id = strand_data.new_strand._id;
                             var message_ids = vm.primed_messages.map(function(message) {return message._id});
                             var user_ids = [vm.forms.newMessageFormData.sender_id, vm.forms.newMessageFormData.receiver_id];
+
+                            //This is ONLY if creating a new strand. Seems like the only spot strand color should be set.
+                            console.log("reached1")
+
+                            //create an array of times created
+                            var strand_times_created = vm.strands.map(function(strand) {
+                                return strand.time_created;
+                            });
+                            console.log("reached2")
+
+                            console.log(strand_times_created)
+
+
+                            // Strands.paintStrand(vm.strand_id, vm.time_created, vm.color)
+                            //     .success(function(assign_messages_data) {
+                            //     vm.messages = assign_messages_data;
+                            // });
+
 
                             // update the primed messages to be part of the new strand
                             Messages.assignMessagesToStrand(message_ids, strand_data.new_strand._id, vm.selected_convo._id, user_ids)
@@ -159,6 +178,25 @@ angular.module('messagesDirective', [])
                 return true;
             };
         };
+
+        //Probably not going to use this
+        //this should only be called once: right when a strand is created
+        vm.paintStrand = function() {
+            color1 = "rgb(182, 227, 212)";
+            color2 = "rgb(247, 141, 176)";
+            color3 = "rgb(252, 192, 129)"; 
+            color4 = "rgb(129, 189, 252)";
+
+            //this should return a color
+            //console.log(vm.selected_strand.color)
+            // Strands.paintStrand(vm.strand_id, vm.time_created, vm.color)
+            //     .success(function(assign_messages_data) {
+            //         vm.messages = assign_messages_data;
+            // });
+
+
+            return color2
+        }
 
 
         // register listeners
