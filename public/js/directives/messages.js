@@ -126,6 +126,13 @@ angular.module('messagesDirective', [])
             };
         };
 
+        vm.removeMessageFromStrand = function(message) {
+            Messages.removeMessageFromStrand(message._id, vm.selected_convo._id)
+                .success(function(assign_message_data) {
+                    vm.messages = assign_message_data;
+            });
+        };
+
         vm.addMessagesToStrand = function(message) {
             var primed_message_ids = vm.primed_messages.map(function(primed_message) {
                 return primed_message._id;
@@ -137,6 +144,10 @@ angular.module('messagesDirective', [])
                     vm.messages = assign_messages_data;
                     vm.primed_messages = [];
             });
+        };
+
+        vm.removeButtonIsHidden = function(message) {
+                return !message.strand_id;
         };
 
         vm.addButtonIsHidden = function(message) {
