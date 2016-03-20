@@ -1,6 +1,7 @@
 angular.module('messageService', [])
 
     .factory('Messages', ['$http', 'socket', function($http, socket) {
+
         return {
             get: function(convo_id) {
                 return $http.get('/api/messages/' + convo_id);
@@ -15,4 +16,5 @@ angular.module('messageService', [])
                 return $http.post('/api/assignMessagesToStrand/' + strand_id + '/' + convo_id, {message_ids: message_ids, user_ids: user_ids})
             }
         };
+
     }]);

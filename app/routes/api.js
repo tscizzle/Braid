@@ -11,6 +11,18 @@ module.exports = function(app, io) {
     var ObjectId = mongoose.Types.ObjectId;
 
 
+    var loggedIn = function(req, res, next) {
+        if (req.user) {
+            next();
+        } else {
+            res.status(401).json({
+                err: 'User not logged in.'
+            });
+        };
+    };
+    app.all( "/api/*" , loggedIn);
+
+
     // --- get messages for a convo
     app.get('/api/messages/:convo_id', function(req, res) {
 

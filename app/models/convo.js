@@ -14,7 +14,16 @@ module.exports = function(io) {
         user_id_1: {type: ObjectId, ref: 'User', required: true}
     });
 
+    convoSchema.post('save', function() {
+        io.to(this.user_id_0).emit('convos:receive_update');
+        io.to(this.user_id_1).emit('convos:receive_update');
+    });
+
     convoSchema.post('remove', function() {
+        console.log('remove mongoose middleware');
+        io.to(this.user_id_0).emit('convos:receive_update');
+        io.to(this.user_id_1).emit('convos:receive_update');
+
         // find, loop, and instance-level remove, instead of simply model-level remove all at once which doesn't trigger middleware hooks
         Message.find({convo_id: this._id}, function(err, messages) {
             _.each(messages, function(message) {

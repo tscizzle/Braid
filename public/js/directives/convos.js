@@ -1,6 +1,6 @@
 angular.module('convosDirective', [])
 
-    .controller('convoController', ['$scope', 'Convos', function($scope, Convos) {
+    .controller('convoController', ['$scope', 'socket', 'Convos', function($scope, socket, Convos) {
 
         var vm = this;
 
@@ -8,12 +8,12 @@ angular.module('convosDirective', [])
         // define CRUD functions used in the template
 
         vm.createConvo = function() {
-            if (vm.forms.newConvoFormData.user_id_1) {
-                vm.forms.newConvoFormData.user_id_0 = vm.selected_user._id;
+            if (vm.newConvoFormData.user_id_1) {
+                vm.newConvoFormData.user_id_0 = vm.selected_user._id;
 
-                Convos.create(vm.forms.newConvoFormData)
+                Convos.create(vm.newConvoFormData)
                     .success(function(data) {
-                        vm.forms.newConvoFormData = {};
+                        vm.newConvoFormData = {};
                         vm.convos = data.convos;
                         vm.selected_convo = data.new_convo;
 
@@ -64,14 +64,16 @@ angular.module('convosDirective', [])
         };
 
         var refreshPotentialPartners = function() {
-            var already_convod = [];
-            _.each(vm.convos, function(convo) {
-                already_convod.push(convo.user_id_0, convo.user_id_1);
-            });
-            vm.potential_partners = vm.users.filter(function(user) {
-                return (($.inArray(user._id, already_convod) === -1) && (user._id !== vm.selected_user._id));
-            });
-            vm.potential_partners.unshift({_id: "", username: ""});
+            if (vm.selected_user) {
+                var already_convod = [];
+                _.each(vm.convos, function(convo) {
+                    already_convod.push(convo.user_id_0, convo.user_id_1);
+                });
+                vm.potential_partners = vm.users.filter(function(user) {
+                    return (($.inArray(user._id, already_convod) === -1) && (user._id !== vm.selected_user._id));
+                });
+                vm.potential_partners.unshift({_id: "", username: ""});
+            };
         };
 
         var convos_watcher = function(scope) {return vm.convos;};
@@ -82,13 +84,18 @@ angular.module('convosDirective', [])
         $scope.$watchGroup([convos_watcher, users_watcher, selected_convo_watcher], refreshPotentialPartners);
 
 
+        // register socket listeners
+
+        socket.on('convos:receive_update', function() {
+            refreshConvos();
+        });
+
+
         // initialization
 
         vm.convos = [];
         vm.potential_partners = [];
-        vm.forms = {
-            newConvoFormData: {user_id_1: ""}
-        };
+        vm.newConvoFormData = {user_id_1: ""};
 
     }])
 

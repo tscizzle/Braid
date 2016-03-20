@@ -44,47 +44,21 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 
-// routes
+// api routes
 
 require('./app/routes/api')(app, io);
 
 
 // application routes
-// TODO: take these routes out of here and into their own file
 
 app.get('/', function(req, res) {
     res.sendfile('./public/views/index.html');
 });
 
-app.get('/register', function(req, res) {
-    res.sendfile('./public/views/register.html');
-});
 
-app.post('/register', function(req, res) {
-    User.register(new User({username: req.body.username}), req.body.password, function(err, user) {
-        if (err) {
-            console.log(err); // TODO: log error until we have real error handling
-            return res.sendfile('./public/views/register.html');
-        };
+// authentication routes
 
-        passport.authenticate('local')(req, res, function() {
-            res.redirect('/');
-        });
-    });
-});
-
-app.get('/login', function(req, res) {
-    res.sendfile('./public/views/login.html');
-});
-
-app.post('/login', passport.authenticate('local'), function(req, res) {
-    res.redirect('/');
-});
-
-app.get('/logout', function(req, res) {
-    req.logout();
-    res.redirect('/');
-});
+require('./app/routes/auth')(app, io, passport);
 
 
 // socket communication

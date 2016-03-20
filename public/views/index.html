@@ -6,6 +6,7 @@
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <base href="/">
 
     <title>Braid</title>
     <link rel="shortcut icon" href="/img/braid.ico">
@@ -17,6 +18,7 @@
     <link rel="stylesheet" href="/css/users.css">
 
     <script src="/bower_components/angular/angular.js"></script>
+    <script src="/bower_components/angular-route/angular-route.min.js"></script>
     <script src="/bower_components/jquery/dist/jquery.min.js"></script>
     <script src="/bower_components/underscore/underscore-min.js"></script>
     <script src="/bower_components/objectid.js/src/main/javascript/Objectid.js"></script>
@@ -26,11 +28,15 @@
     <script src="/js/controllers/main.js"></script>
     <script src="/js/directives/enter_submit.js"></script>
     <script src="/js/directives/navbar.js"></script>
+    <script src="/js/directives/register.js"></script>
+    <script src="/js/directives/login.js"></script>
+    <script src="/js/directives/logout.js"></script>
     <script src="/js/directives/messages.js"></script>
     <script src="/js/directives/convos.js"></script>
     <script src="/js/directives/users.js"></script>
     <script src="/js/filters/main.js"></script>
     <script src="/js/services/socket.js"></script>
+    <script src="/js/services/auth.js"></script>
     <script src="/js/services/messages.js"></script>
     <script src="/js/services/strands.js"></script>
     <script src="/js/services/convos.js"></script>
@@ -41,34 +47,51 @@
 
 <body ng-controller="mainController as mainCtrl">
 
-    <braid-navbar user="mainCtrl.selected_user"></braid-navbar>
+    <braid-navbar selected_user="mainCtrl.selected_user"></braid-navbar>
 
     <div class="container-fluid">
     <div id="margin-fixer-grid-wrapper">
 
-        <div class="row">
+        <div id="chat-view" ng-if="mainCtrl.selected_user">
 
-            <div id="convo-list-col" class="col-sm-2">
-                <braid-convos users="mainCtrl.users"
-                              selected_convo="mainCtrl.selected_convo"
-                              selected_user="mainCtrl.selected_user"
-                              user_map="mainCtrl.user_map">
-                </braid-convos>
+            <div class="row">
+
+                <div id="convo-list-col" class="col-sm-2">
+                    <braid-convos users="mainCtrl.users"
+                                  selected_convo="mainCtrl.selected_convo"
+                                  selected_user="mainCtrl.selected_user"
+                                  user_map="mainCtrl.user_map">
+                    </braid-convos>
+                </div>
+
+                <div id="message-list-col" class="col-sm-8">
+                    <braid-messages selected_strand="mainCtrl.selected_strand"
+                                    selected_convo="mainCtrl.selected_convo"
+                                    selected_user="mainCtrl.selected_user"
+                                    user_map="mainCtrl.user_map">
+                    </braid-messages>
+                </div>
+
+                <div id="user-list-col" class="col-sm-2">
+                    <braid-users users="mainCtrl.users"
+                                 selected_user="mainCtrl.selected_user"
+                                 user_map="mainCtrl.user_map">
+                    </braid-users>
+                </div>
+
             </div>
 
-            <div id="message-list-col" class="col-sm-8">
-                <braid-messages selected_strand="mainCtrl.selected_strand"
-                                selected_convo="mainCtrl.selected_convo"
-                                selected_user="mainCtrl.selected_user"
-                                user_map="mainCtrl.user_map">
-                </braid-messages>
+        </div>
+
+        <!-- TODO: move these to the appropriate place (maybe that place is index.html, not sure) -->
+        <div class="row" ng-if="!mainCtrl.selected_user">
+
+            <div id="register-view-col" class="col-sm-4">
+                <braid-register selected_user="mainCtrl.selected_user"></braid-register>
             </div>
 
-            <div id="user-list-col" class="col-sm-2">
-                <braid-users users="mainCtrl.users"
-                             selected_user="mainCtrl.selected_user"
-                             user_map="mainCtrl.user_map">
-                </braid-users>
+            <div id="login-view-col" class="col-sm-4">
+                <braid-login selected_user="mainCtrl.selected_user"></braid-login>
             </div>
 
         </div>

@@ -1,6 +1,7 @@
 angular.module('convoService', [])
 
     .factory('Convos', ['$http', function($http) {
+
         return {
             get: function(user_id) {
                 return $http.get('/api/convos/' + user_id);
@@ -11,5 +12,6 @@ angular.module('convoService', [])
             delete: function(convo_id, user_id) {
                 return $http.delete('/api/convos/' + convo_id + '/' + user_id);
             }
-        }
+        };
+
     }]);

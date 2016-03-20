@@ -1,72 +1,21 @@
-<!doctype html>
+<div id="login-pane">
 
-<html ng-app="Braid">
-
-<head>
-
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <title>Braid</title>
-    <link rel="shortcut icon" href="/img/braid.ico">
-
-    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/index.css">
-    <link rel="stylesheet" href="/css/messages.css">
-    <link rel="stylesheet" href="/css/convos.css">
-    <link rel="stylesheet" href="/css/users.css">
-
-    <script src="/bower_components/angular/angular.js"></script>
-    <script src="/bower_components/jquery/dist/jquery.min.js"></script>
-    <script src="/bower_components/underscore/underscore-min.js"></script>
-    <script src="/bower_components/objectid.js/src/main/javascript/Objectid.js"></script>
-    <script src="/bower_components/socket.io-client/socket.io.js"></script>
-    <script src="/bower_components/angular-socket-io/socket.min.js"></script>
-    <script src="/bower_components/angular-scroll-glue/src/scrollglue.js"></script>
-    <script src="/js/controllers/main.js"></script>
-    <script src="/js/directives/enter_submit.js"></script>
-    <script src="/js/directives/navbar.js"></script>
-    <script src="/js/directives/messages.js"></script>
-    <script src="/js/directives/convos.js"></script>
-    <script src="/js/directives/users.js"></script>
-    <script src="/js/filters/main.js"></script>
-    <script src="/js/services/socket.js"></script>
-    <script src="/js/services/messages.js"></script>
-    <script src="/js/services/strands.js"></script>
-    <script src="/js/services/convos.js"></script>
-    <script src="/js/services/users.js"></script>
-    <script src="/js/core.js"></script>
-
-</head>
-
-<body>
-
-    <braid-navbar></braid-navbar>
-
-    <div class="container-fluid">
-    <div id="margin-fixer-grid-wrapper">
-
-        <div class="row">
-            <div class="col-sm-12">
-                <h3>Login</h3>
-            </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h3>Login</h3>
         </div>
-
-        <div class="row">
-            <div class="col-sm-4 col-sm-offset-4">
-                <form action="/login" method="post">
-                    <label for="login-username-input">Username: </label><input id="login-username-input" type="text" name="username">
-                    <br>
-                    <label for="login-password-input">Password: </label><input id="login-password-input" type="password" name="password">
-                    <br>
-                    <button type="submit">Submit</button>
-                </form>
-            </div>
-        </div>
-
-    </div>
     </div>
 
-</body>
+    <div class="row">
+        <div class="col-sm-12">
+            <form ng-submit="loginCtrl.login()">
+                <label for="login-username-input">Username: </label><input id="login-username-input" type="text" name="username" ng-model="loginCtrl.loginForm.username">
+                <br>
+                <label for="login-password-input">Password: </label><input id="login-password-input" type="password" name="password" ng-model="loginCtrl.loginForm.password">
+                <br>
+                <button type="submit">Login</button>
+            </form>
+        </div>
+    </div>
 
-</html>
+</div>
