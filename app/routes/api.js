@@ -90,8 +90,6 @@ module.exports = function(app, io) {
             $unset: {
                 strand_id: 1
             }
-        }, {
-            multi: true
         }, function(err, numAffected) {
 
             // unfortunately have to call .emit() here instead of in a post hook on .update(), since mongoose doesn't have document middleware for .update()
