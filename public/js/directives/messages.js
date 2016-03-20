@@ -147,9 +147,7 @@ angular.module('messagesDirective', [])
         };
 
         vm.removeButtonIsHidden = function(message) {
-            if (!message.strand_id) {
-                return true;
-            };
+                return !message.strand_id;
         };
 
         vm.addButtonIsHidden = function(message) {
