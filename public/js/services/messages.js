@@ -15,8 +15,8 @@ angular.module('messageService', [])
             assignMessagesToStrand: function(message_ids, strand_id, convo_id, user_ids) {
                 return $http.post('/api/assignMessagesToStrand/' + strand_id + '/' + convo_id, {message_ids: message_ids, user_ids: user_ids});
             },
-            removeMessageFromStrand: function(message_id, convo_id) {
-                return $http.post('/api/removeMessageFromStrand/' + convo_id, {message_id: message_id});
+            removeMessageFromStrand: function(message_id, convo_id, user_ids) {
+                return $http.post('/api/removeMessageFromStrand/' + convo_id, {message_id: message_id, user_ids: user_ids});
             }
         };
 
