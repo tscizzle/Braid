@@ -56,7 +56,7 @@
 
             <div class="row">
 
-                <div id="convo-list-col" class="col-sm-2">
+                <div id="convo-view-col" class="col-sm-2">
                     <braid-convos users="mainCtrl.users"
                                   selected_convo="mainCtrl.selected_convo"
                                   selected_user="mainCtrl.selected_user"
@@ -64,7 +64,7 @@
                     </braid-convos>
                 </div>
 
-                <div id="message-list-col" class="col-sm-8">
+                <div id="message-view-col" class="col-sm-8">
                     <braid-messages selected_strand="mainCtrl.selected_strand"
                                     selected_convo="mainCtrl.selected_convo"
                                     selected_user="mainCtrl.selected_user"
@@ -72,7 +72,8 @@
                     </braid-messages>
                 </div>
 
-                <div id="user-list-col" class="col-sm-2">
+                <!-- TODO: remove the user pane entirely -->
+                <div id="user-view-col" class="col-sm-2">
                     <braid-users users="mainCtrl.users"
                                  selected_user="mainCtrl.selected_user"
                                  user_map="mainCtrl.user_map">
@@ -84,14 +85,18 @@
         </div>
 
         <!-- TODO: move these to the appropriate place (maybe that place is index.html, not sure) -->
-        <div class="row" ng-if="!mainCtrl.selected_user">
+        <div id="auth-view" ng-if="!mainCtrl.selected_user">
 
-            <div id="register-view-col" class="col-sm-4">
-                <braid-register selected_user="mainCtrl.selected_user"></braid-register>
-            </div>
+            <div class="row">
 
-            <div id="login-view-col" class="col-sm-4">
-                <braid-login selected_user="mainCtrl.selected_user"></braid-login>
+                <div id="register-view-col" class="col-sm-4">
+                    <braid-register selected_user="mainCtrl.selected_user"></braid-register>
+                </div>
+
+                <div id="login-view-col" class="col-sm-4">
+                    <braid-login selected_user="mainCtrl.selected_user"></braid-login>
+                </div>
+
             </div>
 
         </div>

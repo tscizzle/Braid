@@ -10,10 +10,8 @@ angular.module('registerDirective', [])
         vm.register = function() {
             Auth.register(vm.registerForm.username, vm.registerForm.password)
                 .success(function() {
-                    console.log('about to log in');
                     Auth.login(vm.registerForm.username, vm.registerForm.password)
                         .success(function(data) {
-                            console.log('logged in. here\'s data', data);
                             vm.selected_user = data.user;
                             $location.path('/');
                             $route.reload();

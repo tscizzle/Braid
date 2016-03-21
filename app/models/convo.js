@@ -20,7 +20,6 @@ module.exports = function(io) {
     });
 
     convoSchema.post('remove', function() {
-        console.log('remove mongoose middleware');
         io.to(this.user_id_0).emit('convos:receive_update');
         io.to(this.user_id_1).emit('convos:receive_update');
 

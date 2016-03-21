@@ -26,6 +26,6 @@ var Braid = angular.module('Braid', [
     'luegg.directives'
 
 ])
-    .config(function($locationProvider) {
+    .config(['$locationProvider', function($locationProvider) {
         $locationProvider.html5Mode(true);
-    });
+    }]);
