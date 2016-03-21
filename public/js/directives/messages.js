@@ -35,7 +35,7 @@ angular.module('messagesDirective', [])
                                     Messages.create(vm.newMessageFormData)
                                         .success(function(create_messages_data) {
                                             vm.newMessageFormData = {};
-                                            vm.messages = create_messages_data.messages;
+                                            vm.messages = create_messages_data;
                                             vm.selected_strand = strand_data.new_strand;
                                             vm.primed_messages = [];
                                         });

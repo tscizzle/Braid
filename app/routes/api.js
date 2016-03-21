@@ -22,7 +22,7 @@ module.exports = function(app, io) {
             });
         };
     };
-    app.all( "/api/*" , loggedIn);
+    app.all("/api/*", loggedIn);
 
     var assertCorrectUser = function(req, res, next) {
         // TODO: check that req.user (the logged in user) is indeed the user who is allowed to see the requested resources
@@ -70,7 +70,7 @@ module.exports = function(app, io) {
                     res.send(err);
                 };
 
-                res.json({messages: messages, new_message: message});
+                res.json(messages);
             });
         });
 
