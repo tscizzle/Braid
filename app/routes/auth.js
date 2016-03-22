@@ -54,4 +54,16 @@ module.exports = function(app, io, passport) {
         });
     });
 
+    app.get('/loggedInUser', function(req, res) {
+        if (req.user) {
+            res.status(200).json({
+                user: req.user
+            });
+        } else {
+            res.status(200).json({
+                message: 'No user is logged in.'
+            });
+        };
+    });
+
 };

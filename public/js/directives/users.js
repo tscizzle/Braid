@@ -7,23 +7,6 @@ angular.module('usersDirective', [])
 
         // define CRUD functions used in the template
 
-        vm.createUser = function() {
-            if (vm.newUserFormData.username) {
-
-                Users.create(vm.newUserFormData)
-                    .success(function(data) {
-                        vm.newUserFormData = {};
-                        vm.users = data.users;
-                        vm.selected_user = data.new_user;
-
-                        if (!vm.selected_user) {
-                            vm.selected_user = vm.users[0];
-                        };
-                    });
-
-            };
-        };
-
         vm.deleteUser = function(user_id) {
 
             Users.delete(user_id)
@@ -35,13 +18,6 @@ angular.module('usersDirective', [])
                     };
                 });
 
-        };
-
-
-        // define page control functions used in the template
-
-        vm.selectUser = function(user) {
-            vm.selected_user = user;
         };
 
 
@@ -72,11 +48,9 @@ angular.module('usersDirective', [])
         vm.newUserFormData = {};
 
         Users.get()
-            .success(function (data) {
+            .success(function(data) {
                 vm.users = data;
-                if (!vm.selected_user) {
-                    vm.selected_user = vm.users[0];
-                };
+
                 joinUserSocketRoom();
             });
 

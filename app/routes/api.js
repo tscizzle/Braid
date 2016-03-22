@@ -11,6 +11,8 @@ module.exports = function(app, io) {
     var ObjectId = mongoose.Types.ObjectId;
 
 
+    // define middleware for authentication
+
     var loggedIn = function(req, res, next) {
         if (req.user) {
             next();
@@ -20,8 +22,16 @@ module.exports = function(app, io) {
             });
         };
     };
-    app.all( "/api/*" , loggedIn);
+    app.all("/api/*", loggedIn);
 
+    var assertCorrectUser = function(req, res, next) {
+        // TODO: check that req.user (the logged in user) is indeed the user who is allowed to see the requested resources
+        // TODO: perhaps split this method into several methods, one for each model, so we can do a custom check depending on the type of resource requested
+        // TODO:    that would look like assertCorrectUserConvo, assertCorrectUserMessage
+    };
+
+
+    // define the api route handlers
 
     // --- get messages for a convo
     app.get('/api/messages/:convo_id', function(req, res) {
@@ -60,7 +70,7 @@ module.exports = function(app, io) {
                     res.send(err);
                 };
 
-                res.json({messages: messages, new_message: message});
+                res.json(messages);
             });
         });
 

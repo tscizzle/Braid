@@ -1,6 +1,6 @@
 angular.module('braidController', [])
 
-    .controller('mainController', function() {
+    .controller('mainController', ['Auth', function(Auth) {
 
         var vm = this;
 
@@ -14,6 +14,9 @@ angular.module('braidController', [])
         vm.selected_user = undefined;
         vm.user_map = {};
 
-        // TODO: check if anyone is logged in and if so then set them to selected_user
+        Auth.getLoggedInUser()
+            .success(function(data) {
+                vm.selected_user = data.user;
+            });
 
-    });
+    }]);

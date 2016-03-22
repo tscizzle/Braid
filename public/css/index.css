@@ -2,15 +2,15 @@
     padding: 0 15px;
 }
 
-#convo-list-col {
+#convo-view-col {
     background-color: #ddd;
 }
 
-#message-list-col {
+#message-view-col {
     background-color: #eee;
 }
 
-#user-list-col {
+#user-view-col {
     background-color: #ddd;
 }
 
