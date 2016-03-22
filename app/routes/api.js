@@ -25,6 +25,112 @@ module.exports = function(app, io) {
     app.all("/api/*", loggedIn);
 
 
+    // define a dynamic middleware-generating function that each route can use to suit its own auth needs
+
+    var resourceBelongsToUser = function(reqPathToResourceId, resourceModel) {
+        /*
+        * reqPathToResourceId: array of strings, defining the path to the resource in the req. (e.g. ['params', 'convo_id'])
+        * resourceModel: mongoose model, type of resource of which we are checking ownership
+        */
+
+        return function(req, res, next) {
+
+            var it_checks_out = false;
+
+            // specify where to find the reference to the users to which a resource belongs based on resourceModel
+            var modelToUserIdPathsMap = function(m) {
+                switch (m) {
+                    case Message: return [['sender_id'], ['receiver_id']];
+                    case Strand: return [['user_id_0'], ['user_id_1']];
+                    case Convo: return [['user_id_0'], ['user_id_1']];
+                    case User: return [['_id']];
+                };
+            };
+            var resourcePathsToUserIds = modelToUserIdPathsMap(resourceModel);
+
+            // get the resource id from the req based on reqPathToResourceId
+            var resource_id = req;
+            _.each(reqPathToResourceId, function(req_field_name) {
+                resource_id = resource_id[req_field_name];
+            });
+
+            resourceModel.findOne({
+                _id: resource_id
+            }, function(err, resource) {
+
+                _.each(resourcePathsToUserIds, function(path) {
+                    var owner_id = resource;
+                    _.each(path, function(resource_field_name) {
+                        owner_id = owner_id[resource_field_name];
+                    });
+                    if (owner_id.equals(req.user._id)) {
+                        it_checks_out = true;
+                    };
+                });
+
+                if (it_checks_out) {
+                    req.auth_checked = true;
+                    next();
+                } else {
+                    res.status(401).json({
+                        err: 'Logged in user does not have access to requested resource.'
+                    });
+                };
+            });
+
+        };
+
+    };
+
+
+    // apply the dynamic middleware-generating function to each route (there should be one for every api route)
+
+    app.get('/api/messages/:convo_id', resourceBelongsToUser(['params', 'convo_id'], Convo));
+
+    app.post('/api/messages', resourceBelongsToUser(['body', 'sender_id'], User));
+
+    app.delete('/api/messages/:message_id/:convo_id', resourceBelongsToUser(['params', 'message_id'], Message),
+                                                      resourceBelongsToUser(['params', 'convo_id'], Convo));
+
+    // TODO: put in a custom function for checking that req.body.message_ids all have sender_id or receiver_id equal to req.user._id
+    app.post('/api/assignMessagesToStrand/:strand_id/:convo_id', resourceBelongsToUser(['params', 'strand_id'], Strand),
+                                                                 resourceBelongsToUser(['params', 'convo_id'], Convo));
+
+    app.post('/api/unassignMessageFromStrand/:convo_id', resourceBelongsToUser(['body', 'message_id'], Message),
+                                                         resourceBelongsToUser(['params', 'convo_id'], Convo));
+
+    app.get('/api/strands/:convo_id', resourceBelongsToUser(['params', 'convo_id'], Convo));
+
+    // TODO: put in a custom function for checking that either req.body.user_id_0 or req.body.user_id_1 are equal to req.user._id
+    app.post('/api/strands', resourceBelongsToUser(['body', 'convo_id'], Convo));
+
+    app.get('/api/convos/:user_id', resourceBelongsToUser(['params', 'user_id'], User));
+
+    // TODO: put in a custom function for checking that either req.body.user_id_0 or req.body.user_id_1 are equal to req.user._id
+    app.post('/api/convos', function(req, res, next) {req.auth_checked = true; next();});
+
+    app.delete('/api/convos/:convo_id/:user_id', resourceBelongsToUser(['params', 'convo_id'], Convo),
+                                                 resourceBelongsToUser(['params', 'user_id'], User));
+
+    app.get('/api/users', function(req, res, next) {req.auth_checked = true; next();});
+
+    app.delete('/api/users/:user_id', resourceBelongsToUser(['params', 'user_id'], User));
+
+
+    // make sure that every request is approved by one of our auth-checking functions
+
+    var authChecked = function(req, res, next) {
+        if (req.auth_checked) {
+            next();
+        } else {
+            res.status(500).json({
+                err: 'Internal server error.'
+            });
+        };
+    };
+    app.all("/api/*", authChecked);
+
+
     // define the api route handlers
 
     // --- get messages for a convo
@@ -212,11 +318,7 @@ module.exports = function(app, io) {
     app.get('/api/convos/:user_id', function(req, res) {
 
         Convo.find({
-            $or: [{
-                user_id_0: req.params.user_id
-            }, {
-                user_id_1: req.params.user_id
-            }]
+            $or: [{user_id_0: req.params.user_id}, {user_id_1: req.params.user_id}]
         }, function(err, convos) {
             if (err) {
                 res.send(err);
@@ -239,11 +341,7 @@ module.exports = function(app, io) {
             };
 
             Convo.find({
-                $or: [{
-                    user_id_0: req.body.user_id_0
-                }, {
-                    user_id_1: req.body.user_id_0
-                }]
+                $or: [{user_id_0: req.body.user_id_0}, {user_id_1: req.body.user_id_0}]
             }, function(err, convos) {
                 if (err) {
                     res.send(err);
@@ -271,11 +369,7 @@ module.exports = function(app, io) {
             };
 
             Convo.find({
-                $or: [{
-                    user_id_0: req.params.user_id
-                }, {
-                    user_id_1: req.params.user_id
-                }]
+                $or: [{user_id_0: req.params.user_id}, {user_id_1: req.params.user_id}]
             }, function(err, convos) {
                 if (err) {
                     res.send(err)
@@ -296,27 +390,6 @@ module.exports = function(app, io) {
             };
 
             res.json(users);
-        });
-
-    });
-
-    // --- create user and send back the new user_id as well as all users after creation
-    app.post('/api/users', function(req, res) {
-
-        User.create({
-            username: req.body.username,
-        }, function(err, user) {
-            if (err) {
-                res.send(err);
-            };
-
-            User.find(function(err, users) {
-                if (err) {
-                    res.send(err);
-                };
-
-                res.json({users: users, new_user: user});
-            });
         });
 
     });
