@@ -1,9 +1,11 @@
 var mongoose = require('mongoose');
 var _ = require('underscore');
+var passportLocalMongoose = require('passport-local-mongoose');
+
 
 module.exports = function(io) {
 
-    var Convo = mongoose.models.Convo || require('./convo')(io);
+    var Convo = require('./convo')(io);
 
     var Schema = mongoose.Schema;
 
@@ -20,6 +22,9 @@ module.exports = function(io) {
         });
     });
 
-    return mongoose.model('User', userSchema);
+    userSchema.plugin(passportLocalMongoose);
+
+    // if the model already exists, use the existing model
+    return mongoose.models.User || mongoose.model('User', userSchema);
 
 };

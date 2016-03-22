@@ -1,7 +1,13 @@
 <nav class="navbar navbar-default">
     <div class="container-fluid">
+
         <div class="navbar-header navbar-right">
-            <a class="navbar-brand">{{ user.username }}</a>
+            <a class="navbar-brand">{{ selected_user.username }}</a>
         </div>
+
+        <div class="navbar-header navbar-right" ng-show="selected_user">
+            <braid-logout selected_user="selected_user"></braid-logout>
+        </div>
+
     </div>
 </nav>

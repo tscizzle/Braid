@@ -8,11 +8,11 @@ angular.module('usersDirective', [])
         // define CRUD functions used in the template
 
         vm.createUser = function() {
-            if (vm.forms.newUserFormData.username) {
+            if (vm.newUserFormData.username) {
 
-                Users.create(vm.forms.newUserFormData)
+                Users.create(vm.newUserFormData)
                     .success(function(data) {
-                        vm.forms.newUserFormData = {};
+                        vm.newUserFormData = {};
                         vm.users = data.users;
                         vm.selected_user = data.new_user;
 
@@ -69,14 +69,14 @@ angular.module('usersDirective', [])
 
         // initialization
 
-        vm.forms = {
-            newUserFormData: {}
-        };
+        vm.newUserFormData = {};
 
         Users.get()
             .success(function (data) {
                 vm.users = data;
-                vm.selected_user = vm.users[0];
+                if (!vm.selected_user) {
+                    vm.selected_user = vm.users[0];
+                };
                 joinUserSocketRoom();
             });
 

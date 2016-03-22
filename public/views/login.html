@@ -1,0 +1,21 @@
+<div id="login-pane">
+
+    <div class="row">
+        <div class="col-sm-12">
+            <h3>Login</h3>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <form ng-submit="loginCtrl.login()">
+                <label for="login-username-input">Username: </label><input id="login-username-input" type="text" name="username" ng-model="loginCtrl.loginForm.username">
+                <br>
+                <label for="login-password-input">Password: </label><input id="login-password-input" type="password" name="password" ng-model="loginCtrl.loginForm.password">
+                <br>
+                <button type="submit">Login</button>
+            </form>
+        </div>
+    </div>
+
+</div>

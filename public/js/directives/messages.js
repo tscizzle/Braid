@@ -8,24 +8,24 @@ angular.module('messagesDirective', [])
         // define CRUD functions used in the template
 
         vm.createMessage = function() {
-            if (vm.forms.newMessageFormData.text && vm.selected_convo && vm.selected_user) {
-                vm.forms.newMessageFormData.convo_id = vm.selected_convo._id;
-                vm.forms.newMessageFormData.sender_id = vm.selected_user._id;
-                vm.forms.newMessageFormData.receiver_id = partnerIdFromSelectedConvo();
-                vm.forms.newMessageFormData.time_sent = new Date();
+            if (vm.newMessageFormData.text && vm.selected_convo && vm.selected_user) {
+                vm.newMessageFormData.convo_id = vm.selected_convo._id;
+                vm.newMessageFormData.sender_id = vm.selected_user._id;
+                vm.newMessageFormData.receiver_id = partnerIdFromSelectedConvo();
+                vm.newMessageFormData.time_sent = new Date();
 
                 // if responding to a new strand
                 if (vm.primed_messages.length > 0) {
-                    vm.forms.newStrandFormData.convo_id = vm.selected_convo._id;
+                    vm.newStrandFormData.convo_id = vm.selected_convo._id;
 
                     // create a new strand
-                    //PREETHI: Here is where you set the color to be painted
-                    Strands.create(vm.forms.newStrandFormData)
+                    Strands.create(vm.newStrandFormData)
+
                         .success(function(strand_data) {
                             vm.strands = strand_data.strands;
-                            vm.forms.newMessageFormData.strand_id = strand_data.new_strand._id;
+                            vm.newMessageFormData.strand_id = strand_data.new_strand._id;
                             var message_ids = vm.primed_messages.map(function(message) {return message._id});
-                            var user_ids = [vm.forms.newMessageFormData.sender_id, vm.forms.newMessageFormData.receiver_id];
+                            var user_ids = [vm.newMessageFormData.sender_id, vm.newMessageFormData.receiver_id];
 
                             //This is ONLY if creating a new strand. Seems like the only spot strand color should be set.
                             console.log("reached1")
@@ -51,9 +51,9 @@ angular.module('messagesDirective', [])
                                     vm.messages = assign_messages_data;
 
                                     // create the new message as part of the new strand
-                                    Messages.create(vm.forms.newMessageFormData)
+                                    Messages.create(vm.newMessageFormData)
                                         .success(function(create_messages_data) {
-                                            vm.forms.newMessageFormData = {};
+                                            vm.newMessageFormData = {};
                                             vm.messages = create_messages_data.messages;
                                             vm.selected_strand = strand_data.new_strand;
                                             vm.primed_messages = [];
@@ -66,12 +66,12 @@ angular.module('messagesDirective', [])
                 // if not responding to a new strand
                 } else {
                     if (vm.selected_strand) {
-                        vm.forms.newMessageFormData.strand_id = vm.selected_strand._id;
+                        vm.newMessageFormData.strand_id = vm.selected_strand._id;
                     };
 
-                    Messages.create(vm.forms.newMessageFormData)
+                    Messages.create(vm.newMessageFormData)
                         .success(function(data) {
-                            vm.forms.newMessageFormData = {};
+                            vm.newMessageFormData = {};
                             vm.messages = data.messages;
                         });
 
@@ -148,7 +148,7 @@ angular.module('messagesDirective', [])
         vm.removeMessageFromStrand = function(message) {
             Messages.removeMessageFromStrand(message._id, vm.selected_convo._id)
                 .success(function(assign_message_data) {
-                    vm.message = assign_message_data;
+                    vm.messages = assign_message_data;
             });
         };
 
@@ -166,9 +166,7 @@ angular.module('messagesDirective', [])
         };
 
         vm.removeButtonIsHidden = function(message) {
-            if (!message.strand_id) {
-                return message;
-            };
+                return !message.strand_id;
         };
 
         vm.addButtonIsHidden = function(message) {
@@ -257,9 +255,11 @@ angular.module('messagesDirective', [])
         // register socket listeners
 
         socket.on('messages:receive_update', function(convo_id) {
-            if (convo_id == vm.selected_convo._id) {
-                refreshMessages();
-                refreshStrands();
+            if (vm.selected_convo) {
+                if (convo_id == vm.selected_convo._id) {
+                    refreshMessages();
+                    refreshStrands();
+                };
             };
         });
 
@@ -285,10 +285,8 @@ angular.module('messagesDirective', [])
         vm.strand_map = {};
         vm.primed_messages = [];
         vm.message_text_focus = false;
-        vm.forms = {
-            newMessageFormData: {},
-            newStrandFormData: {}
-        };
+        vm.newMessageFormData = {};
+        vm.newStrandFormData = {};
 
     }])
 

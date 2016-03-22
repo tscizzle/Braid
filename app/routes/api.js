@@ -11,6 +11,18 @@ module.exports = function(app, io) {
     var ObjectId = mongoose.Types.ObjectId;
 
 
+    var loggedIn = function(req, res, next) {
+        if (req.user) {
+            next();
+        } else {
+            res.status(401).json({
+                err: 'User not logged in.'
+            });
+        };
+    };
+    app.all( "/api/*" , loggedIn);
+
+
     // --- get messages for a convo
     app.get('/api/messages/:convo_id', function(req, res) {
 
@@ -85,13 +97,11 @@ module.exports = function(app, io) {
     // --- remove a message from a strand and send back messages for the convo after update
     app.post('/api/removeMessageFromStrand/:convo_id', function(req, res) {
         Message.update({
-            _id: {$in: req.body.message_id}
+            _id: req.body.message_id
         }, {
             $unset: {
                 strand_id: 1
             }
-        }, {
-            multi: true
         }, function(err, numAffected) {
 
             // unfortunately have to call .emit() here instead of in a post hook on .update(), since mongoose doesn't have document middleware for .update()

@@ -1,11 +1,11 @@
 angular.module('navbarDirective', [])
 
     .directive('braidNavbar', function() {
-      return {
-        restrict: 'E',
-        scope: {
-            user: '='
-        },
-        templateUrl: 'views/navbar.html'
-      };
+        return {
+            restrict: 'E',
+            scope: {
+                selected_user: '=selectedUser'
+            },
+            templateUrl: 'views/navbar.html'
+        };
     });

@@ -1,0 +1,21 @@
+<div id="register-pane">
+
+    <div class="row">
+        <div class="col-sm-12">
+            <h3>Register</h3>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <form ng-submit="registerCtrl.register()">
+                <label for="register-username-input">Username: </label><input id="register-username-input" type="text" name="username" ng-model="registerCtrl.registerForm.username">
+                <br>
+                <label for="register-password-input">Password: </label><input id="register-password-input" type="password" name="password" ng-model="registerCtrl.registerForm.password">
+                <br>
+                <button type="submit">Register</button>
+            </form>
+        </div>
+    </div>
+
+</div>

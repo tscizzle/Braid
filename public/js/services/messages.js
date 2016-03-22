@@ -1,6 +1,7 @@
 angular.module('messageService', [])
 
     .factory('Messages', ['$http', 'socket', function($http, socket) {
+
         return {
             get: function(convo_id) {
                 return $http.get('/api/messages/' + convo_id);
@@ -18,4 +19,5 @@ angular.module('messageService', [])
                 return $http.post('/api/removeMessageFromStrand/' + convo_id, {message_id: message_id})
             }
         };
+
     }]);
