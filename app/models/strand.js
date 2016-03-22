@@ -6,7 +6,9 @@ module.exports = function(io) {
     var ObjectId = Schema.ObjectId;
 
     var strandSchema = new Schema({
-        convo_id: {type: ObjectId, ref: 'Convo', required: true}
+        convo_id: {type: ObjectId, ref: 'Convo', required: true},
+        user_id_0: {type: ObjectId, ref: 'User', required: true},
+        user_id_1: {type: ObjectId, ref: 'User', required: true}
     });
 
     // if the model already exists, use the existing model

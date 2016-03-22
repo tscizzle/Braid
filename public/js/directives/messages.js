@@ -17,6 +17,8 @@ angular.module('messagesDirective', [])
                 // if responding to a new strand
                 if (vm.primed_messages.length > 0) {
                     vm.newStrandFormData.convo_id = vm.selected_convo._id;
+                    vm.newStrandFormData.user_id_0 = vm.selected_convo.user_id_0;
+                    vm.newStrandFormData.user_id_1 = vm.selected_convo.user_id_1;
 
                     // create a new strand
                     Strands.create(vm.newStrandFormData)
@@ -24,10 +26,9 @@ angular.module('messagesDirective', [])
                             vm.strands = strand_data.strands;
                             vm.newMessageFormData.strand_id = strand_data.new_strand._id;
                             var message_ids = vm.primed_messages.map(function(message) {return message._id});
-                            var user_ids = [vm.newMessageFormData.sender_id, vm.newMessageFormData.receiver_id];
 
                             // update the primed messages to be part of the new strand
-                            Messages.assignMessagesToStrand(message_ids, strand_data.new_strand._id, vm.selected_convo._id, user_ids)
+                            Messages.assignMessagesToStrand(message_ids, strand_data.new_strand._id, vm.selected_convo._id)
                                 .success(function(assign_messages_data) {
                                     vm.messages = assign_messages_data;
 
@@ -127,9 +128,8 @@ angular.module('messagesDirective', [])
         };
 
         vm.removeMessageFromStrand = function(message_id) {
-            var user_ids = [vm.selected_convo.user_id_0, vm.selected_convo.user_id_1];
 
-            Messages.unassignMessageFromStrand(message_id, vm.selected_convo._id, user_ids)
+            Messages.unassignMessageFromStrand(message_id, vm.selected_convo._id)
                 .success(function(assign_message_data) {
                     vm.messages = assign_message_data;
 
@@ -143,19 +143,20 @@ angular.module('messagesDirective', [])
                         };
                     };
             });
+
         };
 
         vm.addMessagesToStrand = function(strand_message) {
             var primed_message_ids = vm.primed_messages.map(function(primed_message) {
                 return primed_message._id;
             });
-            var user_ids = [vm.selected_convo.user_id_0, vm.selected_convo.user_id_1];
 
-            Messages.assignMessagesToStrand(primed_message_ids, strand_message.strand_id, vm.selected_convo._id, user_ids)
+            Messages.assignMessagesToStrand(primed_message_ids, strand_message.strand_id, vm.selected_convo._id)
                 .success(function(assign_messages_data) {
                     vm.messages = assign_messages_data;
                     vm.primed_messages = [];
             });
+
         };
 
         vm.removeButtonIsHidden = function(message) {
