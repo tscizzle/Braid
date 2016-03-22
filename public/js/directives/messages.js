@@ -20,7 +20,6 @@ angular.module('messagesDirective', [])
 
                     // create a new strand
                     Strands.create(vm.newStrandFormData)
-
                         .success(function(strand_data) {
                             vm.strands = strand_data.strands;
                             vm.newMessageFormData.strand_id = strand_data.new_strand._id;
