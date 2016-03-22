@@ -126,22 +126,32 @@ angular.module('messagesDirective', [])
             };
         };
 
-        vm.removeMessageFromStrand = function(message) {
+        vm.removeMessageFromStrand = function(message_id) {
             var user_ids = [vm.selected_convo.user_id_0, vm.selected_convo.user_id_1];
 
-            Messages.removeMessageFromStrand(message._id, vm.selected_convo._id, user_ids)
+            Messages.unassignMessageFromStrand(message_id, vm.selected_convo._id, user_ids)
                 .success(function(assign_message_data) {
                     vm.messages = assign_message_data;
+
+                    if (vm.selected_strand) {
+                        var strand_messages = vm.messages.filter(function(message) {
+                            return message.strand_id === vm.selected_strand._id;
+                        });
+
+                        if (strand_messages.length === 0) {
+                            vm.selected_strand = undefined;
+                        };
+                    };
             });
         };
 
-        vm.addMessagesToStrand = function(message) {
+        vm.addMessagesToStrand = function(strand_message) {
             var primed_message_ids = vm.primed_messages.map(function(primed_message) {
                 return primed_message._id;
             });
             var user_ids = [vm.selected_convo.user_id_0, vm.selected_convo.user_id_1];
 
-            Messages.assignMessagesToStrand(primed_message_ids, message.strand_id, vm.selected_convo._id, user_ids)
+            Messages.assignMessagesToStrand(primed_message_ids, strand_message.strand_id, vm.selected_convo._id, user_ids)
                 .success(function(assign_messages_data) {
                     vm.messages = assign_messages_data;
                     vm.primed_messages = [];

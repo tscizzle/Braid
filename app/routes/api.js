@@ -11,7 +11,7 @@ module.exports = function(app, io) {
     var ObjectId = mongoose.Types.ObjectId;
 
 
-    // define middleware for authentication
+    // make sure that, on all requests, the request is authenticated with a logged in user
 
     var loggedIn = function(req, res, next) {
         if (req.user) {
@@ -24,10 +24,48 @@ module.exports = function(app, io) {
     };
     app.all("/api/*", loggedIn);
 
-    var assertCorrectUser = function(req, res, next) {
-        // TODO: check that req.user (the logged in user) is indeed the user who is allowed to see the requested resources
-        // TODO: perhaps split this method into several methods, one for each model, so we can do a custom check depending on the type of resource requested
-        // TODO:    that would look like assertCorrectUserConvo, assertCorrectUserMessage
+
+    // define a dynamic middleware-generating function that each route can use to suit its own auth needs
+
+    var resourceBelongsToUser = function(reqPathToResourceId, model, resourcePathsToUserIds) {
+        /*
+        * reqPathToResourceId: array of strings, defining the path to the resource in the req. (e.g. ['params', 'convo_id'])
+        * model: mongoose model, type of resource of which we are checking ownership
+        * modelPathToUserId: array array of strings, defining the path to the user id  that owns that resource
+        */
+        return function(req, res, next) {
+            var it_checks_out = false;
+
+            var resource_id = req;
+            _.each(reqPathToResourceId, function(req_field_name) {
+                resource_id = resource_id[req_field_name];
+            });
+
+            model.find({
+                _id: resource_id
+            }, function(err, resource) {
+
+                _.each(resourcePathsToUserIds, function(path) {
+                    var owner_id = resource;
+                    _.each(path, function(resource_field_name) {
+                        owner_id = owner_id[resource_field_name];
+                    });
+
+                    if (req.user._id == owner_id) {
+                        it_checks_out = true;
+                    };
+                });
+
+                if (it_checks_out) {
+                    req.auth_checked = true;
+                    next();
+                } else {
+                    res.status(401).json({
+                        err: 'Logged in user does not have access to requested resource.'
+                    });
+                };
+            });
+        };
     };
 
 
@@ -105,7 +143,7 @@ module.exports = function(app, io) {
     });
 
     // --- remove a message from a strand and send back messages for the convo after update
-    app.post('/api/removeMessageFromStrand/:convo_id', function(req, res) {
+    app.post('/api/unassignMessageFromStrand/:convo_id', function(req, res) {
         Message.update({
             _id: req.body.message_id
         }, {
@@ -337,5 +375,19 @@ module.exports = function(app, io) {
         });
 
     });
+
+
+    // make sure that, on all requests, one of our auth-checking functions has approved the request
+
+    var authChecked = function(req, res, next) {
+        if (req.auth_checked) {
+            next();
+        } else {
+            res.status(500).json({
+                err: 'Internal server error.'
+            });
+        };
+    };
+    app.all("/api/*", authChecked);
 
 };
