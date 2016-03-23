@@ -96,6 +96,7 @@ module.exports = function(app, io) {
                     });
                 };
             });
+            req.auth_checked = true;
             next();
         });
     };
@@ -107,6 +108,7 @@ module.exports = function(app, io) {
                 err: 'Logged in user does not have access to one of the involved resources.'
             });
         } else {
+            req.auth_checked = true;
             next();
         };
     };
@@ -151,6 +153,7 @@ module.exports = function(app, io) {
         if (req.auth_checked) {
             next();
         } else {
+            console.log();
             res.status(500).json({
                 err: 'Internal server error.'
             });
