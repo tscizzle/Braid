@@ -73,13 +73,42 @@ module.exports = function(app, io) {
                     next();
                 } else {
                     res.status(401).json({
-                        err: 'Logged in user does not have access to requested resource.'
+                        err: 'Logged in user does not have access to one of the involved resources.'
                     });
                 };
             });
 
         };
 
+    };
+
+
+    // define some custom auth middleware for particular routes whose needs are outside the ability of the dynamic middleware-generating function
+
+    var bodyMessageIdsBelongToUser = function(req, res, next) {
+        Message.find({
+            _id: {$in: req.body.message_ids}
+        }, function(err, messages) {
+            _.each(messages, function(message) {
+                if (!(message.sender_id.equals(req.user._id) || message.receiver_id.equals(req.user._id))) {
+                    res.status(401).json({
+                        err: 'Logged in user does not have access to one of the involved resources.'
+                    });
+                };
+            });
+            next();
+        });
+    };
+
+    var bodyUserId0Or1IsUser = function(req, res, next) {
+        // use '==' instead of .equals() because these are strings whereas we should use .equals() for ObjectId's
+        if (!(req.body.user_id_0 == req.user._id || req.body.user_id_1 == req.user._id)) {
+            res.status(401).json({
+                err: 'Logged in user does not have access to one of the involved resources.'
+            });
+        } else {
+            next();
+        };
     };
 
 
@@ -92,22 +121,21 @@ module.exports = function(app, io) {
     app.delete('/api/messages/:message_id/:convo_id', resourceBelongsToUser(['params', 'message_id'], Message),
                                                       resourceBelongsToUser(['params', 'convo_id'], Convo));
 
-    // TODO: put in a custom function for checking that req.body.message_ids all have sender_id or receiver_id equal to req.user._id
     app.post('/api/assignMessagesToStrand/:strand_id/:convo_id', resourceBelongsToUser(['params', 'strand_id'], Strand),
-                                                                 resourceBelongsToUser(['params', 'convo_id'], Convo));
+                                                                 resourceBelongsToUser(['params', 'convo_id'], Convo),
+                                                                 bodyMessageIdsBelongToUser);
 
     app.post('/api/unassignMessageFromStrand/:convo_id', resourceBelongsToUser(['body', 'message_id'], Message),
                                                          resourceBelongsToUser(['params', 'convo_id'], Convo));
 
     app.get('/api/strands/:convo_id', resourceBelongsToUser(['params', 'convo_id'], Convo));
 
-    // TODO: put in a custom function for checking that either req.body.user_id_0 or req.body.user_id_1 are equal to req.user._id
-    app.post('/api/strands', resourceBelongsToUser(['body', 'convo_id'], Convo));
+    app.post('/api/strands', resourceBelongsToUser(['body', 'convo_id'], Convo),
+                             bodyUserId0Or1IsUser);
 
     app.get('/api/convos/:user_id', resourceBelongsToUser(['params', 'user_id'], User));
 
-    // TODO: put in a custom function for checking that either req.body.user_id_0 or req.body.user_id_1 are equal to req.user._id
-    app.post('/api/convos', function(req, res, next) {req.auth_checked = true; next();});
+    app.post('/api/convos', bodyUserId0Or1IsUser);
 
     app.delete('/api/convos/:convo_id/:user_id', resourceBelongsToUser(['params', 'convo_id'], Convo),
                                                  resourceBelongsToUser(['params', 'user_id'], User));
