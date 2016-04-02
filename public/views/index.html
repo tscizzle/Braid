@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="/css/messages.css">
     <link rel="stylesheet" href="/css/convos.css">
     <link rel="stylesheet" href="/css/users.css">
+    <link rel="stylesheet" href="/css/friendships.css">
 
     <script src="/bower_components/angular/angular.js"></script>
     <script src="/bower_components/angular-route/angular-route.min.js"></script>
@@ -34,6 +35,7 @@
     <script src="/js/directives/messages.js"></script>
     <script src="/js/directives/convos.js"></script>
     <script src="/js/directives/users.js"></script>
+    <script src="/js/directives/friendships.js"></script>
     <script src="/js/filters/main.js"></script>
     <script src="/js/services/socket.js"></script>
     <script src="/js/services/auth.js"></script>
@@ -41,6 +43,7 @@
     <script src="/js/services/strands.js"></script>
     <script src="/js/services/convos.js"></script>
     <script src="/js/services/users.js"></script>
+    <script src="/js/services/friendships.js"></script>
     <script src="/js/core.js"></script>
 
 </head>
@@ -57,27 +60,27 @@
             <div class="row">
 
                 <div id="convo-view-col" class="col-sm-2">
-                    <braid-convos users="mainCtrl.users"
+                    <braid-convos friend_users="mainCtrl.friend_users"
+                                  friendships="mainCtrl.friendships"
                                   selected_convo="mainCtrl.selected_convo"
                                   selected_user="mainCtrl.selected_user"
-                                  user_map="mainCtrl.user_map">
+                                  friend_user_map="mainCtrl.friend_user_map">
                     </braid-convos>
                 </div>
 
                 <div id="message-view-col" class="col-sm-8">
-                    <braid-messages selected_strand="mainCtrl.selected_strand"
-                                    selected_convo="mainCtrl.selected_convo"
+                    <braid-messages selected_convo="mainCtrl.selected_convo"
                                     selected_user="mainCtrl.selected_user"
-                                    user_map="mainCtrl.user_map">
+                                    friend_user_map="mainCtrl.friend_user_map">
                     </braid-messages>
                 </div>
 
-                <!-- TODO: remove the user pane entirely -->
-                <div id="user-view-col" class="col-sm-2">
-                    <braid-users users="mainCtrl.users"
-                                 selected_user="mainCtrl.selected_user"
-                                 user_map="mainCtrl.user_map">
-                    </braid-users>
+                <div id="friendship-view-col" class="col-sm-2">
+                    <braid-friendships friend_users="mainCtrl.friend_users"
+                                       friendships="mainCtrl.friendships"
+                                       selected_user="mainCtrl.selected_user"
+                                       friend_user_map="mainCtrl.friend_user_map">
+                    </braid-friendships>
                 </div>
 
             </div>

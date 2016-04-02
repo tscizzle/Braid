@@ -25,17 +25,19 @@ angular.module('convosDirective', [])
             };
         };
 
-        vm.deleteConvo = function(convo_id, user_id) {
+        vm.deleteConvo = function(convo_id) {
+            if (vm.selected_user) {
 
-            Convos.delete(convo_id, user_id)
-                .success(function(data) {
-                    vm.convos = data;
+                Convos.delete(convo_id, vm.selected_user._id)
+                    .success(function(data) {
+                        vm.convos = data;
 
-                    if (convo_id === vm.selected_convo._id) {
-                        vm.selected_convo = vm.convos[0];
-                    };
-                });
+                        if (convo_id === vm.selected_convo._id) {
+                            vm.selected_convo = vm.convos[0];
+                        };
+                    });
 
+            };
         };
 
 
@@ -69,19 +71,30 @@ angular.module('convosDirective', [])
                 _.each(vm.convos, function(convo) {
                     already_convod.push(convo.user_id_0, convo.user_id_1);
                 });
-                vm.potential_partners = vm.users.filter(function(user) {
-                    return (($.inArray(user._id, already_convod) === -1) && (user._id !== vm.selected_user._id));
+                var friends = [];
+                _.each(vm.friendships, function(friendship) {
+                    if (friendship.status === 'accepted') {
+                        if (friendship.requester_id !== vm.selected_user._id && vm.friend_user_map[friendship.requester_id]) {
+                            friends.push(vm.friend_user_map[friendship.requester_id]);
+                        };
+                        if (friendship.target_id !== vm.selected_user._id && vm.friend_user_map[friendship.target_id]) {
+                            friends.push(vm.friend_user_map[friendship.target_id]);
+                        };
+                    };
+                });
+                vm.potential_partners = friends.filter(function(friend) {
+                    return (($.inArray(friend._id, already_convod) === -1) && (friend._id !== vm.selected_user._id));
                 });
                 vm.potential_partners.unshift({_id: "", username: ""});
             };
         };
 
         var convos_watcher = function(scope) {return vm.convos;};
-        var users_watcher = function(scope) {return vm.users;};
+        var friend_users_watcher = function(scope) {return vm.friend_users;};
         var selected_convo_watcher = function(scope) {return vm.selected_convo;};
         var selected_user_watcher = function(scope) {return vm.selected_user;};
-        $scope.$watchGroup([users_watcher, selected_user_watcher], refreshConvos);
-        $scope.$watchGroup([convos_watcher, users_watcher, selected_convo_watcher], refreshPotentialPartners);
+        $scope.$watchGroup([friend_users_watcher, selected_user_watcher], refreshConvos);
+        $scope.$watchGroup([convos_watcher, friend_users_watcher, selected_convo_watcher], refreshPotentialPartners);
 
 
         // register socket listeners
@@ -103,10 +116,11 @@ angular.module('convosDirective', [])
         return {
             restrict: 'E',
             scope: {
-                users: '=',
+                friend_users: '=friendUsers',
+                friendships: "=",
                 selected_convo: '=selectedConvo',
                 selected_user: '=selectedUser',
-                user_map: '=userMap'
+                friend_user_map: '=friendUserMap'
             },
             templateUrl: 'views/convos.html',
             controller: 'convoController',

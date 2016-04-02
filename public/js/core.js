@@ -10,6 +10,7 @@ var Braid = angular.module('Braid', [
     'registerDirective',
     'loginDirective',
     'logoutDirective',
+    'friendshipsDirective',
     'messagesDirective',
     'convosDirective',
     'usersDirective',
@@ -20,6 +21,7 @@ var Braid = angular.module('Braid', [
     'strandService',
     'convoService',
     'userService',
+    'friendshipService',
 
     // 3rd-party dependencies
     'btford.socket-io',

@@ -61,26 +61,28 @@ angular.module('messagesDirective', [])
             };
         };
 
-        vm.deleteMessage = function(message_id, convo_id) {
+        vm.deleteMessage = function(message_id) {
+            if (vm.selected_convo) {
 
-            Messages.delete(message_id, convo_id)
-                .success(function(data) {
-                    vm.messages = data;
-                    vm.primed_messages = vm.primed_messages.filter(function(primed_message) {
-                        return message_id !== primed_message._id;
-                    });
-
-                    if (vm.selected_strand) {
-                        var strand_messages = vm.messages.filter(function(message) {
-                            return message.strand_id === vm.selected_strand._id;
+                Messages.delete(message_id, vm.selected_convo._id)
+                    .success(function(data) {
+                        vm.messages = data;
+                        vm.primed_messages = vm.primed_messages.filter(function(primed_message) {
+                            return message_id !== primed_message._id;
                         });
 
-                        if (strand_messages.length === 0) {
-                            vm.selected_strand = undefined;
-                        };
-                    };
-                });
+                        if (vm.selected_strand) {
+                            var strand_messages = vm.messages.filter(function(message) {
+                                return message.strand_id === vm.selected_strand._id;
+                            });
 
+                            if (strand_messages.length === 0) {
+                                vm.selected_strand = undefined;
+                            };
+                        };
+                    });
+
+            };
         };
 
 
@@ -269,10 +271,9 @@ angular.module('messagesDirective', [])
         return {
             restrict: 'E',
             scope: {
-                selected_strand: '=selectedStrand',
                 selected_convo: '=selectedConvo',
                 selected_user: '=selectedUser',
-                user_map: '=userMap'
+                friend_user_map: '=friendUserMap'
             },
             templateUrl: 'views/messages.html',
             controller: 'messageController',

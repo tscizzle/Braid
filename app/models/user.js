@@ -6,6 +6,7 @@ var passportLocalMongoose = require('passport-local-mongoose');
 module.exports = function(io) {
 
     var Convo = require('./convo')(io);
+    var Friendship = require('./friendship')(io);
 
     var Schema = mongoose.Schema;
 
@@ -18,6 +19,12 @@ module.exports = function(io) {
         Convo.find({$or: [{user_id_0: this._id}, {user_id_1: this._id}]}, function(err, convos) {
             _.each(convos, function(convo) {
                 convo.remove();
+            });
+        });
+        // find, loop, and instance-level remove, instead of simply model-level remove all at once which doesn't trigger middleware hooks
+        Friendship.find({$or: [{requester_id: this._id}, {target_id: this._id}]}, function(err, friendships) {
+            _.each(friendships, function(friendship) {
+                friendship.remove();
             });
         });
     });

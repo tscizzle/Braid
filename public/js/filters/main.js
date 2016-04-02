@@ -12,8 +12,20 @@ angular.module('braidFilters', [])
         };
     })
 
+    .filter('friend', function() {
+        return function(friendship, selected_user) {
+            if (friendship && selected_user) {
+                if (friendship.requester_id == selected_user._id) {
+                    return friendship.target_id;
+                } else if (friendship.target_id == selected_user._id) {
+                    return friendship.requester_id;
+                };
+            };
+        };
+    })
+
     .filter('username', function() {
-        return function(user_id, user_map) {
+        return function(user_id, user_map, third) {
             if (user_id) {
                 if (user_map[user_id]) {
                     return user_map[user_id].username;

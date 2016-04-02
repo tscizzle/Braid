@@ -7,6 +7,7 @@ module.exports = function(app, io) {
     var Strand = require('../models/strand')(io);
     var Convo = require('../models/convo')(io);
     var User = require('../models/user')(io);
+    var Friendship = require('../models/friendship')(io);
 
     var ObjectId = mongoose.Types.ObjectId;
 
@@ -44,6 +45,7 @@ module.exports = function(app, io) {
                     case Strand: return [['user_id_0'], ['user_id_1']];
                     case Convo: return [['user_id_0'], ['user_id_1']];
                     case User: return [['_id']];
+                    case Friendship: return [['requester_id'], ['target_id']];
                 };
             };
             var resourcePathsToUserIds = modelToUserIdPathsMap(resourceModel);
@@ -101,9 +103,21 @@ module.exports = function(app, io) {
         });
     };
 
-    var bodyUserId0Or1IsUser = function(req, res, next) {
+    var bodyUserId0OrUserId1IsUser = function(req, res, next) {
         // use '==' instead of .equals() because these are strings whereas we should use .equals() for ObjectId's
         if (!(req.body.user_id_0 == req.user._id || req.body.user_id_1 == req.user._id)) {
+            res.status(401).json({
+                err: 'Logged in user does not have access to one of the involved resources.'
+            });
+        } else {
+            req.auth_checked = true;
+            next();
+        };
+    };
+
+    var bodyRequesterIdOrTargetIdIsUser = function(req, res, next) {
+        // use '==' instead of .equals() because these are strings whereas we should use .equals() for ObjectId's
+        if (!(req.body.requester_id == req.user._id || req.body.target_id == req.user._id)) {
             res.status(401).json({
                 err: 'Logged in user does not have access to one of the involved resources.'
             });
@@ -133,18 +147,31 @@ module.exports = function(app, io) {
     app.get('/api/strands/:convo_id', resourceBelongsToUser(['params', 'convo_id'], Convo));
 
     app.post('/api/strands', resourceBelongsToUser(['body', 'convo_id'], Convo),
-                             bodyUserId0Or1IsUser);
+                             bodyUserId0OrUserId1IsUser);
 
     app.get('/api/convos/:user_id', resourceBelongsToUser(['params', 'user_id'], User));
 
-    app.post('/api/convos', bodyUserId0Or1IsUser);
+    app.post('/api/convos', bodyUserId0OrUserId1IsUser);
 
     app.delete('/api/convos/:convo_id/:user_id', resourceBelongsToUser(['params', 'convo_id'], Convo),
                                                  resourceBelongsToUser(['params', 'user_id'], User));
 
+    // TODO: this is saying that anyone can see the list of users
     app.get('/api/users', function(req, res, next) {req.auth_checked = true; next();});
 
+    app.get('/api/friendUsers/:user_id', resourceBelongsToUser(['params', 'user_id'], User));
+
     app.delete('/api/users/:user_id', resourceBelongsToUser(['params', 'user_id'], User));
+
+    app.get('/api/friendships/:user_id', resourceBelongsToUser(['params', 'user_id'], User));
+
+    app.post('/api/friendships', bodyRequesterIdOrTargetIdIsUser);
+
+    app.post('/api/friendships/accept/:friendship_id/:user_id', resourceBelongsToUser(['params', 'friendship_id'], Friendship),
+                                                                resourceBelongsToUser(['params', 'user_id'], User));
+
+    app.delete('/api/friendships/:friendship_id/:user_id', resourceBelongsToUser(['params', 'friendship_id'], Friendship),
+                                                           resourceBelongsToUser(['params', 'user_id'], User));
 
 
     // make sure that every request is approved by one of our auth-checking functions
@@ -425,6 +452,38 @@ module.exports = function(app, io) {
 
     });
 
+    // --- get all users who are friends of the user
+    app.get('/api/friendUsers/:user_id', function(req, res) {
+
+        Friendship.find({
+            $or: [{requester_id: req.params.user_id}, {target_id: req.params.user_id}]
+        }, function(err, friendships) {
+            if (err) {
+                res.send(err);
+            };
+
+            var friend_ids = friendships.map(function(friendship) {
+                if (friendship.requester_id == req.params.user_id) {
+                    return friendship.target_id;
+                } else if (friendship.target_id == req.params.user_id) {
+                    return friendship.requester_id;
+                };
+            });
+
+            User.find({
+                _id: {$in: friend_ids}
+            }, function(err, friend_users) {
+                if (err) {
+                    res.send(err);
+                };
+
+                res.json(friend_users);
+            });
+
+        });
+
+    });
+
     // --- delete user and send back all users after deletion
     app.delete('/api/users/:user_id', function(req, res) {
 
@@ -446,6 +505,123 @@ module.exports = function(app, io) {
                 };
 
                 res.json(users);
+            });
+        });
+
+    });
+
+    // --- get friendships for a user
+    app.get('/api/friendships/:user_id', function(req, res) {
+
+        Friendship.find({
+            $or: [{requester_id: req.params.user_id}, {target_id: req.params.user_id}]
+        }, function(err, friendships) {
+            if (err) {
+                res.send(err);
+            };
+
+            res.json(friendships);
+        });
+
+    });
+
+    // --- create a friendship and send back the new friendship_id as well as friendships for the user after creation
+    app.post('/api/friendships', function(req, res) {
+
+        User.findOne({
+            username: req.body.username
+        }, function(err, user) {
+            if (err) {
+                res.send(err);
+            };
+
+            if (!user) {
+                res.status(422).json({
+                    err: 'No user found with that username.'
+                });
+            } else if (user._id.equals(req.user._id)) {
+                res.status(422).json({
+                    err: 'Target user is the same as the requesting user.'
+                });
+            } else {
+
+                Friendship.create({
+                    requester_id: req.body.requester_id,
+                    target_id: user._id,
+                    status: 'pending'
+                }, function(err, friendship) {
+                    if (err) {
+                        res.send(err);
+                    };
+
+                    Friendship.find({
+                        $or: [{requester_id: req.body.requester_id}, {target_id: req.body.requester_id}]
+                    }, function(err, friendships) {
+                        if (err) {
+                            res.send(err);
+                        };
+
+                        res.json(friendships);
+                    });
+                });
+
+            };
+
+        });
+
+    });
+
+    // --- update a friendship to be accepted and send back friendships for the user after update
+    app.post('/api/friendships/accept/:friendship_id/:user_id', function(req, res) {
+
+        Friendship.update({
+            _id: req.params.friendship_id
+        }, {
+            $set: {
+                status: 'accepted'
+            }
+        }, function(err, numAffected) {
+            if (err) {
+                res.send(err);
+            };
+
+            Friendship.find({
+                $or: [{requester_id: req.params.user_id}, {target_id: req.params.user_id}]
+            }, function(err, friendships) {
+                if (err) {
+                    res.send(err)
+                };
+
+                res.json(friendships);
+            });
+
+        });
+
+    });
+
+    // --- delete a friendship and send back friendships for the user after deletion
+    app.delete('/api/friendships/:friendship_id/:user_id', function(req, res) {
+
+        Friendship.findOneAndRemove({
+            _id: req.params.friendship_id
+        }, function(err, friendship) {
+            if (err) {
+                res.send(err);
+            };
+
+            // to trigger the middleware
+            if (friendship) {
+                friendship.remove();
+            };
+
+            Friendship.find({
+                $or: [{requester_id: req.params.user_id}, {target_id: req.params.user_id}]
+            }, function(err, friendships) {
+                if (err) {
+                    res.send(err)
+                };
+
+                res.json(friendships);
             });
         });
 

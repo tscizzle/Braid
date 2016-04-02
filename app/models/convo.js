@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var _ = require('underscore');
 
+
 module.exports = function(io) {
 
     var Message = require('./message')(io);
@@ -29,6 +30,7 @@ module.exports = function(io) {
                 message.remove();
             });
         });
+        // find, loop, and instance-level remove, instead of simply model-level remove all at once which doesn't trigger middleware hooks
         Strand.find({convo_id: this._id}, function(err, strands) {
             _.each(strands, function(strand) {
                 strand.remove();
