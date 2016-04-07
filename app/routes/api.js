@@ -275,7 +275,6 @@ module.exports = function(app, io) {
         if (req.auth_checked) {
             return next();
         } else {
-            console.log();
             res.status(500).json({
                 err: 'Internal server error.'
             });
