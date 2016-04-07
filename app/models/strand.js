@@ -7,7 +7,7 @@ module.exports = function(io) {
 
     var strandSchema = new Schema({
         convo_id: {type: ObjectId, ref: 'Convo', required: true},
-        color: {type: ObjectId},
+        color: String,
         time_created: Date
     });
 

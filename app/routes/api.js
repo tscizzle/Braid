@@ -177,22 +177,22 @@ module.exports = function(app, io) {
 
     });
 
+
     // --- create a strand and send back the new strand_id as well as strands for the convo after creation
     app.post('/api/strands', function(req, res) {
-
+        console.log(req.body.color)
+        console.log(req.body.time_created)
         Strand.create({
             'convo_id': req.body.convo_id,
-            'color' : req.body.color,
-            'time_created' : Date.parse(req.body.time_created),
+            'color': req.body.color, 
+            'time_created': Date.parse(req.body.time_created)
         }, function(err, strand) {
             if (err) {
                 res.send(err);
             };
 
             Strand.find({
-                'convo_id': req.body.convo_id,
-                'color' : req.body.color,
-                'time_created' : req.body.time_created
+                'convo_id': req.body.convo_id
             }, function(err, strands) {
                 if (err) {
                     res.send(err);
@@ -203,45 +203,6 @@ module.exports = function(app, io) {
         });
 
     });
-
-
-            
-
-    //     // --- assign the strand a color based on when it is created
-    // app.post('/api/paintStrand', function(req, res) {
-
-    //     Strand.update({
-    //         strand_id: {$in: req.body.strand_id}
-    //     }, {
-    //         $set: {
-    //             color: 'red'
-    //         }
-    //     }, {
-    //         multi: true
-    //     }, function(err, numAffected) {
-
-    //         // unfortunately have to call .emit() here instead of in a post hook on .update(), since mongoose doesn't have document middleware for .update()
-    //         _.each(req.body.user_ids, function(user_id) {
-    //             io.to(user_id).emit('messages:receive_update', req.params.convo_id);
-    //         });
-
-    //         Message.find({
-    //             'convo_id': req.params.convo_id
-    //         }, function(err, messages) {
-    //             if (err) {
-    //                 res.send(err);
-    //             };
-
-    //             res.json(messages);
-    //         });
-    //     });
-    // });
-
-
-
-
-
-
 
 
     // --- get convos for a user

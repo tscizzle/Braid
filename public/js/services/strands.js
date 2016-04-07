@@ -8,9 +8,14 @@ angular.module('strandService', [])
             },
             create: function(strandData) {
                 return $http.post('/api/strands', strandData);
-            },
+            }
+        };
+
+    }]);
+
+
+
+            //,
             // paintStrand: function(strand_id, time_created) {
             //     return $http.post('/api/paintStrand', {strand_id: strand_id , time_created: time_created, color: color});
             // }
-        };
-    }]);

@@ -3,6 +3,7 @@ angular.module('messagesDirective', [])
     .controller('messageController', ['$scope', 'socket', 'Messages', 'Strands', function($scope, socket, Messages, Strands) {
 
         var vm = this;
+        window.SCOPE = vm;
 
 
         // define CRUD functions used in the template
@@ -17,7 +18,10 @@ angular.module('messagesDirective', [])
                 // if responding to a new strand
                 if (vm.primed_messages.length > 0) {
                     vm.newStrandFormData.convo_id = vm.selected_convo._id;
-
+                    //call a function here that decides the color
+                    vm.newStrandFormData.color = vm.thisColor();
+                    //use the time of the PREVIOUS strand to figure out what color this one should be
+                    vm.newStrandFormData.time_created = new Date();
                     // create a new strand
                     Strands.create(vm.newStrandFormData)
                         .success(function(strand_data) {
@@ -26,18 +30,13 @@ angular.module('messagesDirective', [])
                             var message_ids = vm.primed_messages.map(function(message) {return message._id});
                             var user_ids = [vm.newMessageFormData.sender_id, vm.newMessageFormData.receiver_id];
 
-                            //This is ONLY if creating a new strand. Seems like the only spot strand color should be set.
-                            console.log("reached1")
+                            //This is ONLY if creating a new strand. Seems like this is the only spot where strand color should be set.
+
 
                             //create an array of times created
                             var strand_times_created = vm.strands.map(function(strand) {
-                                return strand.time_created;
+                                return vm.strands.time_created;
                             });
-                            console.log("reached2")
-
-                            console.log(strand_times_created)
-
-
                             // Strands.paintStrand(vm.strand_id, vm.time_created, vm.color)
                             //     .success(function(assign_messages_data) {
                             //     vm.messages = assign_messages_data;
@@ -58,7 +57,7 @@ angular.module('messagesDirective', [])
                                             vm.primed_messages = [];
                                         });
 
-                            });
+                                });
 
                         });
 
@@ -177,7 +176,7 @@ angular.module('messagesDirective', [])
         };
 
         vm.removeButtonIsHidden = function(message) {
-                return !message.strand_id;
+            return !message.strand_id;
         };
 
         vm.addButtonIsHidden = function(message) {
@@ -188,23 +187,72 @@ angular.module('messagesDirective', [])
             };
         };
 
-        //Probably not going to use this
+        vm.thisColor = function() {
+            //should look at the previous strands color, and assign the next one in the queue.
+            strandColors = ["red", "orange", "yellow", "green", "blue", "purple"];
+
+            //make a list of all the strands that have an associated message, don't include repeats
+            var allStrand_ids = new Array();
+            _.each(vm.messages, function(message) {
+                if (!_.contains(allStrand_ids, message.strand_id)){
+                    allStrand_ids.push(message.strand_id)
+                }
+            })
+
+            if(allStrand_ids.length < 2){
+                thisColorIndex = 0;
+            } else {
+            //remove the last entry, which is undefined, because the newly made strand doesn't have a strand ID yet)
+            allStrand_ids.splice(allStrand_ids.length-1,1)
+
+            //add the strands with those strand ids to an array
+            var allStrands = new Array();
+            _.each(allStrand_ids, function(all_strand_id){
+                _.each(vm.strands, function(strand){
+
+                    if (strand._id == all_strand_id) {
+                        strand_to_add = strand
+                        allStrands.push(strand_to_add)
+                    }
+                })
+            })
+
+            //order strands by time
+            var strandsByTime = _.sortBy(allStrands, _.map(allStrands, function(strand){
+                Date.parse(strand.time_created)
+            }));
+
+            //loop through assign the color based on the previous color.
+            
+            prevStrand = strandsByTime[strandsByTime.length - 1];
+            prevStrandColor = prevStrand.color;
+            _.each(strandColors, function(color){
+                if (color == prevStrandColor){
+                    prevColorIndex = strandColors.indexOf(color)
+                    if (prevColorIndex == strandColors.length-1){
+                        thisColorIndex = 0
+                    }
+                        else {
+                            thisColorIndex = prevColorIndex + 1;
+                        }
+                }
+            })
+            }
+            return strandColors[thisColorIndex]
+        }
+
+
         //this should only be called once: right when a strand is created
-        vm.paintStrand = function() {
-            color1 = "rgb(182, 227, 212)";
-            color2 = "rgb(247, 141, 176)";
-            color3 = "rgb(252, 192, 129)"; 
-            color4 = "rgb(129, 189, 252)";
-
-            //this should return a color
-            //console.log(vm.selected_strand.color)
-            // Strands.paintStrand(vm.strand_id, vm.time_created, vm.color)
-            //     .success(function(assign_messages_data) {
-            //         vm.messages = assign_messages_data;
-            // });
-
-
-            return color2
+        vm.paintStrand = function(message) { 
+                if(message.strand_id){
+                    _.each(vm.strands, function(strand) {
+                        if (strand._id == message.strand_id) {
+                            message_color = strand.color
+                        }            
+                    });
+                }
+                console.log(message_color)
+        return message_color
         }
 
 

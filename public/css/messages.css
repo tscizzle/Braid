@@ -1,9 +1,9 @@
 #message-list-pane .primed {
-    background-color: rgb(250, 185, 80) !important;
+    background-color: white !important;
 }
 
 #message-list-pane .current-strand {
-    background-color: rgb(80, 173, 250) !important;
+    background-color: white !important;
 }
 
 #message-list-wrapper {
