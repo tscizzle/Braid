@@ -16,7 +16,7 @@ module.exports = function(app, io) {
 
     var loggedIn = function(req, res, next) {
         if (req.user) {
-            next();
+            return next();
         } else {
             res.status(401).json({
                 err: 'User not logged in.'
@@ -26,7 +26,7 @@ module.exports = function(app, io) {
     app.all("/api/*", loggedIn);
 
 
-    // define a dynamic middleware-generating function that each route can use to suit its own auth needs
+    // define a dynamic middleware-generating function that checks if a resource belongs to the logged in user
 
     var resourceBelongsToUser = function(reqPathToResourceId, resourceModel) {
         /*
@@ -56,6 +56,12 @@ module.exports = function(app, io) {
                 resource_id = resource_id[req_field_name];
             });
 
+            // if the request does not include the resource id, there is no ownership to check
+            if (!resource_id) {
+                req.auth_checked = true;
+                return next();
+            };
+
             resourceModel.findOne({
                 _id: resource_id
             }, function(err, resource) {
@@ -72,7 +78,7 @@ module.exports = function(app, io) {
 
                 if (it_checks_out) {
                     req.auth_checked = true;
-                    next();
+                    return next();
                 } else {
                     res.status(401).json({
                         err: 'Logged in user does not have access to one of the involved resources.'
@@ -87,7 +93,37 @@ module.exports = function(app, io) {
 
     // define some custom auth middleware for particular routes whose needs are outside the ability of the dynamic middleware-generating function
 
+    var bodyReceiverIdIsFriend = function(req, res, next) {
+
+        Friendship.find({
+            $or: [{requester_id: req.user._id}, {target_id: req.user._id}],
+            status: 'accepted'
+        }, function(err, friendships) {
+            var friend_ids = friendships.map(function(friendship) {
+                if (friendship.requester_id.equals(req.user._id)) {
+                    return friendship.target_id;
+                } else if (friendship.target_id.equals(req.user._id)) {
+                    return friendship.requester_id;
+                };
+            });
+
+            var isUsersFriend = function(other_user_id) {
+                return friend_ids.filter(function(friend_id) {return friend_id == other_user_id}).length > 0;
+            };
+
+            if (!isUsersFriend(req.body.receiver_id)) {
+                res.status(401).json({
+                    err: 'Logged in user does not have access to one of the involved resources.'
+                });
+            } else {
+                req.auth_checked = true;
+                return next();
+            };
+        });
+    };
+
     var bodyMessageIdsBelongToUser = function(req, res, next) {
+
         Message.find({
             _id: {$in: req.body.message_ids}
         }, function(err, messages) {
@@ -99,8 +135,9 @@ module.exports = function(app, io) {
                 };
             });
             req.auth_checked = true;
-            next();
+            return next();
         });
+
     };
 
     var bodyUserId0OrUserId1IsUser = function(req, res, next) {
@@ -111,8 +148,43 @@ module.exports = function(app, io) {
             });
         } else {
             req.auth_checked = true;
-            next();
+            return next();
         };
+    };
+
+    var bodyOtherUserIdXIsFriend = function(req, res, next) {
+
+        Friendship.find({
+            $or: [{requester_id: req.user._id}, {target_id: req.user._id}],
+            status: 'accepted'
+        }, function(err, friendships) {
+            var friend_ids = friendships.map(function(friendship) {
+                if (friendship.requester_id.equals(req.user._id)) {
+                    return friendship.target_id;
+                } else if (friendship.target_id.equals(req.user._id)) {
+                    return friendship.requester_id;
+                };
+            });
+
+            var isUsersFriend = function(other_user_id) {
+                return friend_ids.filter(function(friend_id) {return friend_id == other_user_id}).length > 0;
+            };
+
+            // are user_id_0 and user_id_1 the logged in user and one of his/her friends
+            // use '==' instead of .equals() because these are strings whereas we should use .equals() for ObjectId's
+            var ownersAreUserAndFriend = (req.body.user_id_0 == req.user._id && isUsersFriend(req.body.user_id_1) ||
+                                          req.body.user_id_1 == req.user._id && isUsersFriend(req.body.user_id_0))
+
+            if (!ownersAreUserAndFriend) {
+                res.status(401).json({
+                    err: 'Logged in user does not have access to one of the involved resources.'
+                });
+            } else {
+                req.auth_checked = true;
+                return next();
+            };
+        });
+
     };
 
     var bodyRequesterIdOrTargetIdIsUser = function(req, res, next) {
@@ -123,7 +195,7 @@ module.exports = function(app, io) {
             });
         } else {
             req.auth_checked = true;
-            next();
+            return next();
         };
     };
 
@@ -132,7 +204,10 @@ module.exports = function(app, io) {
 
     app.get('/api/messages/:convo_id', resourceBelongsToUser(['params', 'convo_id'], Convo));
 
-    app.post('/api/messages', resourceBelongsToUser(['body', 'sender_id'], User));
+    app.post('/api/messages', resourceBelongsToUser(['body', 'sender_id'], User),
+                              resourceBelongsToUser(['body', 'strand_id'], Strand),
+                              resourceBelongsToUser(['body', 'convo_id'], Convo),
+                              bodyReceiverIdIsFriend);
 
     app.delete('/api/messages/:message_id/:convo_id', resourceBelongsToUser(['params', 'message_id'], Message),
                                                       resourceBelongsToUser(['params', 'convo_id'], Convo));
@@ -147,17 +222,19 @@ module.exports = function(app, io) {
     app.get('/api/strands/:convo_id', resourceBelongsToUser(['params', 'convo_id'], Convo));
 
     app.post('/api/strands', resourceBelongsToUser(['body', 'convo_id'], Convo),
-                             bodyUserId0OrUserId1IsUser);
+                             bodyUserId0OrUserId1IsUser,
+                             bodyOtherUserIdXIsFriend);
 
     app.get('/api/convos/:user_id', resourceBelongsToUser(['params', 'user_id'], User));
 
-    app.post('/api/convos', bodyUserId0OrUserId1IsUser);
+    app.post('/api/convos', bodyUserId0OrUserId1IsUser,
+                            bodyOtherUserIdXIsFriend);
 
     app.delete('/api/convos/:convo_id/:user_id', resourceBelongsToUser(['params', 'convo_id'], Convo),
                                                  resourceBelongsToUser(['params', 'user_id'], User));
 
     // TODO: this is saying that anyone can see the list of users
-    app.get('/api/users', function(req, res, next) {req.auth_checked = true; next();});
+    app.get('/api/users', function(req, res, next) {req.auth_checked = true; return next();});
 
     app.get('/api/friendUsers/:user_id', resourceBelongsToUser(['params', 'user_id'], User));
 
@@ -178,7 +255,7 @@ module.exports = function(app, io) {
 
     var authChecked = function(req, res, next) {
         if (req.auth_checked) {
-            next();
+            return next();
         } else {
             console.log();
             res.status(500).json({
