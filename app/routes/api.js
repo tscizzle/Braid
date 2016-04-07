@@ -141,7 +141,7 @@ module.exports = function(app, io) {
     };
 
     var bodyUserId0OrUserId1IsUser = function(req, res, next) {
-        // use '==' instead of .equals() because these are strings whereas we should use .equals() for ObjectId's
+        // use '==' instead of .equals() because these may be strings whereas we should use .equals() for ObjectId's
         if (!(req.body.user_id_0 == req.user._id || req.body.user_id_1 == req.user._id)) {
             res.status(401).json({
                 err: 'Logged in user does not have access to one of the involved resources.'
@@ -171,7 +171,7 @@ module.exports = function(app, io) {
             };
 
             // are user_id_0 and user_id_1 the logged in user and one of his/her friends
-            // use '==' instead of .equals() because these are strings whereas we should use .equals() for ObjectId's
+            // use '==' instead of .equals() because these may be strings whereas we should use .equals() for ObjectId's
             var ownersAreUserAndFriend = (req.body.user_id_0 == req.user._id && isUsersFriend(req.body.user_id_1) ||
                                           req.body.user_id_1 == req.user._id && isUsersFriend(req.body.user_id_0))
 
@@ -188,7 +188,7 @@ module.exports = function(app, io) {
     };
 
     var bodyRequesterIdOrTargetIdIsUser = function(req, res, next) {
-        // use '==' instead of .equals() because these are strings whereas we should use .equals() for ObjectId's
+        // use '==' instead of .equals() because these may be strings whereas we should use .equals() for ObjectId's
         if (!(req.body.requester_id == req.user._id || req.body.target_id == req.user._id)) {
             res.status(401).json({
                 err: 'Logged in user does not have access to one of the involved resources.'
@@ -197,6 +197,23 @@ module.exports = function(app, io) {
             req.auth_checked = true;
             return next();
         };
+    };
+
+    var friendshipTargetIsUser = function(req, res, next) {
+
+        Friendship.findOne({
+            _id: req.params.friendship_id
+        }, function(err, friendship) {
+            if (!friendship.target_id.equals(req.user._id)) {
+                res.status(401).json({
+                    err: 'Logged in user does not have access to one of the involved resources.'
+                });
+            } else {
+                req.auth_checked = true;
+                return next();
+            };
+        });
+
     };
 
 
@@ -245,7 +262,8 @@ module.exports = function(app, io) {
     app.post('/api/friendships', bodyRequesterIdOrTargetIdIsUser);
 
     app.post('/api/friendships/accept/:friendship_id/:user_id', resourceBelongsToUser(['params', 'friendship_id'], Friendship),
-                                                                resourceBelongsToUser(['params', 'user_id'], User));
+                                                                resourceBelongsToUser(['params', 'user_id'], User),
+                                                                friendshipTargetIsUser);
 
     app.delete('/api/friendships/:friendship_id/:user_id', resourceBelongsToUser(['params', 'friendship_id'], Friendship),
                                                            resourceBelongsToUser(['params', 'user_id'], User));
