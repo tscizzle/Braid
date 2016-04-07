@@ -51,6 +51,7 @@ module.exports = function(app, io) {
             var resourcePathsToUserIds = modelToUserIdPathsMap(resourceModel);
 
             // get the resource id from the req based on reqPathToResourceId
+            console.log('reqPathToResourceId', reqPathToResourceId);
             var resource_id = req;
             _.each(reqPathToResourceId, function(req_field_name) {
                 resource_id = resource_id[req_field_name];
@@ -62,10 +63,13 @@ module.exports = function(app, io) {
                 return next();
             };
 
+            console.log('resourcePathsToUserIds', resourcePathsToUserIds);
+            console.log('resource_id', resource_id);
             resourceModel.findOne({
                 _id: resource_id
             }, function(err, resource) {
 
+                console.log('resource', resource);
                 _.each(resourcePathsToUserIds, function(path) {
                     var owner_id = resource;
                     _.each(path, function(resource_field_name) {
@@ -678,6 +682,17 @@ module.exports = function(app, io) {
             if (err) {
                 res.send(err);
             };
+
+            // unfortunately have to call .emit() here instead of in a post hook on .update(), since mongoose doesn't have document middleware for .update()
+            Friendship.findOne({
+                _id: req.params.friendship_id
+            }, function(err, friendship) {
+                var user_ids = [friendship.requester_id, friendship.target_id];
+
+                _.each(user_ids, function(user_id) {
+                    io.to(user_id).emit('friendships:receive_update', req.params.user_id);
+                });
+            });
 
             Friendship.find({
                 $or: [{requester_id: req.params.user_id}, {target_id: req.params.user_id}]

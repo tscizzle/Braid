@@ -43,18 +43,6 @@ angular.module('friendshipsDirective', [])
         };
 
 
-        // register listeners
-
-        var joinUserSocketRoom = function() {
-            if (vm.selected_user) {
-                socket.emit('room:join', vm.selected_user);
-            };
-        };
-
-        var selected_user_watcher = function(scope) {return vm.selected_user;};
-        $scope.$watch(selected_user_watcher, joinUserSocketRoom);
-
-
         // initialization
 
         vm.friendships = [];
@@ -63,8 +51,6 @@ angular.module('friendshipsDirective', [])
         Friendships.get(vm.selected_user._id)
             .success(function(data) {
                 vm.friendships = data;
-
-                joinUserSocketRoom();
             });
 
     }])

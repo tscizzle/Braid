@@ -1,6 +1,6 @@
 angular.module('braidController', [])
 
-    .controller('mainController', ['$scope', 'Auth', 'Users', 'Friendships', function($scope, Auth, Users, Friendships) {
+    .controller('mainController', ['$scope', 'socket', 'Auth', 'Users', 'Friendships', function($scope, socket, Auth, Users, Friendships) {
 
         var vm = this;
 
@@ -46,12 +46,26 @@ angular.module('braidController', [])
             vm.friend_user_map = temp_friend_user_map;
         };
 
+        var joinUserSocketRoom = function() {
+            if (vm.selected_user) {
+                socket.emit('room:join', vm.selected_user);
+            };
+        };
+
         var friend_users_watcher = function(scope) {return vm.friend_users;};
         var friendships_watcher = function(scope) {return vm.friendships;};
         var selected_user_watcher = function(scope) {return vm.selected_user;};
         $scope.$watch(friendships_watcher, refreshFriendUsers);
         $scope.$watch(selected_user_watcher, refreshFriendships);
         $scope.$watch(friend_users_watcher, refreshFriendUserMap);
+        $scope.$watch(selected_user_watcher, joinUserSocketRoom);
+
+
+        // register socket listeners
+
+        socket.on('friendships:receive_update', function() {
+            refreshFriendships();
+        });
 
 
         // initialization
@@ -65,6 +79,8 @@ angular.module('braidController', [])
         Auth.getLoggedInUser()
             .success(function(data) {
                 vm.selected_user = data.user;
+
+                joinUserSocketRoom();
             });
 
     }]);
