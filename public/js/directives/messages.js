@@ -176,9 +176,9 @@ angular.module('messagesDirective', [])
         vm.thisColor = function() {
 
             //looks at the previous strands color, and assign the next one in the queue.
-            strandColors = ["red", "orange", "yellow", "green", "blue", "purple"];
+            var STRANDCOLORS = ["red", "orange", "yellow", "green", "blue", "purple"];
             //make a list of all the strands that have an associated message, don't include repeats
-            var allStrand_ids = new Array();
+            var allStrand_ids = [];
             _.each(vm.messages, function(message) {
                 if (!_.contains(allStrand_ids, message.strand_id)){
                     allStrand_ids.push(message.strand_id)
@@ -209,10 +209,10 @@ angular.module('messagesDirective', [])
             //loop through assign the color based on the previous color.
             prevStrand = strandsByTime[strandsByTime.length - 1];
             prevStrandColor = prevStrand.color;
-            _.each(strandColors, function(color){
+            _.each(STRANDCOLORS, function(color){
                 if (color == prevStrandColor){
-                    prevColorIndex = strandColors.indexOf(color)
-                    if (prevColorIndex == strandColors.length-1){
+                    prevColorIndex = STRANDCOLORS.indexOf(color)
+                    if (prevColorIndex == STRANDCOLORS.length-1){
                         thisColorIndex = 0
                     }
                         else {
@@ -221,7 +221,7 @@ angular.module('messagesDirective', [])
                 }
             })
             }
-                return strandColors[thisColorIndex]
+                return STRANDCOLORS[thisColorIndex]
         }
 
 
