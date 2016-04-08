@@ -12,10 +12,7 @@ angular.module('usersDirective', [])
             Users.delete(user_id)
                 .success(function(data) {
                     vm.users = data;
-
-                    if (user_id === vm.selected_user._id) {
-                        vm.selected_user = vm.users[0];
-                    };
+                    vm.selected_user = undefined;
                 });
 
         };

@@ -19,6 +19,8 @@ angular.module('messagesDirective', [])
                     vm.newStrandFormData.convo_id = vm.selected_convo._id;
                     vm.newStrandFormData.color = vm.thisColor();
                     vm.newStrandFormData.time_created = new Date();
+                    vm.newStrandFormData.user_id_0 = vm.selected_convo.user_id_0;
+                    vm.newStrandFormData.user_id_1 = vm.selected_convo.user_id_1;
                     // create a new strand
                     Strands.create(vm.newStrandFormData)
                         .success(function(strand_data) {
@@ -29,9 +31,8 @@ angular.module('messagesDirective', [])
                             var strand_times_created = vm.strands.map(function(strand) {
                                 return vm.strands.time_created;
                             });
-
                             // update the primed messages to be part of the new strand
-                            Messages.assignMessagesToStrand(message_ids, strand_data.new_strand._id, vm.selected_convo._id, user_ids)
+                            Messages.assignMessagesToStrand(message_ids, strand_data.new_strand._id, vm.selected_convo._id)
                                 .success(function(assign_messages_data) {
                                     vm.messages = assign_messages_data;
 
@@ -64,26 +65,28 @@ angular.module('messagesDirective', [])
             };
         };
 
-        vm.deleteMessage = function(message_id, convo_id) {
+        vm.deleteMessage = function(message_id) {
+            if (vm.selected_convo) {
 
-            Messages.delete(message_id, convo_id)
-                .success(function(data) {
-                    vm.messages = data;
-                    vm.primed_messages = vm.primed_messages.filter(function(primed_message) {
-                        return message_id !== primed_message._id;
-                    });
-
-                    if (vm.selected_strand) {
-                        var strand_messages = vm.messages.filter(function(message) {
-                            return message.strand_id === vm.selected_strand._id;
+                Messages.delete(message_id, vm.selected_convo._id)
+                    .success(function(data) {
+                        vm.messages = data;
+                        vm.primed_messages = vm.primed_messages.filter(function(primed_message) {
+                            return message_id !== primed_message._id;
                         });
 
-                        if (strand_messages.length === 0) {
-                            vm.selected_strand = undefined;
-                        };
-                    };
-                });
+                        if (vm.selected_strand) {
+                            var strand_messages = vm.messages.filter(function(message) {
+                                return message.strand_id === vm.selected_strand._id;
+                            });
 
+                            if (strand_messages.length === 0) {
+                                vm.selected_strand = undefined;
+                            };
+                        };
+                    });
+
+            };
         };
 
 
@@ -131,9 +134,8 @@ angular.module('messagesDirective', [])
         };
 
         vm.removeMessageFromStrand = function(message_id) {
-            var user_ids = [vm.selected_convo.user_id_0, vm.selected_convo.user_id_1];
 
-            Messages.unassignMessageFromStrand(message_id, vm.selected_convo._id, user_ids)
+            Messages.unassignMessageFromStrand(message_id, vm.selected_convo._id)
                 .success(function(assign_message_data) {
                     vm.messages = assign_message_data;
 
@@ -147,19 +149,20 @@ angular.module('messagesDirective', [])
                         };
                     };
             });
+
         };
 
         vm.addMessagesToStrand = function(strand_message) {
             var primed_message_ids = vm.primed_messages.map(function(primed_message) {
                 return primed_message._id;
             });
-            var user_ids = [vm.selected_convo.user_id_0, vm.selected_convo.user_id_1];
 
-            Messages.assignMessagesToStrand(primed_message_ids, strand_message.strand_id, vm.selected_convo._id, user_ids)
+            Messages.assignMessagesToStrand(primed_message_ids, strand_message.strand_id, vm.selected_convo._id)
                 .success(function(assign_messages_data) {
                     vm.messages = assign_messages_data;
                     vm.primed_messages = [];
             });
+
         };
 
         vm.removeButtonIsHidden = function(message) {
@@ -224,12 +227,6 @@ angular.module('messagesDirective', [])
             }
                 return strandColors[thisColorIndex]
         }
-
-
-
-
-
-
 
 
         vm.paintStrand = function(message) { 
@@ -359,10 +356,9 @@ angular.module('messagesDirective', [])
         return {
             restrict: 'E',
             scope: {
-                selected_strand: '=selectedStrand',
                 selected_convo: '=selectedConvo',
                 selected_user: '=selectedUser',
-                user_map: '=userMap'
+                friend_user_map: '=friendUserMap'
             },
             templateUrl: 'views/messages.html',
             controller: 'messageController',

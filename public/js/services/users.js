@@ -6,8 +6,8 @@ angular.module('userService', [])
             get: function() {
                 return $http.get('/api/users');
             },
-            create: function(userData) {
-                return $http.post('/api/users', userData);
+            getFriends: function(user_id) {
+                return $http.get('/api/friendUsers/' + user_id);
             },
             delete: function(user_id) {
                 return $http.delete('/api/users/' + user_id);

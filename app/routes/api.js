@@ -7,15 +7,16 @@ module.exports = function(app, io) {
     var Strand = require('../models/strand')(io);
     var Convo = require('../models/convo')(io);
     var User = require('../models/user')(io);
+    var Friendship = require('../models/friendship')(io);
 
     var ObjectId = mongoose.Types.ObjectId;
 
 
-    // define middleware for authentication
+    // make sure that every request is authenticated with a logged in user
 
     var loggedIn = function(req, res, next) {
         if (req.user) {
-            next();
+            return next();
         } else {
             res.status(401).json({
                 err: 'User not logged in.'
@@ -24,11 +25,266 @@ module.exports = function(app, io) {
     };
     app.all("/api/*", loggedIn);
 
-    var assertCorrectUser = function(req, res, next) {
-        // TODO: check that req.user (the logged in user) is indeed the user who is allowed to see the requested resources
-        // TODO: perhaps split this method into several methods, one for each model, so we can do a custom check depending on the type of resource requested
-        // TODO:    that would look like assertCorrectUserConvo, assertCorrectUserMessage
+
+    // define a dynamic middleware-generating function that checks if a resource belongs to the logged in user
+
+    var resourceBelongsToUser = function(reqPathToResourceId, resourceModel) {
+        /*
+        * reqPathToResourceId: array of strings, defining the path to the resource in the req. (e.g. ['params', 'convo_id'])
+        * resourceModel: mongoose model, type of resource of which we are checking ownership
+        */
+
+        return function(req, res, next) {
+
+            var it_checks_out = false;
+
+            // specify where to find the reference to the users to which a resource belongs based on resourceModel
+            var modelToUserIdPathsMap = function(m) {
+                switch (m) {
+                    case Message: return [['sender_id'], ['receiver_id']];
+                    case Strand: return [['user_id_0'], ['user_id_1']];
+                    case Convo: return [['user_id_0'], ['user_id_1']];
+                    case User: return [['_id']];
+                    case Friendship: return [['requester_id'], ['target_id']];
+                };
+            };
+            var resourcePathsToUserIds = modelToUserIdPathsMap(resourceModel);
+
+            // get the resource id from the req based on reqPathToResourceId
+            console.log('reqPathToResourceId', reqPathToResourceId);
+            var resource_id = req;
+            _.each(reqPathToResourceId, function(req_field_name) {
+                resource_id = resource_id[req_field_name];
+            });
+
+            // if the request does not include the resource id, there is no ownership to check
+            if (!resource_id) {
+                req.auth_checked = true;
+                return next();
+            };
+
+            console.log('resourcePathsToUserIds', resourcePathsToUserIds);
+            console.log('resource_id', resource_id);
+            resourceModel.findOne({
+                _id: resource_id
+            }, function(err, resource) {
+
+                console.log('resource', resource);
+                _.each(resourcePathsToUserIds, function(path) {
+                    var owner_id = resource;
+                    _.each(path, function(resource_field_name) {
+                        owner_id = owner_id[resource_field_name];
+                    });
+                    if (owner_id.equals(req.user._id)) {
+                        it_checks_out = true;
+                    };
+                });
+
+                if (it_checks_out) {
+                    req.auth_checked = true;
+                    return next();
+                } else {
+                    res.status(401).json({
+                        err: 'Logged in user does not have access to one of the involved resources.'
+                    });
+                };
+            });
+
+        };
+
     };
+
+
+    // define some custom auth middleware for particular routes whose needs are outside the ability of the dynamic middleware-generating function
+
+    var bodyReceiverIdIsFriend = function(req, res, next) {
+
+        Friendship.find({
+            $or: [{requester_id: req.user._id}, {target_id: req.user._id}],
+            status: 'accepted'
+        }, function(err, friendships) {
+            var friend_ids = friendships.map(function(friendship) {
+                if (friendship.requester_id.equals(req.user._id)) {
+                    return friendship.target_id;
+                } else if (friendship.target_id.equals(req.user._id)) {
+                    return friendship.requester_id;
+                };
+            });
+
+            var isUsersFriend = function(other_user_id) {
+                return friend_ids.filter(function(friend_id) {return friend_id == other_user_id}).length > 0;
+            };
+
+            if (!isUsersFriend(req.body.receiver_id)) {
+                res.status(401).json({
+                    err: 'Logged in user does not have access to one of the involved resources.'
+                });
+            } else {
+                req.auth_checked = true;
+                return next();
+            };
+        });
+    };
+
+    var bodyMessageIdsBelongToUser = function(req, res, next) {
+
+        Message.find({
+            _id: {$in: req.body.message_ids}
+        }, function(err, messages) {
+            _.each(messages, function(message) {
+                if (!(message.sender_id.equals(req.user._id) || message.receiver_id.equals(req.user._id))) {
+                    res.status(401).json({
+                        err: 'Logged in user does not have access to one of the involved resources.'
+                    });
+                };
+            });
+            req.auth_checked = true;
+            return next();
+        });
+
+    };
+
+    var bodyUserId0OrUserId1IsUser = function(req, res, next) {
+        // use '==' instead of .equals() because these may be strings whereas we should use .equals() for ObjectId's
+        if (!(req.body.user_id_0 == req.user._id || req.body.user_id_1 == req.user._id)) {
+            res.status(401).json({
+                err: 'Logged in user does not have access to one of the involved resources.'
+            });
+        } else {
+            req.auth_checked = true;
+            return next();
+        };
+    };
+
+    var bodyOtherUserIdXIsFriend = function(req, res, next) {
+
+        Friendship.find({
+            $or: [{requester_id: req.user._id}, {target_id: req.user._id}],
+            status: 'accepted'
+        }, function(err, friendships) {
+            var friend_ids = friendships.map(function(friendship) {
+                if (friendship.requester_id.equals(req.user._id)) {
+                    return friendship.target_id;
+                } else if (friendship.target_id.equals(req.user._id)) {
+                    return friendship.requester_id;
+                };
+            });
+
+            var isUsersFriend = function(other_user_id) {
+                return friend_ids.filter(function(friend_id) {return friend_id == other_user_id}).length > 0;
+            };
+
+            // are user_id_0 and user_id_1 the logged in user and one of his/her friends
+            // use '==' instead of .equals() because these may be strings whereas we should use .equals() for ObjectId's
+            var ownersAreUserAndFriend = (req.body.user_id_0 == req.user._id && isUsersFriend(req.body.user_id_1) ||
+                                          req.body.user_id_1 == req.user._id && isUsersFriend(req.body.user_id_0))
+
+            if (!ownersAreUserAndFriend) {
+                res.status(401).json({
+                    err: 'Logged in user does not have access to one of the involved resources.'
+                });
+            } else {
+                req.auth_checked = true;
+                return next();
+            };
+        });
+
+    };
+
+    var bodyRequesterIdOrTargetIdIsUser = function(req, res, next) {
+        // use '==' instead of .equals() because these may be strings whereas we should use .equals() for ObjectId's
+        if (!(req.body.requester_id == req.user._id || req.body.target_id == req.user._id)) {
+            res.status(401).json({
+                err: 'Logged in user does not have access to one of the involved resources.'
+            });
+        } else {
+            req.auth_checked = true;
+            return next();
+        };
+    };
+
+    var friendshipTargetIsUser = function(req, res, next) {
+
+        Friendship.findOne({
+            _id: req.params.friendship_id
+        }, function(err, friendship) {
+            if (!friendship.target_id.equals(req.user._id)) {
+                res.status(401).json({
+                    err: 'Logged in user does not have access to one of the involved resources.'
+                });
+            } else {
+                req.auth_checked = true;
+                return next();
+            };
+        });
+
+    };
+
+
+    // apply the dynamic middleware-generating function to each route (there should be one for every api route)
+
+    app.get('/api/messages/:convo_id', resourceBelongsToUser(['params', 'convo_id'], Convo));
+
+    app.post('/api/messages', resourceBelongsToUser(['body', 'sender_id'], User),
+                              resourceBelongsToUser(['body', 'strand_id'], Strand),
+                              resourceBelongsToUser(['body', 'convo_id'], Convo),
+                              bodyReceiverIdIsFriend);
+
+    app.delete('/api/messages/:message_id/:convo_id', resourceBelongsToUser(['params', 'message_id'], Message),
+                                                      resourceBelongsToUser(['params', 'convo_id'], Convo));
+
+    app.post('/api/assignMessagesToStrand/:strand_id/:convo_id', resourceBelongsToUser(['params', 'strand_id'], Strand),
+                                                                 resourceBelongsToUser(['params', 'convo_id'], Convo),
+                                                                 bodyMessageIdsBelongToUser);
+
+    app.post('/api/unassignMessageFromStrand/:convo_id', resourceBelongsToUser(['body', 'message_id'], Message),
+                                                         resourceBelongsToUser(['params', 'convo_id'], Convo));
+
+    app.get('/api/strands/:convo_id', resourceBelongsToUser(['params', 'convo_id'], Convo));
+
+    app.post('/api/strands', resourceBelongsToUser(['body', 'convo_id'], Convo),
+                             bodyUserId0OrUserId1IsUser,
+                             bodyOtherUserIdXIsFriend);
+
+    app.get('/api/convos/:user_id', resourceBelongsToUser(['params', 'user_id'], User));
+
+    app.post('/api/convos', bodyUserId0OrUserId1IsUser,
+                            bodyOtherUserIdXIsFriend);
+
+    app.delete('/api/convos/:convo_id/:user_id', resourceBelongsToUser(['params', 'convo_id'], Convo),
+                                                 resourceBelongsToUser(['params', 'user_id'], User));
+
+    // TODO: this is saying that anyone can see the list of users
+    app.get('/api/users', function(req, res, next) {req.auth_checked = true; return next();});
+
+    app.get('/api/friendUsers/:user_id', resourceBelongsToUser(['params', 'user_id'], User));
+
+    app.delete('/api/users/:user_id', resourceBelongsToUser(['params', 'user_id'], User));
+
+    app.get('/api/friendships/:user_id', resourceBelongsToUser(['params', 'user_id'], User));
+
+    app.post('/api/friendships', bodyRequesterIdOrTargetIdIsUser);
+
+    app.post('/api/friendships/accept/:friendship_id/:user_id', resourceBelongsToUser(['params', 'friendship_id'], Friendship),
+                                                                resourceBelongsToUser(['params', 'user_id'], User),
+                                                                friendshipTargetIsUser);
+
+    app.delete('/api/friendships/:friendship_id/:user_id', resourceBelongsToUser(['params', 'friendship_id'], Friendship),
+                                                           resourceBelongsToUser(['params', 'user_id'], User));
+
+
+    // make sure that every request is approved by one of our auth-checking functions
+
+    var authChecked = function(req, res, next) {
+        if (req.auth_checked) {
+            return next();
+        } else {
+            res.status(500).json({
+                err: 'Internal server error.'
+            });
+        };
+    };
+    app.all("/api/*", authChecked);
 
 
     // define the api route handlers
@@ -104,34 +360,6 @@ module.exports = function(app, io) {
 
     });
 
-    // --- remove a message from a strand and send back messages for the convo after update
-    app.post('/api/unassignMessageFromStrand/:convo_id', function(req, res) {
-
-        Message.update({
-            _id: req.body.message_id
-        }, {
-            $unset: {
-                strand_id: 1
-            }
-        }, function(err, numAffected) {
-
-            // unfortunately have to call .emit() here instead of in a post hook on .update(), since mongoose doesn't have document middleware for .update()
-            _.each(req.body.user_ids, function(user_id) {
-                io.to(user_id).emit('messages:receive_update', req.params.convo_id);
-            });
-
-            Message.find({
-                'convo_id': req.params.convo_id
-            }, function(err, messages) {
-                if (err) {
-                    res.send(err);
-                };
-
-                res.json(messages);
-            });
-        });
-    });
-
     // --- assign messages to a strand and send back messages for the convo after update
     app.post('/api/assignMessagesToStrand/:strand_id/:convo_id', function(req, res) {
 
@@ -146,8 +374,48 @@ module.exports = function(app, io) {
         }, function(err, numAffected) {
 
             // unfortunately have to call .emit() here instead of in a post hook on .update(), since mongoose doesn't have document middleware for .update()
-            _.each(req.body.user_ids, function(user_id) {
-                io.to(user_id).emit('messages:receive_update', req.params.convo_id);
+            Convo.findOne({
+                _id: req.params.convo_id
+            }, function(err, convo) {
+                var user_ids = [convo.user_id_0, convo.user_id_1];
+
+                _.each(user_ids, function(user_id) {
+                    io.to(user_id).emit('messages:receive_update', req.params.convo_id);
+                });
+            });
+
+            Message.find({
+                'convo_id': req.params.convo_id
+            }, function(err, messages) {
+                if (err) {
+                    res.send(err);
+                };
+
+                res.json(messages);
+            });
+        });
+    });
+
+    // --- unassign a message from a strand and send back messages for the convo after update
+    app.post('/api/unassignMessageFromStrand/:convo_id', function(req, res) {
+
+        Message.update({
+            _id: req.body.message_id
+        }, {
+            $unset: {
+                strand_id: 1
+            }
+        }, function(err, numAffected) {
+
+            // unfortunately have to call .emit() here instead of in a post hook on .update(), since mongoose doesn't have document middleware for .update()
+            Convo.findOne({
+                _id: req.params.convo_id
+            }, function(err, convo) {
+                var user_ids = [convo.user_id_0, convo.user_id_1];
+
+                _.each(user_ids, function(user_id) {
+                    io.to(user_id).emit('messages:receive_update', req.params.convo_id);
+                });
             });
 
             Message.find({
@@ -185,7 +453,9 @@ module.exports = function(app, io) {
         Strand.create({
             'convo_id': req.body.convo_id,
             'color': req.body.color, 
-            'time_created': Date.parse(req.body.time_created)
+            'time_created': Date.parse(req.body.time_created),
+            'user_id_0': req.body.user_id_0,
+            'user_id_1': req.body.user_id_1
         }, function(err, strand) {
             if (err) {
                 res.send(err);
@@ -209,11 +479,7 @@ module.exports = function(app, io) {
     app.get('/api/convos/:user_id', function(req, res) {
 
         Convo.find({
-            $or: [{
-                user_id_0: req.params.user_id
-            }, {
-                user_id_1: req.params.user_id
-            }]
+            $or: [{user_id_0: req.params.user_id}, {user_id_1: req.params.user_id}]
         }, function(err, convos) {
             if (err) {
                 res.send(err);
@@ -236,11 +502,7 @@ module.exports = function(app, io) {
             };
 
             Convo.find({
-                $or: [{
-                    user_id_0: req.body.user_id_0
-                }, {
-                    user_id_1: req.body.user_id_0
-                }]
+                $or: [{user_id_0: req.body.user_id_0}, {user_id_1: req.body.user_id_0}]
             }, function(err, convos) {
                 if (err) {
                     res.send(err);
@@ -268,11 +530,7 @@ module.exports = function(app, io) {
             };
 
             Convo.find({
-                $or: [{
-                    user_id_0: req.params.user_id
-                }, {
-                    user_id_1: req.params.user_id
-                }]
+                $or: [{user_id_0: req.params.user_id}, {user_id_1: req.params.user_id}]
             }, function(err, convos) {
                 if (err) {
                     res.send(err)
@@ -297,23 +555,34 @@ module.exports = function(app, io) {
 
     });
 
-    // --- create user and send back the new user_id as well as all users after creation
-    app.post('/api/users', function(req, res) {
+    // --- get all users who are friends of the user
+    app.get('/api/friendUsers/:user_id', function(req, res) {
 
-        User.create({
-            username: req.body.username,
-        }, function(err, user) {
+        Friendship.find({
+            $or: [{requester_id: req.params.user_id}, {target_id: req.params.user_id}]
+        }, function(err, friendships) {
             if (err) {
                 res.send(err);
             };
 
-            User.find(function(err, users) {
+            var friend_ids = friendships.map(function(friendship) {
+                if (friendship.requester_id == req.params.user_id) {
+                    return friendship.target_id;
+                } else if (friendship.target_id == req.params.user_id) {
+                    return friendship.requester_id;
+                };
+            });
+
+            User.find({
+                _id: {$in: friend_ids}
+            }, function(err, friend_users) {
                 if (err) {
                     res.send(err);
                 };
 
-                res.json({users: users, new_user: user});
+                res.json(friend_users);
             });
+
         });
 
     });
@@ -339,6 +608,134 @@ module.exports = function(app, io) {
                 };
 
                 res.json(users);
+            });
+        });
+
+    });
+
+    // --- get friendships for a user
+    app.get('/api/friendships/:user_id', function(req, res) {
+
+        Friendship.find({
+            $or: [{requester_id: req.params.user_id}, {target_id: req.params.user_id}]
+        }, function(err, friendships) {
+            if (err) {
+                res.send(err);
+            };
+
+            res.json(friendships);
+        });
+
+    });
+
+    // --- create a friendship and send back the new friendship_id as well as friendships for the user after creation
+    app.post('/api/friendships', function(req, res) {
+
+        User.findOne({
+            username: req.body.username
+        }, function(err, user) {
+            if (err) {
+                res.send(err);
+            };
+
+            if (!user) {
+                res.status(422).json({
+                    err: 'No user found with that username.'
+                });
+            } else if (user._id.equals(req.user._id)) {
+                res.status(422).json({
+                    err: 'Target user is the same as the requesting user.'
+                });
+            } else {
+
+                Friendship.create({
+                    requester_id: req.body.requester_id,
+                    target_id: user._id,
+                    status: 'pending'
+                }, function(err, friendship) {
+                    if (err) {
+                        res.send(err);
+                    };
+
+                    Friendship.find({
+                        $or: [{requester_id: req.body.requester_id}, {target_id: req.body.requester_id}]
+                    }, function(err, friendships) {
+                        if (err) {
+                            res.send(err);
+                        };
+
+                        res.json(friendships);
+                    });
+                });
+
+            };
+
+        });
+
+    });
+
+    // --- update a friendship to be accepted and send back friendships for the user after update
+    app.post('/api/friendships/accept/:friendship_id/:user_id', function(req, res) {
+
+        Friendship.update({
+            _id: req.params.friendship_id
+        }, {
+            $set: {
+                status: 'accepted'
+            }
+        }, function(err, numAffected) {
+            if (err) {
+                res.send(err);
+            };
+
+            // unfortunately have to call .emit() here instead of in a post hook on .update(), since mongoose doesn't have document middleware for .update()
+            Friendship.findOne({
+                _id: req.params.friendship_id
+            }, function(err, friendship) {
+                var user_ids = [friendship.requester_id, friendship.target_id];
+
+                _.each(user_ids, function(user_id) {
+                    io.to(user_id).emit('friendships:receive_update', req.params.user_id);
+                });
+            });
+
+            Friendship.find({
+                $or: [{requester_id: req.params.user_id}, {target_id: req.params.user_id}]
+            }, function(err, friendships) {
+                if (err) {
+                    res.send(err)
+                };
+
+                res.json(friendships);
+            });
+
+        });
+
+    });
+
+    // --- delete a friendship and send back friendships for the user after deletion
+    app.delete('/api/friendships/:friendship_id/:user_id', function(req, res) {
+
+        Friendship.findOneAndRemove({
+            _id: req.params.friendship_id
+        }, function(err, friendship) {
+            if (err) {
+                res.send(err);
+            };
+
+            // to trigger the middleware
+            if (friendship) {
+                friendship.remove();
+            };
+
+            Friendship.find({
+                $or: [{requester_id: req.params.user_id}, {target_id: req.params.user_id}]
+            }, function(err, friendships) {
+                if (err) {
+                    res.send(err)
+                };
+
+                res.json(friendships);
             });
         });
 

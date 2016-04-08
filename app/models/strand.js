@@ -8,7 +8,9 @@ module.exports = function(io) {
     var strandSchema = new Schema({
         convo_id: {type: ObjectId, ref: 'Convo', required: true},
         color: String,
-        time_created: Date
+        time_created: Date,
+        user_id_0: {type: ObjectId, ref: 'User', required: true},
+        user_id_1: {type: ObjectId, ref: 'User', required: true}
     });
 
     // if the model already exists, use the existing model
