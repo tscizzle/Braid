@@ -445,11 +445,8 @@ module.exports = function(app, io) {
 
     });
 
-
     // --- create a strand and send back the new strand_id as well as strands for the convo after creation
     app.post('/api/strands', function(req, res) {
-        console.log(req.body.color)
-        console.log(req.body.time_created)
         Strand.create({
             'convo_id': req.body.convo_id,
             'color': req.body.color, 
