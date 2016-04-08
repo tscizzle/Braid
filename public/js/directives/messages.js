@@ -5,7 +5,6 @@ angular.module('messagesDirective', [])
         var vm = this;
         window.SCOPE = vm;
 
-
         // define CRUD functions used in the template
 
         vm.createMessage = function() {
@@ -18,9 +17,7 @@ angular.module('messagesDirective', [])
                 // if responding to a new strand
                 if (vm.primed_messages.length > 0) {
                     vm.newStrandFormData.convo_id = vm.selected_convo._id;
-                    //call a function here that decides the color
                     vm.newStrandFormData.color = vm.thisColor();
-                    //use the time of the PREVIOUS strand to figure out what color this one should be
                     vm.newStrandFormData.time_created = new Date();
                     // create a new strand
                     Strands.create(vm.newStrandFormData)
@@ -29,19 +26,9 @@ angular.module('messagesDirective', [])
                             vm.newMessageFormData.strand_id = strand_data.new_strand._id;
                             var message_ids = vm.primed_messages.map(function(message) {return message._id});
                             var user_ids = [vm.newMessageFormData.sender_id, vm.newMessageFormData.receiver_id];
-
-                            //This is ONLY if creating a new strand. Seems like this is the only spot where strand color should be set.
-
-
-                            //create an array of times created
                             var strand_times_created = vm.strands.map(function(strand) {
                                 return vm.strands.time_created;
                             });
-                            // Strands.paintStrand(vm.strand_id, vm.time_created, vm.color)
-                            //     .success(function(assign_messages_data) {
-                            //     vm.messages = assign_messages_data;
-                            // });
-
 
                             // update the primed messages to be part of the new strand
                             Messages.assignMessagesToStrand(message_ids, strand_data.new_strand._id, vm.selected_convo._id, user_ids)
@@ -188,9 +175,9 @@ angular.module('messagesDirective', [])
         };
 
         vm.thisColor = function() {
-            //should look at the previous strands color, and assign the next one in the queue.
-            strandColors = ["red", "orange", "yellow", "green", "blue", "purple"];
 
+            //looks at the previous strands color, and assign the next one in the queue.
+            strandColors = ["red", "orange", "yellow", "green", "blue", "purple"];
             //make a list of all the strands that have an associated message, don't include repeats
             var allStrand_ids = new Array();
             _.each(vm.messages, function(message) {
@@ -198,13 +185,13 @@ angular.module('messagesDirective', [])
                     allStrand_ids.push(message.strand_id)
                 }
             })
-
             if(allStrand_ids.length < 2){
                 thisColorIndex = 0;
             } else {
-            //remove the last entry, which is undefined, because the newly made strand doesn't have a strand ID yet)
-            allStrand_ids.splice(allStrand_ids.length-1,1)
-
+            //remove the last entry if it is undefined, because the newly made strand doesn't have a strand ID yet)
+            if (allStrand_ids[allStrand_ids.length-1] == undefined){
+                allStrand_ids.splice(allStrand_ids.length-1,1)
+            }
             //add the strands with those strand ids to an array
             var allStrands = new Array();
             _.each(allStrand_ids, function(all_strand_id){
@@ -216,14 +203,11 @@ angular.module('messagesDirective', [])
                     }
                 })
             })
-
             //order strands by time
             var strandsByTime = _.sortBy(allStrands, _.map(allStrands, function(strand){
                 Date.parse(strand.time_created)
             }));
-
             //loop through assign the color based on the previous color.
-            
             prevStrand = strandsByTime[strandsByTime.length - 1];
             prevStrandColor = prevStrand.color;
             _.each(strandColors, function(color){
@@ -238,12 +222,23 @@ angular.module('messagesDirective', [])
                 }
             })
             }
-            return strandColors[thisColorIndex]
+                return strandColors[thisColorIndex]
         }
 
 
-        //this should only be called once: right when a strand is created
+
+
+
+
+
+
         vm.paintStrand = function(message) { 
+            faded_red = "rgb(237, 97, 93)";
+            faded_orange = "rgb(237, 179, 93)";
+            faded_yellow = "rgb(237, 221, 93)";
+            faded_green = "rgb(93, 237, 97)";
+            faded_blue = "rgb(93, 127, 237)";
+            faded_purple = "rgb(158, 93, 237)";
                 if(message.strand_id){
                     _.each(vm.strands, function(strand) {
                         if (strand._id == message.strand_id) {
@@ -251,7 +246,18 @@ angular.module('messagesDirective', [])
                         }            
                     });
                 }
-                console.log(message_color)
+                else if (vm.messageIsPrimed(message)){
+                    this_color = vm.thisColor();
+                    if (this_color == "red"){message_color = faded_red;}
+                    if (this_color == "orange"){message_color = faded_orange;}
+                    if (this_color == "yellow"){message_color = faded_yellow;}
+                    if (this_color == "green"){message_color = faded_green;}
+                    if (this_color == "blue"){message_color = faded_blue;}
+                    if (this_color == "purple"){message_color = faded_purple;}
+                    
+                } else {
+                    message_color = "white";
+                }
         return message_color
         }
 
