@@ -447,9 +447,10 @@ module.exports = function(app, io) {
 
     // --- create a strand and send back the new strand_id as well as strands for the convo after creation
     app.post('/api/strands', function(req, res) {
-
         Strand.create({
             'convo_id': req.body.convo_id,
+            'color': req.body.color, 
+            'time_created': Date.parse(req.body.time_created),
             'user_id_0': req.body.user_id_0,
             'user_id_1': req.body.user_id_1
         }, function(err, strand) {
@@ -469,6 +470,7 @@ module.exports = function(app, io) {
         });
 
     });
+
 
     // --- get convos for a user
     app.get('/api/convos/:user_id', function(req, res) {

@@ -3,7 +3,7 @@ angular.module('messagesDirective', [])
     .controller('messageController', ['$scope', 'socket', 'Messages', 'Strands', function($scope, socket, Messages, Strands) {
 
         var vm = this;
-
+        window.SCOPE = vm;
 
         // define CRUD functions used in the template
 
@@ -17,16 +17,16 @@ angular.module('messagesDirective', [])
                 // if responding to a new strand
                 if (vm.primed_messages.length > 0) {
                     vm.newStrandFormData.convo_id = vm.selected_convo._id;
+                    vm.newStrandFormData.color = vm.thisColor();
+                    vm.newStrandFormData.time_created = new Date();
                     vm.newStrandFormData.user_id_0 = vm.selected_convo.user_id_0;
                     vm.newStrandFormData.user_id_1 = vm.selected_convo.user_id_1;
-
                     // create a new strand
                     Strands.create(vm.newStrandFormData)
                         .success(function(strand_data) {
                             vm.strands = strand_data.strands;
                             vm.newMessageFormData.strand_id = strand_data.new_strand._id;
                             var message_ids = vm.primed_messages.map(function(message) {return message._id});
-
                             // update the primed messages to be part of the new strand
                             Messages.assignMessagesToStrand(message_ids, strand_data.new_strand._id, vm.selected_convo._id)
                                 .success(function(assign_messages_data) {
@@ -41,7 +41,7 @@ angular.module('messagesDirective', [])
                                             vm.primed_messages = [];
                                         });
 
-                            });
+                                });
 
                         });
 
@@ -162,7 +162,7 @@ angular.module('messagesDirective', [])
         };
 
         vm.removeButtonIsHidden = function(message) {
-                return !message.strand_id;
+            return !message.strand_id;
         };
 
         vm.addButtonIsHidden = function(message) {
@@ -172,6 +172,87 @@ angular.module('messagesDirective', [])
                 return true;
             };
         };
+
+        vm.thisColor = function() {
+
+            //looks at the previous strands color, and assign the next one in the queue.
+            var STRANDCOLORS = ["red", "orange", "yellow", "green", "blue", "purple"];
+            //make a list of all the strands that have an associated message, don't include repeats
+            var allStrand_ids = [];
+            _.each(vm.messages, function(message) {
+                if (!_.contains(allStrand_ids, message.strand_id)){
+                    allStrand_ids.push(message.strand_id)
+                }
+            })
+            if(allStrand_ids.length < 2){
+                thisColorIndex = 0;
+            } else {
+            //remove the last entry if it is undefined, because the newly made strand doesn't have a strand ID yet)
+            if (allStrand_ids[allStrand_ids.length-1] == undefined){
+                allStrand_ids.splice(allStrand_ids.length-1,1)
+            }
+            //add the strands with those strand ids to an array
+            var allStrands = new Array();
+            _.each(allStrand_ids, function(all_strand_id){
+                _.each(vm.strands, function(strand){
+
+                    if (strand._id == all_strand_id) {
+                        strand_to_add = strand
+                        allStrands.push(strand_to_add)
+                    }
+                })
+            })
+            //order strands by time
+            var strandsByTime = _.sortBy(allStrands, _.map(allStrands, function(strand){
+                Date.parse(strand.time_created)
+            }));
+            //loop through assign the color based on the previous color.
+            prevStrand = strandsByTime[strandsByTime.length - 1];
+            prevStrandColor = prevStrand.color;
+            _.each(STRANDCOLORS, function(color){
+                if (color == prevStrandColor){
+                    prevColorIndex = STRANDCOLORS.indexOf(color)
+                    if (prevColorIndex == STRANDCOLORS.length-1){
+                        thisColorIndex = 0
+                    }
+                        else {
+                            thisColorIndex = prevColorIndex + 1;
+                        }
+                }
+            })
+            }
+                return STRANDCOLORS[thisColorIndex]
+        }
+
+
+        vm.paintStrand = function(message) { 
+            faded_red = "rgb(237, 97, 93)";
+            faded_orange = "rgb(237, 179, 93)";
+            faded_yellow = "rgb(237, 221, 93)";
+            faded_green = "rgb(93, 237, 97)";
+            faded_blue = "rgb(93, 127, 237)";
+            faded_purple = "rgb(158, 93, 237)";
+                if(message.strand_id){
+                    _.each(vm.strands, function(strand) {
+                        if (strand._id == message.strand_id) {
+                            message_color = strand.color
+                        }            
+                    });
+                }
+                else if (vm.messageIsPrimed(message)){
+                    this_color = vm.thisColor();
+                    if (this_color == "red"){message_color = faded_red;}
+                    if (this_color == "orange"){message_color = faded_orange;}
+                    if (this_color == "yellow"){message_color = faded_yellow;}
+                    if (this_color == "green"){message_color = faded_green;}
+                    if (this_color == "blue"){message_color = faded_blue;}
+                    if (this_color == "purple"){message_color = faded_purple;}
+                    
+                } else {
+                    message_color = "white";
+                }
+        return message_color
+        }
 
 
         // register listeners
