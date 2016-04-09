@@ -1,6 +1,6 @@
 angular.module('braidController', [])
 
-    .controller('mainController', ['$scope', 'socket', 'Auth', 'Users', 'Friendships', function($scope, socket, Auth, Users, Friendships) {
+    .controller('mainController', ['$scope', 'socket', 'auth', 'Users', 'Friendships', function($scope, socket, auth, Users, Friendships) {
 
         var vm = this;
 
@@ -76,7 +76,7 @@ angular.module('braidController', [])
         vm.selected_user = undefined;
         vm.friend_user_map = {};
 
-        Auth.getLoggedInUser()
+        auth.getLoggedInUser()
             .success(function(data) {
                 vm.selected_user = data.user;
 

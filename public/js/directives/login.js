@@ -1,6 +1,6 @@
 angular.module('loginDirective', [])
 
-    .controller('loginController', ['$location', '$route', 'Auth', function($location, $route, Auth) {
+    .controller('loginController', ['$location', '$route', 'auth', function($location, $route, auth) {
 
         var vm = this;
 
@@ -8,7 +8,7 @@ angular.module('loginDirective', [])
         // define functions used in the template
 
         vm.login = function() {
-            Auth.login(vm.loginForm.username, vm.loginForm.password)
+            auth.login(vm.loginForm.username, vm.loginForm.password)
                 .success(function(data) {
                     vm.selected_user = data.user;
                     $location.path('/');

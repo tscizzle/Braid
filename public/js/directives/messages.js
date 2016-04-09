@@ -1,6 +1,6 @@
 angular.module('messagesDirective', [])
 
-    .controller('messageController', ['$scope', 'socket', 'Messages', 'Strands', function($scope, socket, Messages, Strands) {
+    .controller('messageController', ['$scope', 'focus', 'socket', 'Messages', 'Strands', function($scope, focus, socket, Messages, Strands) {
 
         var vm = this;
         window.SCOPE = vm;
@@ -102,7 +102,7 @@ angular.module('messagesDirective', [])
             if (vm.selected_strand) {
                 return message.strand_id !== vm.selected_strand._id;
             } else {
-                return vm.message_text_focus && vm.primed_messages.length > 0 && !vm.messageIsPrimed(message);
+                return vm.sendable_text_focus && vm.primed_messages.length > 0 && !vm.messageIsPrimed(message);
             };
         };
 
@@ -180,7 +180,7 @@ angular.module('messagesDirective', [])
             /* looks at the previous strand's color, and returns the next one in the queue. */
 
             var thisColorIndex;
-            var STRAND_COLOR_ORDER = ["red", "orange", "yellow", "green", "blue", "purple"];
+            var STRAND_COLOR_ORDER = ['red', 'orange', 'yellow', 'green', 'blue', 'purple'];
 
             // make a list of all the ID's of strands that have an associated message
             var messageStrands = _.map(vm.messages, function(message) {
@@ -218,7 +218,7 @@ angular.module('messagesDirective', [])
                 message_color = COLOR_TO_FADED_MAP[vm.thisColor()];
             // if a message is neither in a strand nor primed, make it no color
             } else {
-                message_color = "white";
+                message_color = 'white';
             };
             return message_color;
         };
@@ -233,13 +233,17 @@ angular.module('messagesDirective', [])
                 textarea_color = COLOR_TO_FADED_MAP[vm.thisColor()];
             // if there is no selected strand and no primed messages, make it no color
             } else {
-                textarea_color = "white";
+                textarea_color = 'white';
             };
             return textarea_color;
         };
 
 
         // register listeners
+
+        var focusSendableTextarea = function() {
+            focus.focus('sendable-textarea');
+        };
 
         var refreshMessages = function() {
             if (vm.selected_convo) {
@@ -284,9 +288,10 @@ angular.module('messagesDirective', [])
         };
 
         var strands_watcher = function(scope) {return vm.strands;};
-        var selected_strand_watcher = function(scope) {return vm.strands;};
+        var selected_strand_watcher = function(scope) {return vm.selected_strand;};
         var selected_convo_watcher = function(scope) {return vm.selected_convo;};
         var selected_user_watcher = function(scope) {return vm.selected_user;};
+        $scope.$watch(selected_strand_watcher, focusSendableTextarea);
         $scope.$watchGroup([selected_strand_watcher, selected_convo_watcher], refreshMessages);
         $scope.$watchGroup([selected_strand_watcher, selected_convo_watcher, selected_user_watcher], clearPrimedMessages);
         $scope.$watch(selected_convo_watcher, refreshStrands);
@@ -322,12 +327,12 @@ angular.module('messagesDirective', [])
         // constants
 
         var COLOR_TO_FADED_MAP = {
-            red: "rgb(237, 97, 93)",
-            orange: "rgb(237, 179, 93)",
-            yellow: "rgb(237, 221, 93)",
-            green: "rgb(93, 237, 97)",
-            blue: "rgb(93, 127, 237)",
-            purple: "rgb(158, 93, 237)"
+            red: 'rgb(237, 97, 93)',
+            orange: 'rgb(237, 179, 93)',
+            yellow: 'rgb(237, 221, 93)',
+            green: 'rgb(93, 237, 97)',
+            blue: 'rgb(93, 127, 237)',
+            purple: 'rgb(158, 93, 237)'
         };
 
 
@@ -338,7 +343,7 @@ angular.module('messagesDirective', [])
         vm.selected_strand = undefined;
         vm.strand_map = {};
         vm.primed_messages = [];
-        vm.message_text_focus = false;
+        vm.sendable_text_focus = false;
         vm.newMessageFormData = {};
         vm.newStrandFormData = {};
 

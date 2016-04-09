@@ -1,6 +1,6 @@
 angular.module('logoutDirective', [])
 
-    .controller('logoutController', ['$location', '$route', 'Auth', function($location, $route, Auth) {
+    .controller('logoutController', ['$location', '$route', 'auth', function($location, $route, auth) {
 
         var vm = this;
 
@@ -8,7 +8,7 @@ angular.module('logoutDirective', [])
         // define functions used in the template
 
         vm.logout = function() {
-            Auth.logout()
+            auth.logout()
                 .then(function() {
                     vm.selected_user = undefined;
                     $location.path('/');
