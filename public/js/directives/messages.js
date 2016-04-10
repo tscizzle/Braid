@@ -27,10 +27,6 @@ angular.module('messagesDirective', [])
                             vm.strands = strand_data.strands;
                             vm.newMessageFormData.strand_id = strand_data.new_strand._id;
                             var message_ids = vm.primed_messages.map(function(message) {return message._id});
-                            var user_ids = [vm.newMessageFormData.sender_id, vm.newMessageFormData.receiver_id];
-                            var strand_times_created = vm.strands.map(function(strand) {
-                                return vm.strands.time_created;
-                            });
                             // update the primed messages to be part of the new strand
                             Messages.assignMessagesToStrand(message_ids, strand_data.new_strand._id, vm.selected_convo._id)
                                 .success(function(assign_messages_data) {
