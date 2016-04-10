@@ -51,7 +51,6 @@ module.exports = function(app, io) {
             var resourcePathsToUserIds = modelToUserIdPathsMap(resourceModel);
 
             // get the resource id from the req based on reqPathToResourceId
-            console.log('reqPathToResourceId', reqPathToResourceId);
             var resource_id = req;
             _.each(reqPathToResourceId, function(req_field_name) {
                 resource_id = resource_id[req_field_name];
@@ -63,30 +62,33 @@ module.exports = function(app, io) {
                 return next();
             };
 
-            console.log('resourcePathsToUserIds', resourcePathsToUserIds);
-            console.log('resource_id', resource_id);
             resourceModel.findOne({
                 _id: resource_id
             }, function(err, resource) {
 
-                console.log('resource', resource);
-                _.each(resourcePathsToUserIds, function(path) {
-                    var owner_id = resource;
-                    _.each(path, function(resource_field_name) {
-                        owner_id = owner_id[resource_field_name];
+                if (!resource) {
+                    res.status(404).json({
+                        err: 'One of the resources to be checked for auth does not exist.'
                     });
-                    if (owner_id.equals(req.user._id)) {
-                        it_checks_out = true;
-                    };
-                });
-
-                if (it_checks_out) {
-                    req.auth_checked = true;
-                    return next();
                 } else {
-                    res.status(401).json({
-                        err: 'Logged in user does not have access to one of the involved resources.'
+                    _.each(resourcePathsToUserIds, function(path) {
+                        var owner_id = resource;
+                        _.each(path, function(resource_field_name) {
+                            owner_id = owner_id[resource_field_name];
+                        });
+                        if (owner_id.equals(req.user._id)) {
+                            it_checks_out = true;
+                        };
                     });
+
+                    if (it_checks_out) {
+                        req.auth_checked = true;
+                        return next();
+                    } else {
+                        res.status(401).json({
+                            err: 'Logged in user does not have access to one of the involved resources.'
+                        });
+                    };
                 };
             });
 
@@ -449,7 +451,7 @@ module.exports = function(app, io) {
     app.post('/api/strands', function(req, res) {
         Strand.create({
             'convo_id': req.body.convo_id,
-            'color': req.body.color, 
+            'color': req.body.color,
             'time_created': Date.parse(req.body.time_created),
             'user_id_0': req.body.user_id_0,
             'user_id_1': req.body.user_id_1
