@@ -76,7 +76,7 @@ angular.module('convosDirective', [])
                 });
                 var friends = [];
                 _.each(vm.friendships, function(friendship) {
-                    if (friendship.status === 'accepted' || true) {
+                    if (friendship.status === 'accepted') {
                         if (friendship.requester_id !== vm.selected_user._id && vm.friend_user_map[friendship.requester_id]) {
                             friends.push(vm.friend_user_map[friendship.requester_id]);
                         };

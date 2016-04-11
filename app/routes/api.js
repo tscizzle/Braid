@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var _ = require('underscore');
 
+
 module.exports = function(app, io) {
 
     var Message = require('../models/message')(io);
@@ -18,7 +19,7 @@ module.exports = function(app, io) {
         if (req.user) {
             return next();
         } else {
-            res.status(401).json({
+            return res.status(401).json({
                 err: 'User not logged in.'
             });
         };
@@ -67,7 +68,7 @@ module.exports = function(app, io) {
             }, function(err, resource) {
 
                 if (!resource) {
-                    res.status(404).json({
+                    return res.status(404).json({
                         err: 'One of the resources to be checked for auth does not exist.'
                     });
                 } else {
@@ -85,7 +86,7 @@ module.exports = function(app, io) {
                         req.auth_checked = true;
                         return next();
                     } else {
-                        res.status(401).json({
+                        return res.status(401).json({
                             err: 'Logged in user does not have access to one of the involved resources.'
                         });
                     };
@@ -118,7 +119,7 @@ module.exports = function(app, io) {
             };
 
             if (!isUsersFriend(req.body.receiver_id)) {
-                res.status(401).json({
+                return res.status(401).json({
                     err: 'Logged in user does not have access to one of the involved resources.'
                 });
             } else {
@@ -135,7 +136,7 @@ module.exports = function(app, io) {
         }, function(err, messages) {
             _.each(messages, function(message) {
                 if (!(message.sender_id.equals(req.user._id) || message.receiver_id.equals(req.user._id))) {
-                    res.status(401).json({
+                    return res.status(401).json({
                         err: 'Logged in user does not have access to one of the involved resources.'
                     });
                 };
@@ -149,7 +150,7 @@ module.exports = function(app, io) {
     var bodyUserId0OrUserId1IsUser = function(req, res, next) {
         // use '==' instead of .equals() because these may be strings whereas we should use .equals() for ObjectId's
         if (!(req.body.user_id_0 == req.user._id || req.body.user_id_1 == req.user._id)) {
-            res.status(401).json({
+            return res.status(401).json({
                 err: 'Logged in user does not have access to one of the involved resources.'
             });
         } else {
@@ -182,7 +183,7 @@ module.exports = function(app, io) {
                                           req.body.user_id_1 == req.user._id && isUsersFriend(req.body.user_id_0))
 
             if (!ownersAreUserAndFriend) {
-                res.status(401).json({
+                return res.status(401).json({
                     err: 'Logged in user does not have access to one of the involved resources.'
                 });
             } else {
@@ -196,7 +197,7 @@ module.exports = function(app, io) {
     var bodyRequesterIdOrTargetIdIsUser = function(req, res, next) {
         // use '==' instead of .equals() because these may be strings whereas we should use .equals() for ObjectId's
         if (!(req.body.requester_id == req.user._id || req.body.target_id == req.user._id)) {
-            res.status(401).json({
+            return res.status(401).json({
                 err: 'Logged in user does not have access to one of the involved resources.'
             });
         } else {
@@ -211,7 +212,7 @@ module.exports = function(app, io) {
             _id: req.params.friendship_id
         }, function(err, friendship) {
             if (!friendship.target_id.equals(req.user._id)) {
-                res.status(401).json({
+                return res.status(401).json({
                     err: 'Logged in user does not have access to one of the involved resources.'
                 });
             } else {
@@ -281,7 +282,7 @@ module.exports = function(app, io) {
         if (req.auth_checked) {
             return next();
         } else {
-            res.status(500).json({
+            return res.status(500).json({
                 err: 'Internal server error.'
             });
         };
@@ -298,10 +299,10 @@ module.exports = function(app, io) {
             'convo_id': req.params.convo_id
         }, function(err, messages) {
             if (err) {
-                res.send(err)
+                return res.status(500).send(err);
             };
 
-            res.json(messages);
+            return res.json(messages);
         });
 
     });
@@ -318,17 +319,17 @@ module.exports = function(app, io) {
             'strand_id': req.body.strand_id
         }, function(err, message) {
             if (err) {
-                res.send(err);
+                return res.status(500).send(err);
             };
 
             Message.find({
                 'convo_id': req.body.convo_id
             }, function(err, messages) {
                 if (err) {
-                    res.send(err);
+                    return res.status(500).send(err);
                 };
 
-                res.json(messages);
+                return res.json(messages);
             });
         });
 
@@ -341,7 +342,7 @@ module.exports = function(app, io) {
             '_id': req.params.message_id
         }, function(err, message) {
             if (err) {
-                res.send(err);
+                return res.status(500).send(err);
             };
 
             // to trigger the middleware
@@ -353,10 +354,10 @@ module.exports = function(app, io) {
                 'convo_id': req.params.convo_id
             }, function(err, messages) {
                 if (err) {
-                    res.send(err);
+                    return res.status(500).send(err);
                 };
 
-                res.json(messages);
+                return res.json(messages);
             });
         });
 
@@ -390,10 +391,10 @@ module.exports = function(app, io) {
                 'convo_id': req.params.convo_id
             }, function(err, messages) {
                 if (err) {
-                    res.send(err);
+                    return res.status(500).send(err);
                 };
 
-                res.json(messages);
+                return res.json(messages);
             });
         });
     });
@@ -424,10 +425,10 @@ module.exports = function(app, io) {
                 'convo_id': req.params.convo_id
             }, function(err, messages) {
                 if (err) {
-                    res.send(err);
+                    return res.status(500).send(err);
                 };
 
-                res.json(messages);
+                return res.json(messages);
             });
         });
     });
@@ -439,10 +440,10 @@ module.exports = function(app, io) {
             'convo_id': req.params.convo_id
         }, function(err, strands) {
             if (err) {
-                res.send(err)
+                return res.status(500).send(err);
             };
 
-            res.json(strands);
+            return res.json(strands);
         });
 
     });
@@ -457,17 +458,17 @@ module.exports = function(app, io) {
             'user_id_1': req.body.user_id_1
         }, function(err, strand) {
             if (err) {
-                res.send(err);
+                return res.status(500).send(err);
             };
 
             Strand.find({
                 'convo_id': req.body.convo_id
             }, function(err, strands) {
                 if (err) {
-                    res.send(err);
+                    return res.status(500).send(err);
                 };
 
-                res.json({strands: strands, new_strand: strand});
+                return res.json({strands: strands, new_strand: strand});
             });
         });
 
@@ -481,10 +482,10 @@ module.exports = function(app, io) {
             $or: [{user_id_0: req.params.user_id}, {user_id_1: req.params.user_id}]
         }, function(err, convos) {
             if (err) {
-                res.send(err);
+                return res.status(500).send(err);
             };
 
-            res.json(convos);
+            return res.json(convos);
         });
 
     });
@@ -497,17 +498,23 @@ module.exports = function(app, io) {
             user_id_1: req.body.user_id_1
         }, function(err, convo) {
             if (err) {
-                res.send(err);
+                if (err.message === 'DuplicateConvo') {
+                    return res.status(422).json({
+                        err: 'Convo with those users already exists.'
+                    });
+                } else {
+                    return res.status(500).send(err);
+                };
             };
 
             Convo.find({
                 $or: [{user_id_0: req.body.user_id_0}, {user_id_1: req.body.user_id_0}]
             }, function(err, convos) {
                 if (err) {
-                    res.send(err);
+                    return res.status(500).send(err);
                 };
 
-                res.json({convos: convos, new_convo: convo});
+                return res.json({convos: convos, new_convo: convo});
             });
         });
 
@@ -520,7 +527,7 @@ module.exports = function(app, io) {
             _id: req.params.convo_id
         }, function(err, convo) {
             if (err) {
-                res.send(err);
+                return res.status(500).send(err);
             };
 
             // to trigger the middleware
@@ -532,10 +539,10 @@ module.exports = function(app, io) {
                 $or: [{user_id_0: req.params.user_id}, {user_id_1: req.params.user_id}]
             }, function(err, convos) {
                 if (err) {
-                    res.send(err)
+                    return res.status(500).send(err);
                 };
 
-                res.json(convos);
+                return res.json(convos);
             });
         });
 
@@ -546,10 +553,10 @@ module.exports = function(app, io) {
 
         User.find(function(err, users) {
             if (err) {
-                res.send(err);
+                return res.status(500).send(err);
             };
 
-            res.json(users);
+            return res.json(users);
         });
 
     });
@@ -561,7 +568,7 @@ module.exports = function(app, io) {
             $or: [{requester_id: req.params.user_id}, {target_id: req.params.user_id}]
         }, function(err, friendships) {
             if (err) {
-                res.send(err);
+                return res.status(500).send(err);
             };
 
             var friend_ids = friendships.map(function(friendship) {
@@ -576,10 +583,10 @@ module.exports = function(app, io) {
                 _id: {$in: friend_ids}
             }, function(err, friend_users) {
                 if (err) {
-                    res.send(err);
+                    return res.status(500).send(err);
                 };
 
-                res.json(friend_users);
+                return res.json(friend_users);
             });
 
         });
@@ -593,7 +600,7 @@ module.exports = function(app, io) {
             _id: req.params.user_id
         }, function(err, user) {
             if (err) {
-                res.send(err);
+                return res.status(500).send(err);
             };
 
             // to trigger the middleware
@@ -603,10 +610,10 @@ module.exports = function(app, io) {
 
             User.find(function(err, users) {
                 if (err) {
-                    res.send(err)
+                    return res.status(500).send(err);
                 };
 
-                res.json(users);
+                return res.json(users);
             });
         });
 
@@ -619,10 +626,10 @@ module.exports = function(app, io) {
             $or: [{requester_id: req.params.user_id}, {target_id: req.params.user_id}]
         }, function(err, friendships) {
             if (err) {
-                res.send(err);
+                return res.status(500).send(err);
             };
 
-            res.json(friendships);
+            return res.json(friendships);
         });
 
     });
@@ -634,15 +641,15 @@ module.exports = function(app, io) {
             username: req.body.username
         }, function(err, user) {
             if (err) {
-                res.send(err);
+                return res.status(500).send(err);
             };
 
             if (!user) {
-                res.status(422).json({
+                return res.status(422).json({
                     err: 'No user found with that username.'
                 });
             } else if (user._id.equals(req.user._id)) {
-                res.status(422).json({
+                return res.status(422).json({
                     err: 'Target user is the same as the requesting user.'
                 });
             } else {
@@ -653,17 +660,23 @@ module.exports = function(app, io) {
                     status: 'pending'
                 }, function(err, friendship) {
                     if (err) {
-                        res.send(err);
+                        if (err.message === 'DuplicateFriendship') {
+                            return res.status(422).json({
+                                err: 'Friendship with those users already exists.'
+                            });
+                        } else {
+                            return res.status(500).send(err);
+                        };
                     };
 
                     Friendship.find({
                         $or: [{requester_id: req.body.requester_id}, {target_id: req.body.requester_id}]
                     }, function(err, friendships) {
                         if (err) {
-                            res.send(err);
+                            return res.status(500).send(err);
                         };
 
-                        res.json(friendships);
+                        return res.json(friendships);
                     });
                 });
 
@@ -684,7 +697,7 @@ module.exports = function(app, io) {
             }
         }, function(err, numAffected) {
             if (err) {
-                res.send(err);
+                return res.status(500).send(err);
             };
 
             // unfortunately have to call .emit() here instead of in a post hook on .update(), since mongoose doesn't have document middleware for .update()
@@ -702,10 +715,10 @@ module.exports = function(app, io) {
                 $or: [{requester_id: req.params.user_id}, {target_id: req.params.user_id}]
             }, function(err, friendships) {
                 if (err) {
-                    res.send(err)
+                    return res.status(500).send(err);
                 };
 
-                res.json(friendships);
+                return res.json(friendships);
             });
 
         });
@@ -719,7 +732,7 @@ module.exports = function(app, io) {
             _id: req.params.friendship_id
         }, function(err, friendship) {
             if (err) {
-                res.send(err);
+                return res.status(500).send(err);
             };
 
             // to trigger the middleware
@@ -731,10 +744,10 @@ module.exports = function(app, io) {
                 $or: [{requester_id: req.params.user_id}, {target_id: req.params.user_id}]
             }, function(err, friendships) {
                 if (err) {
-                    res.send(err)
+                    return res.status(500).send(err);
                 };
 
-                res.json(friendships);
+                return res.json(friendships);
             });
         });
 

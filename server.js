@@ -52,7 +52,7 @@ require('./app/routes/api')(app, io);
 // application routes
 
 app.get('/', function(req, res) {
-    res.sendfile('./public/views/index.html');
+    return res.sendfile('./public/views/index.html');
 });
 
 
