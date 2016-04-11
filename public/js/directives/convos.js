@@ -56,7 +56,10 @@ angular.module('convosDirective', [])
                 Convos.get(vm.selected_user._id)
                     .success(function(data) {
                         vm.convos = data;
-                        vm.selected_convo = vm.convos[0];
+
+                        if (!vm.selected_convo) {
+                            vm.selected_convo = vm.convos[0];
+                        };
                     });
 
             } else {

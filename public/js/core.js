@@ -15,6 +15,7 @@ var Braid = angular.module('Braid', [
     'convosDirective',
     'usersDirective',
     'braidFilters',
+    'focusService',
     'socketService',
     'authService',
     'messageService',

@@ -1,6 +1,6 @@
 angular.module('registerDirective', [])
 
-    .controller('registerController', ['$location', '$route', 'Auth', function($location, $route, Auth) {
+    .controller('registerController', ['$location', '$route', 'auth', function($location, $route, auth) {
 
         var vm = this;
 
@@ -8,9 +8,9 @@ angular.module('registerDirective', [])
         // define functions used in the template
 
         vm.register = function() {
-            Auth.register(vm.registerForm.username, vm.registerForm.password)
+            auth.register(vm.registerForm.username, vm.registerForm.password)
                 .success(function() {
-                    Auth.login(vm.registerForm.username, vm.registerForm.password)
+                    auth.login(vm.registerForm.username, vm.registerForm.password)
                         .success(function(data) {
                             vm.selected_user = data.user;
                             $location.path('/');

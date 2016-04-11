@@ -15,12 +15,11 @@
     <div class="row">
         <div class="col-sm-12">
             <div id="message-list-wrapper" scroll-glue>
-                <div class="message-in-list" ng-style="{'background-color': messageCtrl.paintStrand(message)}" ng-hide="messageCtrl.messageIsHidden(message)" ng-mousedown="messageCtrl.toggleMessage(message)" ng-repeat="message in messageCtrl.messages">
-                    <p><b>{{ message.sender_id | username:messageCtrl.user_map }}</b>:  <span class="message-text">{{ message.text }}</span></p>
-                    <button ng-mousedown="messageCtrl.deleteMessage(message._id, messageCtrl.selected_convo._id); $event.stopPropagation();">X</button>
-                    <button ng-mousedown="messageCtrl.removeMessageFromStrand(message._id); $event.stopPropagation();" ng-hide="messageCtrl.removeButtonIsHidden(message)">REMOVE</button>
-                    <button ng-mousedown="messageCtrl.addMessagesToStrand(message); $event.stopPropagation();" ng-hide="messageCtrl.addButtonIsHidden(message)">ADD</button>
-                    <i>Strand</i>: {{ message.strand_id || "NO STRAND" }}
+                <div class="message-in-list" ng-style="{'background-color': messageCtrl.paintStrand(message)}" ng-hide="messageCtrl.messageIsHidden(message)" ng-click="messageCtrl.toggleMessage(message)" ng-repeat="message in messageCtrl.messages">
+                    <p><b>{{ message.sender_id | username:messageCtrl.friend_user_map }}</b>:  <span class="message-text">{{ message.text }}</span></p>
+                    <button ng-click="messageCtrl.deleteMessage(message._id, messageCtrl.selected_convo._id); $event.stopPropagation();">X</button>
+                    <button ng-click="messageCtrl.removeMessageFromStrand(message._id); $event.stopPropagation();" ng-hide="messageCtrl.removeButtonIsHidden(message)">REMOVE</button>
+                    <button ng-click="messageCtrl.addMessagesToStrand(message); $event.stopPropagation();" ng-hide="messageCtrl.addButtonIsHidden(message)">ADD</button>
                 </div>
             </div>
         </div>
@@ -31,7 +30,7 @@
             <form>
                 <div class="col-sm-8">
                     <div class="form-group">
-                        <textarea class="form-control input-lg" ng-model="messageCtrl.newMessageFormData.text" ng-focus="messageCtrl.message_text_focus=true" ng-blur="messageCtrl.message_text_focus=false" enter-submit="messageCtrl.createMessage()"></textarea>
+                        <textarea id="sendable-textarea" class="form-control input-lg" ng-style="{'background-color': messageCtrl.paintTextarea()}" ng-model="messageCtrl.newMessageFormData.text" ng-focus="messageCtrl.sendable_text_focus=true" ng-blur="messageCtrl.sendable_text_focus=false" enter-submit="messageCtrl.createMessage()"></textarea>
                     </div>
                 </div>
                 <div class="col-sm-4">

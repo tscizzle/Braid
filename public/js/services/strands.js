@@ -13,9 +13,3 @@ angular.module('strandService', [])
 
     }]);
 
-
-
-            //,
-            // paintStrand: function(strand_id, time_created) {
-            //     return $http.post('/api/paintStrand', {strand_id: strand_id , time_created: time_created, color: color});
-            // }

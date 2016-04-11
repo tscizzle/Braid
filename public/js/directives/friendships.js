@@ -1,6 +1,6 @@
 angular.module('friendshipsDirective', [])
 
-    .controller('friendshipController', ['$scope', 'socket', 'Users', 'Friendships', function($scope, socket, Users, Friendships) {
+    .controller('friendshipController', ['$scope', 'Users', 'Friendships', function($scope, Users, Friendships) {
 
         var vm = this;
 

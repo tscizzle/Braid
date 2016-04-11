@@ -1,6 +1,6 @@
 angular.module('authService', [])
 
-    .factory('Auth', ['$http', function($http) {
+    .factory('auth', ['$http', function($http) {
 
         return {
             register: function(username, password) {
@@ -17,4 +17,4 @@ angular.module('authService', [])
             }
         };
 
-}]);
+    }]);
