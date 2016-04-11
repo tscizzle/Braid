@@ -12,7 +12,26 @@ module.exports = function(io) {
     var friendshipSchema = new Schema({
         requester_id: {type: ObjectId, ref: 'User', required: true},
         target_id: {type: ObjectId, ref: 'User', required: true},
-        status: {type: String, required: true}
+        status: {type: String, required: true, enum: ['pending', 'accepted']}
+    });
+
+    friendshipSchema.pre('validate', function(next) {
+        Friendship = mongoose.models.Friendship;
+        Friendship.findOne({
+            $or: [{
+                requester_id: this.requester_id,
+                target_id: this.target_id
+            }, {
+                requester_id: this.target_id,
+                target_id: this.requester_id
+            }]
+        }, function(err, friendship) {
+            if (friendship) {
+                return next(Error('DuplicateFriendship'));
+            } else {
+                return next();
+            };
+        });
     });
 
     friendshipSchema.post('save', function() {

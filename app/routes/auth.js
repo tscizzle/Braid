@@ -13,7 +13,7 @@ module.exports = function(app, io, passport) {
             };
 
             passport.authenticate('local')(req, res, function() {
-                return res.status(200).json({
+                return res.json({
                     message: 'Registration succeeded.'
                 });
             });
@@ -39,7 +39,7 @@ module.exports = function(app, io, passport) {
                     });
                 };
 
-                res.status(200).json({
+                res.json({
                     message: 'Login succeeded.',
                     user: user
                 });
@@ -49,18 +49,18 @@ module.exports = function(app, io, passport) {
 
     app.get('/logout', function(req, res) {
         req.logout();
-        res.status(200).json({
+        res.json({
             message: 'Logout successful.'
         });
     });
 
     app.get('/loggedInUser', function(req, res) {
         if (req.user) {
-            res.status(200).json({
+            res.json({
                 user: req.user
             });
         } else {
-            res.status(200).json({
+            res.json({
                 message: 'No user is logged in.'
             });
         };
