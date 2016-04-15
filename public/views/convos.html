@@ -10,7 +10,7 @@
         <div class="col-sm-12">
             <div class="convo-in-list" ng-class="{'selected': convo._id===convoCtrl.selected_convo._id}" ng-click="convoCtrl.selectConvo(convo)" ng-repeat="convo in convoCtrl.convos">
                 <b>{{ convo | partner:convoCtrl.selected_user | username:convoCtrl.friend_user_map }}</b>
-                <button ng-click="convoCtrl.deleteConvo(convo._id); $event.stopPropagation();">X</button>
+                <button class="btn btn-default" ng-click="convoCtrl.deleteConvo(convo._id); $event.stopPropagation();">X</button>
             </div>
         </div>
     </div>
@@ -24,7 +24,7 @@
             </div>
 
             <div class="col-sm-3">
-                <button type="submit" class="btn btn-primary" ng-click="convoCtrl.createConvo()">+</button>
+                <button type="submit" class="btn btn-default" ng-click="convoCtrl.createConvo()">+</button>
             </div>
         </form>
     </div>
