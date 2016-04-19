@@ -224,6 +224,17 @@ angular.module('messagesDirective', [])
             return message_color;
         };
 
+        vm.alignMessage = function(message) {
+            // depending on who sent the message, set 'margin-left' to either auto (right justified) or 0 (left justified)
+            if (message.sender_id===vm.selected_user._id) {
+                message_alignment = 'auto';
+            } else {
+                message_alignment = 0;
+
+            };
+            return message_alignment;
+        };
+
         vm.paintTextarea = function() {
             var textarea_color;
             // if a strand is selected, color it the faded version of that color
