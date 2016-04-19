@@ -181,7 +181,6 @@ angular.module('messagesDirective', [])
             /* looks at the previous strand's color, and returns the next one in the queue. */
 
             var thisColorIndex;
-            var STRAND_COLOR_ORDER = ['red', 'orange', 'yellow', 'green', 'blue', 'purple'];
 
             // make a list of all the ID's of strands that have an associated message
             var messageStrands = _.map(vm.messages, function(message) {
@@ -338,13 +337,19 @@ angular.module('messagesDirective', [])
 
         // constants
 
+        var STRAND_COLOR_ORDER = [
+            '#E5A9A9',
+            '#EAE7AA',
+            '#B2D6AA',
+            '#ACB3EA',
+            '#D4BADB'
+        ];
         var COLOR_TO_FADED_MAP = {
-            red: 'rgb(237, 97, 93)',
-            orange: 'rgb(237, 179, 93)',
-            yellow: 'rgb(237, 221, 93)',
-            green: 'rgb(93, 237, 97)',
-            blue: 'rgb(93, 127, 237)',
-            purple: 'rgb(158, 93, 237)'
+            '#E5A9A9': '#FACDCD',
+            '#EAE7AA': '#F8FACD',
+            '#B2D6AA': '#D2FACD',
+            '#ACB3EA': '#CDFAEC',
+            '#D4BADB': '#ECCDFA'
         };
 
 
