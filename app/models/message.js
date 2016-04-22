@@ -17,13 +17,13 @@ module.exports = function(io) {
     });
 
     messageSchema.post('save', function() {
-        io.to(this.receiver_id).emit('messages:receive_update', this.convo_id);
-        io.to(this.sender_id).emit('messages:receive_update', this.convo_id);
+        io.to(this.receiver_id).emit('messages:receive_update', {convo_id: this.convo_id, play_ooooh: true});
+        io.to(this.sender_id).emit('messages:receive_update', {convo_id: this.convo_id});
     });
 
     messageSchema.post('remove', function() {
-        io.to(this.receiver_id).emit('messages:receive_update', this.convo_id);
-        io.to(this.sender_id).emit('messages:receive_update', this.convo_id);
+        io.to(this.receiver_id).emit('messages:receive_update', {convo_id: this.convo_id});
+        io.to(this.sender_id).emit('messages:receive_update', {convo_id: this.convo_id});
     });
 
     // if the model already exists, use the existing model

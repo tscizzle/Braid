@@ -300,12 +300,17 @@ angular.module('messagesDirective', [])
 
         // register socket listeners
 
-        socket.on('messages:receive_update', function(convo_id) {
+        socket.on('messages:receive_update', function(data) {
             if (vm.selected_convo) {
-                if (convo_id == vm.selected_convo._id) {
+                if (data.convo_id == vm.selected_convo._id) {
                     refreshMessages();
                     refreshStrands();
                 };
+            };
+
+            if (data.play_ooooh) {
+                var ooooh = new Audio('audio/ooooh.wav');
+                ooooh.play();
             };
         });
 

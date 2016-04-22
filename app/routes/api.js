@@ -383,7 +383,7 @@ module.exports = function(app, io) {
                 var user_ids = [convo.user_id_0, convo.user_id_1];
 
                 _.each(user_ids, function(user_id) {
-                    io.to(user_id).emit('messages:receive_update', req.params.convo_id);
+                    io.to(user_id).emit('messages:receive_update', {convo_id: req.params.convo_id});
                 });
             });
 
@@ -417,7 +417,7 @@ module.exports = function(app, io) {
                 var user_ids = [convo.user_id_0, convo.user_id_1];
 
                 _.each(user_ids, function(user_id) {
-                    io.to(user_id).emit('messages:receive_update', req.params.convo_id);
+                    io.to(user_id).emit('messages:receive_update', {convo_id: req.params.convo_id});
                 });
             });
 
