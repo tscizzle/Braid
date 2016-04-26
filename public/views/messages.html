@@ -15,12 +15,12 @@
     <div class="row">
         <div class="col-sm-12">
             <div id="message-list-wrapper" scroll-glue>
-                    <div class="message-in-list" ng-style="{'max-width': 80 + '%', 'margin-left': messageCtrl.alignMessage(message), 'text-align': messageCtrl.alignBubble(message)}" ng-hide="messageCtrl.messageIsHidden(message)" ng-click="messageCtrl.toggleMessage(message)" ng-repeat="message in messageCtrl.messages">
-                        <div class ="bubble" ng-style="{'background-color': messageCtrl.paintStrand(message)}">
-                        <style type="text/css"> .bubble:after {border-color:transparent {{messageCtrl.paintStrand(message)}};} </style>
-                                <p><span class="message-text">{{ message.text }}</span></p>
-                                <button class="btn btn-default" ng-click="messageCtrl.deleteMessage(message._id, messageCtrl.selected_convo._id); $event.stopPropagation();">X</button>
-                        </div>
+                <div class="message-in-list" ng-style="{'max-width': 80 + '%', 'margin-left': messageCtrl.alignMessage(message), 'text-align': messageCtrl.alignBubble(message)}" ng-hide="messageCtrl.messageIsHidden(message)" ng-mouseover="messageCtrl.hovered_message=message._id" ng-mouseleave="messageCtrl.hovered_message=undefined" ng-click="messageCtrl.toggleMessage(message)" ng-repeat="message in messageCtrl.messages">
+                    <div class ="bubble" ng-style="{'background-color': messageCtrl.paintStrand(message)}">
+                    <style type="text/css"> .bubble:after {border-color:transparent {{messageCtrl.paintStrand(message)}};} </style>
+                        <span class="message-text">{{ message.text }}</span>
+                        <button class="btn btn-default delete-message-button" ng-style="{'opacity': messageCtrl.deleteButtonOpacity(message)}" ng-click="messageCtrl.deleteMessage(message._id, messageCtrl.selected_convo._id); $event.stopPropagation();">X</button>
+                    </div>
                 </div>
             </div>
         </div>

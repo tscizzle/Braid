@@ -4,11 +4,15 @@
     overflow: auto;
 }
 
+.message-in-list {
+    /*height: 2em;*/
+}
+
 .message-text {
     white-space: pre-wrap;
 }
 
-.bubble 
+.bubble
 {
 position: relative;
 padding: 8px;
