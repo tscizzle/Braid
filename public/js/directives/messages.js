@@ -30,6 +30,7 @@ angular.module('messagesDirective', [])
                             vm.newMessageFormData.strand_id = strand_data.new_strand._id;
                             var message_ids = vm.primed_messages.map(function(message) {return message._id});
 
+
                             // update the primed messages to be part of the new strand
                             Messages.assignMessagesToStrand(message_ids, strand_data.new_strand._id, vm.selected_convo._id)
                                 .success(function(assign_messages_data) {
@@ -222,6 +223,17 @@ angular.module('messagesDirective', [])
             return message_color;
         };
 
+        vm.alignMessage = function(message) {
+            // depending on who sent the message, set 'margin-left' to either auto (right justified) or 0 (left justified)
+            if (message.sender_id===vm.selected_user._id) {
+                message_alignment = 'auto';
+            } else {
+                message_alignment = 0;
+
+            };
+            return message_alignment;
+        };
+
         vm.paintTextarea = function() {
             var textarea_color;
             // if a strand is selected, color it the faded version of that color
@@ -331,18 +343,18 @@ angular.module('messagesDirective', [])
         // constants
 
         var STRAND_COLOR_ORDER = [
-            '#E5A9A9',
-            '#EAE7AA',
-            '#B2D6AA',
-            '#ACB3EA',
-            '#D4BADB'
+            '#EFBFFF',
+            '#9EEFD0',
+            '#FFFAAD',
+            '#FFC99E',
+            '#F2969F'
         ];
         var COLOR_TO_FADED_MAP = {
-            '#E5A9A9': '#FACDCD',
-            '#EAE7AA': '#F8FACD',
-            '#B2D6AA': '#D2FACD',
-            '#ACB3EA': '#CDFAEC',
-            '#D4BADB': '#ECCDFA'
+            '#EFBFFF': '#F2DBFF',
+            '#9EEFD0': '#CEF2ED',
+            '#FFFAAD': '#EDFFD9',
+            '#FFC99E': '#FFE6C2',
+            '#F2969F': '#F2C2AE'
         };
 
 

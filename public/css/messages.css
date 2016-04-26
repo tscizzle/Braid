@@ -4,10 +4,17 @@
     overflow: auto;
 }
 
-.message-in-list {
-    border-bottom: solid 1px gray;
-}
-
 .message-text {
     white-space: pre-wrap;
 }
+
+.bubble 
+{
+position: relative;
+padding: 8px;
+-webkit-border-radius: 12px;
+-moz-border-radius: 12px;
+border-radius: 12px;
+}
+
+
