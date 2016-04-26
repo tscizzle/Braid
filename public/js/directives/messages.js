@@ -165,6 +165,10 @@ angular.module('messagesDirective', [])
 
         };
 
+        vm.deleteButtonOpacity = function(message) {
+            return vm.hovered_message === message._id ? 1 : 0;
+        };
+
         vm.removeButtonIsHidden = function(message) {
             return !message.strand_id;
         };
@@ -365,6 +369,7 @@ angular.module('messagesDirective', [])
         vm.selected_strand = undefined;
         vm.strand_map = {};
         vm.primed_messages = [];
+        vm.hovered_message = undefined;
         vm.sendable_text_focus = false;
         vm.newMessageFormData = {};
         vm.newStrandFormData = {};
