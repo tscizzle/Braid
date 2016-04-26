@@ -15,7 +15,7 @@
     <div class="row">
         <div class="col-sm-12">
             <div id="message-list-wrapper" scroll-glue>
-                    <div class="message-in-list" ng-style="{'width': 80 + '%', 'margin-left': messageCtrl.alignMessage(message)}" ng-hide="messageCtrl.messageIsHidden(message)" ng-click="messageCtrl.toggleMessage(message)" ng-repeat="message in messageCtrl.messages">
+                    <div class="message-in-list" ng-style="{'max-width': 80 + '%', 'margin-left': messageCtrl.alignMessage(message), 'text-align': messageCtrl.alignBubble(message)}" ng-hide="messageCtrl.messageIsHidden(message)" ng-click="messageCtrl.toggleMessage(message)" ng-repeat="message in messageCtrl.messages">
                         <div class ="bubble" ng-style="{'background-color': messageCtrl.paintStrand(message)}">
                         <style type="text/css"> .bubble:after {border-color:transparent {{messageCtrl.paintStrand(message)}};} </style>
                                 <p><span class="message-text">{{ message.text }}</span></p>
