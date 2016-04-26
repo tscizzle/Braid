@@ -4,10 +4,6 @@
     overflow: auto;
 }
 
-.message-in-list {
-    /*height: 2em;*/
-}
-
 .message-text {
     white-space: pre-wrap;
 }
