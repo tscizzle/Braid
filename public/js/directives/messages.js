@@ -338,18 +338,18 @@ angular.module('messagesDirective', [])
         // constants
 
         var STRAND_COLOR_ORDER = [
-            '#E5A9A9',
-            '#EAE7AA',
-            '#B2D6AA',
-            '#ACB3EA',
-            '#D4BADB'
+            '#EFBFFF',
+            '#9EEFD0',
+            '#FFFAAD',
+            '#FFC99E',
+            '#F2969F'
         ];
         var COLOR_TO_FADED_MAP = {
-            '#E5A9A9': '#FACDCD',
-            '#EAE7AA': '#F8FACD',
-            '#B2D6AA': '#D2FACD',
-            '#ACB3EA': '#CDFAEC',
-            '#D4BADB': '#ECCDFA'
+            '#EFBFFF': '#F2DBFF',
+            '#9EEFD0': '#CEF2ED',
+            '#FFFAAD': '#EDFFD9',
+            '#FFC99E': '#FFE6C2',
+            '#F2969F': '#F2C2AE'
         };
 
 
