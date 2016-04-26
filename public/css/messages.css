@@ -19,6 +19,10 @@ padding: 8px;
 -webkit-border-radius: 12px;
 -moz-border-radius: 12px;
 border-radius: 12px;
+margin-top: 4px;
+display:inline-block;
+min-width:30%;
+max-width:80%;
 }
 
 

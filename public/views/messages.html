@@ -2,20 +2,19 @@
 
     <div class="row">
         <div class="col-sm-12">
-            <h3>Messages</h3>
+            <h1>{{ messageCtrl.selected_convo | partner:messageCtrl.selected_user | username:messageCtrl.friend_user_map }}</h1>
         </div>
     </div>
 
     <div class="row">
         <div class="col-sm-12">
-            <h4>{{ messageCtrl.selected_convo | partner:messageCtrl.selected_user | username:messageCtrl.friend_user_map }}</h4>
         </div>
     </div>
 
     <div class="row">
         <div class="col-sm-12">
             <div id="message-list-wrapper" scroll-glue>
-                <div class="message-in-list" ng-style="{'width': 80 + '%', 'margin-left': messageCtrl.alignMessage(message)}" ng-hide="messageCtrl.messageIsHidden(message)" ng-mouseover="messageCtrl.hovered_message=message._id" ng-mouseleave="messageCtrl.hovered_message=undefined" ng-click="messageCtrl.toggleMessage(message)" ng-repeat="message in messageCtrl.messages">
+                <div class="message-in-list" ng-style="{'margin-left': messageCtrl.alignMessage(message), 'text-align': messageCtrl.alignBubble(message)}" ng-hide="messageCtrl.messageIsHidden(message)" ng-mouseover="messageCtrl.hovered_message=message._id" ng-mouseleave="messageCtrl.hovered_message=undefined" ng-click="messageCtrl.toggleMessage(message)" ng-repeat="message in messageCtrl.messages">
                     <div class ="bubble" ng-style="{'background-color': messageCtrl.paintStrand(message)}">
                     <style type="text/css"> .bubble:after {border-color:transparent {{messageCtrl.paintStrand(message)}};} </style>
                         <span class="message-text">{{ message.text }}</span>

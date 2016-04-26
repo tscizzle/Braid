@@ -2,20 +2,23 @@
 
     <div class="row">
         <div class="col-sm-12">
-            <h3>Register</h3>
+            <h2>Register</h2>
         </div>
     </div>
 
     <div class="row">
         <div class="col-sm-12">
             <form ng-submit="registerCtrl.register()">
-                <label for="register-username-input">Username: </label><input id="register-username-input" type="text" name="username" ng-model="registerCtrl.registerForm.username">
+                <label for="register-username-input">Username: </label><input id="register-username-input" type="text" name="username" ng-model="registerCtrl.registerForm.username" style="margin-left: 1px">
                 <br>
-                <label for="register-password-input">Password: </label><input id="register-password-input" type="password" name="password" ng-model="registerCtrl.registerForm.password">
+                <label for="register-password-input">Password: </label><input id="register-password-input" type="password" name="password" ng-model="registerCtrl.registerForm.password" style="margin-left: 5px">
                 <br>
                 <button class="btn btn-default" type="submit">Register</button>
+                <br>
+                <label>Already registered? <a href="thispage.php?form=login">Login here</a> </label>
             </form>
         </div>
     </div>
-
 </div>
+
+

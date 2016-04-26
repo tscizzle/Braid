@@ -2,20 +2,19 @@
 
     <div class="row">
         <div class="col-sm-12">
-            <h3>Login</h3>
+            <h2>Login</h2>
         </div>
     </div>
 
     <div class="row">
         <div class="col-sm-12">
             <form ng-submit="loginCtrl.login()">
-                <label for="login-username-input">Username: </label><input id="login-username-input" type="text" name="username" ng-model="loginCtrl.loginForm.username">
+                <label for="login-username-input">Username: </label><input id="login-username-input" type="text" name="username" ng-model="loginCtrl.loginForm.username" style="margin-left: 1px">
                 <br>
-                <label for="login-password-input">Password: </label><input id="login-password-input" type="password" name="password" ng-model="loginCtrl.loginForm.password">
+                <label for="login-password-input">Password: </label><input id="login-password-input" type="password" name="password" ng-model="loginCtrl.loginForm.password" style="margin-left: 5px">
                 <br>
                 <button class="btn btn-default" type="submit">Login</button>
             </form>
         </div>
     </div>
-
 </div>
