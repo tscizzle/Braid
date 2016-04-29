@@ -92,13 +92,17 @@
         <div id="auth-view" ng-if="!mainCtrl.selected_user">
 
             <div class="row">
-
-                <div id="register-view-col" class="col-sm-4">
-                    <braid-register selected_user="mainCtrl.selected_user"></braid-register>
+                 
+                <div id="register-view-col" class="col-sm-4" ng-hide="mainCtrl.login_object">
+                    <braid-register selected_user="mainCtrl.selected_user"
+                                    login_object="mainCtrl.login_object">
+                    </braid-register>
                 </div>
 
-                <div id="login-view-col" class="col-sm-4">
-                    <braid-login selected_user="mainCtrl.selected_user"></braid-login>
+                <div id="login-view-col" class="col-sm-4" ng-hide="!mainCtrl.login_object">
+                    <braid-login selected_user="mainCtrl.selected_user"
+                                 login_object="mainCtrl.login_object">
+                    </braid-login>
                 </div>
 
             </div>

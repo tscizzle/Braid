@@ -10,17 +10,16 @@
     <div class="row">
 
         <div class="col-sm-12">
-
-            <form ng-submit="registerCtrl.register()">
-                <label for="register-username-input">Username: </label><input id="register-username-input" type="text" name="username" ng-model="registerCtrl.registerForm.username" style="margin-left: 1px">
-                <br>
-                <label for="register-password-input">Password: </label><input id="register-password-input" type="password" name="password" ng-model="registerCtrl.registerForm.password" style="margin-left: 5px">
-                <br>
-                <button class="btn btn-default" type="submit" style="margin-top: 5px">Register</button>
-                <br>
-                <label>Already registered? <a href="thispage.php?form=login">Login here.</a> </label>
-                </div>
-            </form>
-        </div>
+                <form ng-submit="registerCtrl.register()">
+                    <label for="register-username-input">Username: </label><input id="register-username-input" type="text" name="username" ng-model="registerCtrl.registerForm.username" style="margin-left: 1px">
+                    <br>
+                    <label for="register-password-input">Password: </label><input id="register-password-input" type="password" name="password" ng-model="registerCtrl.registerForm.password" style="margin-left: 5px">
+                    <br>
+                    <button class="btn btn-default" type="submit" style="margin-top: 5px">Register</button>
+                    <br>
+                    <button class="btn btn-default" ng-click="registerCtrl.switchToLogin()" style="margin-top: 5px" type="button">Already registered? Login here.</button>
+                </form>
+            </div>
+       
     </div>
 

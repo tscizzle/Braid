@@ -8,13 +8,15 @@
 
     <div class="row">
         <div class="col-sm-12">
-            <form ng-submit="loginCtrl.login()">
-                <label for="login-username-input">Username: </label><input id="login-username-input" type="text" name="username" ng-model="loginCtrl.loginForm.username" style="margin-left: 1px">
-                <br>
-                <label for="login-password-input">Password: </label><input id="login-password-input" type="password" name="password" ng-model="loginCtrl.loginForm.password" style="margin-left: 5px">
-                <br>
-                <button class="btn btn-default" type="submit" style="margin-top: 5px">Login</button>
-            </form>
+            
+                <form ng-submit="loginCtrl.login()">
+                    <label for="login-username-input">Username: </label><input id="login-username-input" type="text" name="username" ng-model="loginCtrl.loginForm.username" style="margin-left: 1px">
+                    <br>
+                    <label for="login-password-input">Password: </label><input id="login-password-input" type="password" name="password" ng-model="loginCtrl.loginForm.password" style="margin-left: 5px">
+                    <br>
+                    <button class="btn btn-default" type="submit" style="margin-top: 5px">Login</button>
+                    <button class="btn btn-default" ng-click="loginCtrl.switchToRegister()" style="margin-top: 5px" type="button">Go back to register.</button>
+                </form>
         </div>
     </div>
 </div>

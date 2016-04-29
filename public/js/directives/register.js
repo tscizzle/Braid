@@ -26,6 +26,10 @@ angular.module('registerDirective', [])
                 });
         };
 
+        // Clicking on the "already registered" button sets the login_object to true
+        vm.switchToLogin = function(){
+            vm.login_object = true;
+        };
 
         // initialization
 
@@ -37,7 +41,8 @@ angular.module('registerDirective', [])
         return {
             restrict: 'E',
             scope: {
-                selected_user: '=selectedUser'
+                selected_user: '=selectedUser',
+                login_object: '=loginObject'
             },
             templateUrl: 'views/register.html',
             controller: 'registerController',
