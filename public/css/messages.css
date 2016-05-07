@@ -2,23 +2,31 @@
     min-height: 60vh;
     max-height: 60vh;
     overflow: auto;
+    padding: 0 15px;
+    clear: both;
+}
+
+.message-in-list {
+    cursor: pointer;
+}
+
+.hovered-messages {
+    box-shadow: 2px 2px 2px #777;
 }
 
 .message-text {
     white-space: pre-wrap;
 }
 
-.bubble
-{
-position: relative;
-padding: 8px;
--webkit-border-radius: 12px;
--moz-border-radius: 12px;
-border-radius: 12px;
-margin-top: 4px;
-display:inline-block;
-min-width:30%;
-max-width:80%;
+.bubble {
+    position: relative;
+    padding: 8px;
+    -webkit-border-radius: 12px;
+    -moz-border-radius: 12px;
+    border-radius: 12px;
+    margin-top: 3px;
+    display:inline-block;
+
+    max-width:80%;
+    margin-bottom: 3px;
 }
-
-
