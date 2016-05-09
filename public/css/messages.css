@@ -3,7 +3,7 @@
     max-height: 60vh;
     overflow: auto;
     padding: 0 15px;
-    clear: both;
+    margin-bottom: 10px;
 }
 
 .message-in-list {
