@@ -1,5 +1,6 @@
 .convo-in-list {
     border-bottom: solid 1px black;
+    padding: 5px;
 }
 
 #convo-list-pane .selected {

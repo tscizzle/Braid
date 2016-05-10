@@ -165,6 +165,24 @@ angular.module('messagesDirective', [])
 
         };
 
+        vm.hoverMessage = function(message) {
+            vm.hovered_message = message._id;
+            vm.hovered_strand = message.strand_id;
+        };
+
+        vm.unhoverMessage = function(message) {
+            vm.hovered_message = undefined;
+            vm.hovered_strand = undefined;
+        };
+
+        vm.oneOfHoveredMessages = function(message) {
+            if (!message.strand_id) {
+                return vm.hovered_message === message._id;
+            } else {
+                return vm.hovered_strand === message.strand_id;
+            }
+        };
+
         vm.deleteButtonOpacity = function(message) {
             return vm.hovered_message === message._id ? 1 : 0;
         };
@@ -381,6 +399,7 @@ angular.module('messagesDirective', [])
         vm.strand_map = {};
         vm.primed_messages = [];
         vm.hovered_message = undefined;
+        vm.hovered_strand = undefined;
         vm.sendable_text_focus = false;
         vm.newMessageFormData = {};
         vm.newStrandFormData = {};
