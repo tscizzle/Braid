@@ -1,30 +1,26 @@
 <div id="register-pane">
-
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="firstview-header">
-                <h2>Register</h2>
+            <div class="centerize">
+        <div class="row">
+            <div class="col-sm-12">
+                    <h2>Register</h2>
             </div>
         </div>
-    </div>
 
 
-    <div class="row">
+        <div class="row">
 
-        <div class="col-sm-12">
-                <form ng-submit="registerCtrl.register()">
-                        <div class="firstview-username">
-                            <label for="register-username-input">Username:&nbsp;</label><input id="register-username-input" type="text" name="username" ng-model="registerCtrl.registerForm.username">
-                        </div>
-                    <br>
-                        <div class="firstview-password">
-                            <label for="register-password-input">Password:&nbsp;</label><input id="register-password-input" type="password" name="password" ng-model="registerCtrl.registerForm.password">
-                        </div>
-                    <br>
-                       <button class="firstview-submit" type="submit">Register</button>
-                    <br>
-                        <button class="firstview-switch" ng-click="registerCtrl.switchToLogin()" type="button">Already registered? Login here.</button>
-                </form>
+            <div class="col-sm-12">
+                    <form ng-submit="registerCtrl.register()">
+                                <label for="register-username-input">Username:&nbsp;</label><input id="register-username-input" type="text" name="username" ng-model="registerCtrl.registerForm.username">
+                        <br>
+                                <label for="register-password-input">Password:&nbsp;</label><input id="register-password-input" type="password" name="password" ng-model="registerCtrl.registerForm.password">
+                        <br>
+                           <button class="btn btn-default" type="submit">Register</button>
+                        <br>
+                            <button class="btn btn-default" ng-click="registerCtrl.switchToLogin()" type="button">Already registered? Login here.</button>
+                    </form>
+                </div>
             </div>
-        </div>
+            </div>
+
 

@@ -1,28 +1,23 @@
 <div id="login-pane">
+<div class="centerize">
+        <div class="row">
+            <div class="col-sm-12">
+                    <h2>Login</h2>
+            </div>
+        </div>
 
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="firstview-header">
-                <h2>Login</h2>
+            <div class="row">
+                <div class="col-sm-12">
+                    
+                        <form ng-submit="loginCtrl.login()">
+                                <label for="login-username-input">Username:&nbsp;</label><input id="login-username-input" type="text" name="username" ng-model="loginCtrl.loginForm.username">
+                            <br>
+                                <label for="login-password-input">Password:&nbsp;</label><input id="login-password-input" type="password" name="password" ng-model="loginCtrl.loginForm.password">
+                            <br>
+                            <button class="btn btn-default" type="submit">Login</button>
+                            <button class="btn btn-default" ng-click="loginCtrl.switchToRegister()" type="button">Go back to register.</button>
+                        </form>
+                </div>
             </div>
         </div>
     </div>
-
-    <div class="row">
-        <div class="col-sm-12">
-            
-                <form ng-submit="loginCtrl.login()">
-                    <div class="firstview-username">
-                        <label for="login-username-input">Username:&nbsp;</label><input id="login-username-input" type="text" name="username" ng-model="loginCtrl.loginForm.username">
-                    </div>
-                    <br>
-                    <div class="firstview-password">
-                        <label for="login-password-input">Password:&nbsp;</label><input id="login-password-input" type="password" name="password" ng-model="loginCtrl.loginForm.password">
-                    </div>
-                    <br>
-                    <button class="firstview-submit" type="submit">Login</button>
-                    <button class="firstview-switch" ng-click="loginCtrl.switchToRegister()" type="button">Go back to register.</button>
-                </form>
-        </div>
-    </div>
-</div>
