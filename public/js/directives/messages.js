@@ -267,6 +267,17 @@ angular.module('messagesDirective', [])
             return message_alignment;
         };
 
+        vm.borderRadius = function(message) {
+            // depending on who sent the message, set the radius to either 15px or 0 px
+            if (message.sender_id===vm.selected_user._id) {
+                radius = '15px';
+            } else {
+                radius = '0px';
+
+            };
+            return radius;
+        };
+
         vm.paintTextarea = function() {
             var textarea_color;
             // if a strand is selected, color it the faded version of that color
