@@ -21,12 +21,8 @@
 .bubble {
     position: relative;
     padding: 8px;
-    -webkit-border-radius: 12px;
-    -moz-border-radius: 12px;
-    border-radius: 12px;
     margin-top: 3px;
     display:inline-block;
-
     max-width:80%;
     margin-bottom: 3px;
 }

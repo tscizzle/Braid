@@ -1,20 +1,30 @@
 <div id="login-pane">
+    <div class="firstview-all">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="firstview-header">
+                    <h1>Login</h1>
+                </div>
+            </div>
+        </div>
 
-    <div class="row">
-        <div class="col-sm-12">
-            <h2>Login</h2>
+        <div class="row">
+            <div class="col-sm-12">
+                
+                    <form ng-submit="loginCtrl.login()">
+                        <div class="firstview-username">
+                            <label for="login-username-input">Username:&nbsp;</label><input id="login-username-input" type="text" name="username" ng-model="loginCtrl.loginForm.username">
+                        </div>
+                        <br>
+                        <div class="firstview-password">
+                            <label for="login-password-input">Password:&nbsp;</label><input id="login-password-input" type="password" name="password" ng-model="loginCtrl.loginForm.password">
+                        </div>
+                        <br>
+                        <button class="firstview-submit" type="submit">Login</button>
+                        <br>
+                        <button class="firstview-switch" ng-click="loginCtrl.switchToRegister()" type="button">Go back to register.</button>
+                    </form>
+            </div>
         </div>
     </div>
-
-    <div class="row">
-        <div class="col-sm-12">
-            <form ng-submit="loginCtrl.login()">
-                <label for="login-username-input">Username: </label><input id="login-username-input" type="text" name="username" ng-model="loginCtrl.loginForm.username" style="margin-left: 1px">
-                <br>
-                <label for="login-password-input">Password: </label><input id="login-password-input" type="password" name="password" ng-model="loginCtrl.loginForm.password" style="margin-left: 5px">
-                <br>
-                <button class="btn btn-default" type="submit">Login</button>
-            </form>
-        </div>
     </div>
-</div>

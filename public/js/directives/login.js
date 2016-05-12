@@ -20,6 +20,10 @@ angular.module('loginDirective', [])
                 });
         };
 
+        // Clicking on the "go back to login" button sets the register_object to true
+        vm.switchToRegister = function(){
+            vm.login_object = false;
+        };
 
         // initialization
 
@@ -31,7 +35,8 @@ angular.module('loginDirective', [])
         return {
             restrict: 'E',
             scope: {
-                selected_user: '=selectedUser'
+                selected_user: '=selectedUser',
+                login_object: '=loginObject'
             },
             templateUrl: 'views/login.html',
             controller: 'loginController',
