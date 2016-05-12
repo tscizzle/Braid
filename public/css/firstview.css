@@ -5,58 +5,28 @@
     margin-right: auto;
     margin-left: auto;
     text-align: center;
-    border-radius: 10px;
-    border: 2px solid #2c2e30;
-    padding: 20px; 
-    width: 350px;
-    height: 340px;
+    margin-top: 30px;
 }
 
 .firstview-header {
-	margin-bottom:30px;
+    margin-bottom: 30px;
 }
 
-.firstview-username {
+.firstview-button {
+    -webkit-border-radius: 8;
+    -moz-border-radius: 8;
+    border-radius: 8px;
+    color: #ffffff;
+    background: #2c2e30;
+    padding: 5px 10px 7px 10px;
+    border: none;
 }
 
-.firstview-password {
-}
-
-.firstview-submit {
-	-webkit-border-radius: 8;
-	-moz-border-radius: 8;
-	border-radius: 8px;
-	color: #ffffff;
-	background: #2c2e30;
-	padding: 5px 10px 7px 10px;
-	border: none;
-}
-
-.firstview-submit:hover {
-	background: #7a7a7a;
-	text-decoration: none;
+.firstview-button:hover {
+    background: #7a7a7a;
+    text-decoration: none;
 }
 
 .firstview-switch {
-	margin-top: 10px;
-	-webkit-border-radius: 8;
-	-moz-border-radius: 8;
-	border-radius: 8px;
-	color: #ffffff;
-	background: #2c2e30;
-	padding: 5px 10px 7px 10px;
-	border: none;
-}
-
-.firstview-switch:hover {
-	background: #7a7a7a;
-	text-decoration: none;
-}
-
-.firstview-border{
-    border-radius: 25px;
-    border: 2px solid #73AD21;
-    padding: 20px; 
-    width: 200px;
-    height: 150px; 
+    margin-top: 10px;
 }
