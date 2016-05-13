@@ -339,6 +339,7 @@ module.exports = function(app, io) {
                     return res.status(500).send(err);
                 };
 
+                messages.reverse();
                 return res.json(messages);
             });
         });
@@ -371,6 +372,7 @@ module.exports = function(app, io) {
                     return res.status(500).send(err);
                 };
 
+                messages.reverse();
                 return res.json(messages);
             });
         });
@@ -412,6 +414,7 @@ module.exports = function(app, io) {
                     return res.status(500).send(err);
                 };
 
+                messages.reverse();
                 return res.json(messages);
             });
         });
@@ -450,6 +453,7 @@ module.exports = function(app, io) {
                     return res.status(500).send(err);
                 };
 
+                messages.reverse();
                 return res.json(messages);
             });
         });
