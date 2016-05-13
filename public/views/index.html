@@ -9,7 +9,7 @@
     <base href="/">
 
     <title>Braid</title>
-    
+
     <link rel="shortcut icon" href="/img/poop_logo.ico">
 
     <link rel="stylesheet" href="/css/bootstrap.min.css"> <!-- Bootswatch Yeti -->
@@ -63,7 +63,7 @@
 
             <div class="row">
 
-                <div id="convo-view-col" class="col-sm-2">
+                <div id="convo-view-col" class="col-sm-2 col-sm-offset-1">
                     <braid-convos friend_users="mainCtrl.friend_users"
                                   friendships="mainCtrl.friendships"
                                   selected_convo="mainCtrl.selected_convo"
@@ -72,7 +72,7 @@
                     </braid-convos>
                 </div>
 
-                <div id="message-view-col" class="col-sm-8">
+                <div id="message-view-col" class="col-sm-6">
                     <braid-messages selected_convo="mainCtrl.selected_convo"
                                     selected_user="mainCtrl.selected_user"
                                     friend_user_map="mainCtrl.friend_user_map">
@@ -91,11 +91,11 @@
 
         </div>
 
-        <!-- TODO: move these to the appropriate place (maybe that place is index.html, not sure) -->
+
         <div id="auth-view" ng-if="!mainCtrl.selected_user">
 
             <div class="row">
-                 
+
                 <div id="register-view-col" class="col-sm-4" ng-hide="mainCtrl.login_object">
                     <braid-register selected_user="mainCtrl.selected_user"
                                     login_object="mainCtrl.login_object">

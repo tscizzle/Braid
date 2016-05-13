@@ -6,3 +6,7 @@
 #friendship-list-pane .selected {
     background-color: #bbb;
 }
+
+#friendships-input {
+    width: 100%;
+}

@@ -25,7 +25,7 @@
 
 .bubble {
     position: relative;
-    padding: 8px;
+    padding: 7px 13px;
     margin-top: 3px;
     display: inline-block;
     max-width: 80%;

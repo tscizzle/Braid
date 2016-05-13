@@ -6,3 +6,7 @@
 #convo-list-pane .selected {
     background-color: #bbb;
 }
+
+#convos-select {
+    width: 100%;
+}
