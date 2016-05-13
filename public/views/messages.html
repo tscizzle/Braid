@@ -14,6 +14,7 @@
     <div class="row">
         <div class="col-sm-12">
             <div id="message-list-wrapper" scroll-glue>
+                <a id="load-more-messages-link" ng-show="messageCtrl.showLoadMoreMessagesLink()" ng-click="messageCtrl.increaseNumMessages()">Load earlier messages</a>
                 <div class="message-in-list" ng-style="{'margin-left': messageCtrl.alignMessage(message), 'text-align': messageCtrl.alignBubble(message)}" ng-hide="messageCtrl.messageIsHidden(message)" ng-mouseover="messageCtrl.hoverMessage(message)" ng-mouseleave="messageCtrl.unhoverMessage(message)" ng-click="messageCtrl.toggleMessage(message)" ng-repeat="message in messageCtrl.messages">
                     <div class="bubble" ng-style="{'background-color': messageCtrl.paintStrand(message), 'border-radius':messageCtrl.borderRadius(message)}" ng-class="{'hovered-messages': messageCtrl.oneOfHoveredMessages(message)}">
                         <span class="message-text">{{ message.text }}</span>
@@ -27,13 +28,15 @@
     <div class="row">
         <div class="col-sm-12">
             <form>
-                <div class="col-sm-8">
-                    <div class="form-group">
-                        <textarea id="sendable-textarea" class="form-control input-lg" ng-style="{'background-color': messageCtrl.paintTextarea()}" ng-model="messageCtrl.newMessageFormData.text" ng-focus="messageCtrl.sendable_text_focus=true" ng-blur="messageCtrl.sendable_text_focus=false" enter-submit="messageCtrl.createMessage()"></textarea>
+                <div class="row">
+                    <div class="col-sm-8">
+                        <div class="form-group">
+                            <textarea id="sendable-textarea" class="form-control input-lg" ng-style="{'background-color': messageCtrl.paintTextarea()}" ng-model="messageCtrl.newMessageFormData.text" ng-focus="messageCtrl.sendable_text_focus=true" ng-blur="messageCtrl.sendable_text_focus=false" enter-submit="messageCtrl.createMessage()"></textarea>
+                        </div>
                     </div>
-                </div>
-                <div class="col-sm-4">
-                    <button type="submit" class="btn btn-primary btn-lg" ng-mousedown="messageCtrl.createMessage()">Send</button>
+                    <div class="col-sm-4">
+                        <button type="submit" class="btn btn-primary btn-lg" ng-mousedown="messageCtrl.createMessage()">Send</button>
+                    </div>
                 </div>
             </form>
         </div>

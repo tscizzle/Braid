@@ -1,9 +1,14 @@
+#load-more-messages-link {
+    cursor: pointer;
+}
+
 #message-list-wrapper {
     min-height: 60vh;
     max-height: 60vh;
     overflow: auto;
     padding: 0 15px;
     margin-bottom: 10px;
+    text-align: center;
 }
 
 .message-in-list {
@@ -22,7 +27,7 @@
     position: relative;
     padding: 8px;
     margin-top: 3px;
-    display:inline-block;
-    max-width:80%;
+    display: inline-block;
+    max-width: 80%;
     margin-bottom: 3px;
 }
