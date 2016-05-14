@@ -1,5 +1,5 @@
 .convo-in-list {
-    border-bottom: solid 1px black;
+    border-top: solid 1px #bbb;
     padding: 5px;
 }
 
@@ -7,6 +7,15 @@
     background-color: #bbb;
 }
 
+#convo-form-row {
+    border-top: solid 1px #bbb;
+    padding: 5px;
+}
+
 #convos-select {
     width: 100%;
+}
+
+.no-left-padding {
+    padding-left: 0;
 }

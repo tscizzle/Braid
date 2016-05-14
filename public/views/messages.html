@@ -30,7 +30,7 @@
                 <div class="row">
                     <div class="col-sm-8">
                         <div class="form-group">
-                            <textarea id="sendable-textarea" class="form-control input-lg" ng-style="{'background-color': messageCtrl.paintTextarea()}" ng-model="messageCtrl.newMessageFormData.text" ng-focus="messageCtrl.sendable_text_focus=true" ng-blur="messageCtrl.sendable_text_focus=false" enter-submit="messageCtrl.createMessage()"></textarea>
+                            <textarea id="sendable-textarea" class="form-control" placeholder="Type a message..." ng-style="{'background-color': messageCtrl.paintTextarea()}" ng-model="messageCtrl.newMessageFormData.text" ng-focus="messageCtrl.sendable_text_focus=true" ng-blur="messageCtrl.sendable_text_focus=false" enter-submit="messageCtrl.createMessage()"></textarea>
                         </div>
                     </div>
                     <div class="col-sm-4">
