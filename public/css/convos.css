@@ -2,11 +2,10 @@
     z-index: 200;
     position: absolute;
     top: 50px;
-    left: -75px;
+    left: -85px;
     -webkit-transition: left 0.3s ease-out 1s;
     transition: left 0.3s ease-out 1s;
     width: 200px;
-    height: ;
     font-size: 0.85em;
     background-color: #ddd;
 }

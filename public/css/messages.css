@@ -31,3 +31,8 @@
     max-width: 80%;
     margin-bottom: 3px;
 }
+
+#sendable-textarea {
+    font-size: 0.8em;
+    height: 90px;
+}

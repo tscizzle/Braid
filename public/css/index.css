@@ -1,5 +1,6 @@
 #main-content {
     position: relative;
+    overflow-x: hidden;
 }
 
 #margin-fixer-grid-wrapper {
@@ -8,10 +9,6 @@
 
 #message-view-col {
     background-color: #eee;
-}
-
-#friendship-view-col {
-    background-color: #ddd;
 }
 
 textarea {

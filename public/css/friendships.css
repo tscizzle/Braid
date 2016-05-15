@@ -1,29 +1,43 @@
 #friendship-list-pane {
+    z-index: 200;
+    position: absolute;
+    top: 50px;
+    right: -85px;
+    -webkit-transition: right 0.3s ease-out 1s;
+    transition: right 0.3s ease-out 1s;
+    width: 200px;
     font-size: 0.85em;
+    background-color: #ddd;
 }
 
-#friendship-list-pane .selected {
-    background-color: #bbb;
+#friendship-list-pane:hover {
+    right: 0;
+    -webkit-transition: right 0.3s ease-out 0s;
+    transition: right 0.3s ease-out 0s;
+}
+
+#friendship-list-col {
+    padding-left: 0;
 }
 
 #friendship-list-wrapper {
-    min-height: 50vh;
-    max-height: 50vh;
-    overflow: scroll;
+    height: 40vh;
+    overflow-y: scroll;
 }
 
 #friendship-list-wrapper:first-child {
-    border-top: solid 3px #777;
+    border-top: solid 4px #777;
 }
 
 .friendship-in-list {
-    border-top: solid 1px #bbb;
-    padding: 5px;
+    border-bottom: solid 1px #bbb;
+    padding: 5px 5px 5px 10px;
+    margin-right: 20px;
 }
 
 #friendship-form-row {
-    border-top: solid 1px #bbb;
-    padding: 15px 5px 5px 5px;
+    border-top: solid 2px #777;
+    padding: 15px 15px 10px 0px;
 }
 
 #friendships-input {

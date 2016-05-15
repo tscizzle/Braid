@@ -1,15 +1,15 @@
 <nav class="navbar navbar-default">
     <div class="container-fluid">
 
-        <div class="navbar-header navbar-right">
-            <a class="navbar-brand">{{ selected_user.username }}</a>
-        </div>
         <img class="navbar-logo" src="/img/poop_logo.jpeg" alt="">
         <img class="navbar-words" src="/img/braid_words.png" alt="">
         <div class="navbar-header navbar-right" ng-show="selected_user">
             <braid-logout login_object="login_object"
                           selected_user="selected_user">
             </braid-logout>
+        </div>
+        <div class="navbar-header navbar-right">
+            <a class="navbar-brand">{{ selected_user.username }}</a>
         </div>
 
     </div>

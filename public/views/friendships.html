@@ -1,16 +1,16 @@
-<div id="friendship-list-pane">
+<div id="friendship-list-pane" class="container-fluid">
 
     <div class="row">
         <div class="col-sm-12">
-            <h3>Friendships</h3>
+            <h3>Friends</h3>
         </div>
     </div>
 
     <div class="row">
-        <div class="col-sm-12">
+        <div id="friendship-list-col" class="col-sm-12">
             <div id="friendship-list-wrapper">
                 <div class="friendship-in-list clearfix" ng-repeat="friendship in friendshipCtrl.friendships">
-                    <b>{{ friendship | friend:friendshipCtrl.selected_user | username:friendshipCtrl.friend_user_map }} {{ (friendship.status!=='accepted' && friendship.requester_id===friendshipCtrl.selected_user._id) ? '(' + friendship.status + ')' : '' }}</b>
+                    <b>{{ friendship | friend:friendshipCtrl.selected_user | username:friendshipCtrl.friend_user_map }} {{ friendshipCtrl.conditionalStatus(friendship) }}</b>
                     <button class="btn btn-default pull-right" ng-click="friendshipCtrl.deleteFriendship(friendship._id); $event.stopPropagation();">&#10005;</button>
                     <button class="btn btn-default pull-right" ng-click="friendshipCtrl.acceptFriendship(friendship._id); $event.stopPropagation();" ng-show="friendship.status==='pending' && friendship.target_id===friendshipCtrl.selected_user._id">&#10003;</button>
                 </div>

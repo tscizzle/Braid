@@ -43,6 +43,15 @@ angular.module('friendshipsDirective', [])
         };
 
 
+        // define page control functions used in the template
+
+        vm.conditionalStatus = function(friendship) {
+            if (friendship.status !== 'accepted' && friendship.requester_id === vm.selected_user._id) {
+                return '(' + friendship.status + ')';
+            };
+        };
+
+
         // initialization
 
         vm.friendships = [];
