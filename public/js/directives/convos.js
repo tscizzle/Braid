@@ -110,6 +110,7 @@ angular.module('convosDirective', [])
         // initialization
 
         vm.convos = [];
+        vm.selected_convo = undefined;
         vm.potential_partners = [];
         vm.newConvoFormData = {user_id_1: ""};
 
