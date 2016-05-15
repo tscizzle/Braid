@@ -10,8 +10,8 @@
         <div class="col-sm-12">
             <div class="friendship-in-list clearfix" ng-repeat="friendship in friendshipCtrl.friendships">
                 <b>{{ friendship | friend:friendshipCtrl.selected_user | username:friendshipCtrl.friend_user_map }} {{ friendship.status === 'accepted' ? undefined : '(' + friendship.status + ')' }}</b>
-                <button class="btn btn-default" ng-click="friendshipCtrl.acceptFriendship(friendship._id); $event.stopPropagation();" ng-show="friendship.status==='pending' && friendship.target_id===friendshipCtrl.selected_user._id">ACCEPT</button>
-                <button class="btn btn-default pull-right" ng-click="friendshipCtrl.deleteFriendship(friendship._id); $event.stopPropagation();">X</button>
+                <button class="btn btn-default pull-right" ng-click="friendshipCtrl.deleteFriendship(friendship._id); $event.stopPropagation();">&#10005;</button>
+                <button class="btn btn-default pull-right" ng-click="friendshipCtrl.acceptFriendship(friendship._id); $event.stopPropagation();" ng-show="friendship.status==='pending' && friendship.target_id===friendshipCtrl.selected_user._id">&#10003;</button>
             </div>
         </div>
     </div>
