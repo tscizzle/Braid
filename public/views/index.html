@@ -55,25 +55,16 @@
 
 <body ng-controller="mainController as mainCtrl">
 
-    <braid-navbar selected_user="mainCtrl.selected_user"></braid-navbar>
+    <braid-navbar login_object="mainCtrl.login_object"
+                  selected_user="mainCtrl.selected_user">
+    </braid-navbar>
 
-    <div class="container-fluid">
+    <div id="main-content" class="container-fluid">
     <div id="margin-fixer-grid-wrapper">
 
         <div id="chat-view" ng-if="mainCtrl.selected_user">
-
             <div class="row">
-
-                <div id="convo-view-col" class="col-sm-2 col-sm-offset-1">
-                    <braid-convos friend_users="mainCtrl.friend_users"
-                                  friendships="mainCtrl.friendships"
-                                  selected_convo="mainCtrl.selected_convo"
-                                  selected_user="mainCtrl.selected_user"
-                                  friend_user_map="mainCtrl.friend_user_map">
-                    </braid-convos>
-                </div>
-
-                <div id="message-view-col" class="col-sm-6">
+                <div id="message-view-col" class="col-sm-6 col-sm-offset-3">
                     <braid-messages selected_convo="mainCtrl.selected_convo"
                                     selected_user="mainCtrl.selected_user"
                                     friend_user_map="mainCtrl.friend_user_map">
@@ -87,30 +78,31 @@
                                        friend_user_map="mainCtrl.friend_user_map">
                     </braid-friendships>
                 </div>
-
             </div>
 
+            <braid-convos friend_users="mainCtrl.friend_users"
+                          friendships="mainCtrl.friendships"
+                          selected_convo="mainCtrl.selected_convo"
+                          selected_user="mainCtrl.selected_user"
+                          friend_user_map="mainCtrl.friend_user_map">
+            </braid-convos>
         </div>
 
 
         <div id="auth-view" ng-if="!mainCtrl.selected_user">
-
             <div class="row">
-
                 <div id="register-view-col" class="col-sm-4" ng-hide="mainCtrl.login_object">
                     <braid-register selected_user="mainCtrl.selected_user"
                                     login_object="mainCtrl.login_object">
                     </braid-register>
                 </div>
 
-                <div id="login-view-col" class="col-sm-4" ng-hide="!mainCtrl.login_object">
+                <div id="login-view-col" class="col-sm-4" ng-show="mainCtrl.login_object">
                     <braid-login selected_user="mainCtrl.selected_user"
                                  login_object="mainCtrl.login_object">
                     </braid-login>
                 </div>
-
             </div>
-
         </div>
 
     </div>

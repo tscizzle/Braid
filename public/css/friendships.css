@@ -6,6 +6,16 @@
     background-color: #bbb;
 }
 
+#friendship-list-wrapper {
+    min-height: 50vh;
+    max-height: 50vh;
+    overflow: scroll;
+}
+
+#friendship-list-wrapper:first-child {
+    border-top: solid 3px #777;
+}
+
 .friendship-in-list {
     border-top: solid 1px #bbb;
     padding: 5px;
@@ -13,7 +23,7 @@
 
 #friendship-form-row {
     border-top: solid 1px #bbb;
-    padding: 5px;
+    padding: 15px 5px 5px 5px;
 }
 
 #friendships-input {

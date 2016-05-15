@@ -1,16 +1,17 @@
-<div id="convo-list-pane">
+<div id="convo-list-pane" class="container-fluid">
 
     <div class="row">
         <div class="col-sm-12">
-            <h3>Convos</h3>
+            <h3 id="convos-header">Convos</h3>
         </div>
     </div>
 
     <div class="row">
-        <div class="col-sm-12">
-            <div class="convo-in-list clearfix" ng-class="{'selected': convo._id===convoCtrl.selected_convo._id}" ng-click="convoCtrl.selectConvo(convo)" ng-repeat="convo in convoCtrl.convos">
-                <b>{{ convo | partner:convoCtrl.selected_user | username:convoCtrl.friend_user_map }}</b>
-                <button class="btn btn-default pull-right" ng-click="convoCtrl.deleteConvo(convo._id); $event.stopPropagation();">&#10005;</button>
+        <div id="convo-list-col" class="col-sm-12">
+            <div id="convo-list-wrapper">
+                <div class="convo-in-list clearfix" ng-class="{'selected': convo._id===convoCtrl.selected_convo._id}" ng-click="convoCtrl.selectConvo(convo)" ng-repeat="convo in convoCtrl.convos">
+                    <b>{{ convo | partner:convoCtrl.selected_user | username:convoCtrl.friend_user_map }}</b>
+                </div>
             </div>
         </div>
     </div>

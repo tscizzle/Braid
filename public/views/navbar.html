@@ -7,7 +7,9 @@
         <img class="navbar-logo" src="/img/poop_logo.jpeg" alt="">
         <img class="navbar-words" src="/img/braid_words.png" alt="">
         <div class="navbar-header navbar-right" ng-show="selected_user">
-            <braid-logout selected_user="selected_user"></braid-logout>
+            <braid-logout login_object="login_object"
+                          selected_user="selected_user">
+            </braid-logout>
         </div>
 
     </div>

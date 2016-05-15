@@ -1,10 +1,44 @@
 #convo-list-pane {
+    z-index: 200;
+    position: absolute;
+    top: 50px;
+    left: -75px;
+    -webkit-transition: left 0.3s ease-out 1s;
+    transition: left 0.3s ease-out 1s;
+    width: 200px;
+    height: ;
     font-size: 0.85em;
+    background-color: #ddd;
+}
+
+#convo-list-pane:hover {
+    left: 0;
+    -webkit-transition: left 0.3s ease-out 0s;
+    transition: left 0.3s ease-out 0s;
+}
+
+#convos-header {
+    text-align: right;
+}
+
+#convo-list-col {
+    padding-right: 0;
+}
+
+#convo-list-wrapper {
+    height: 40vh;
+    overflow-y: scroll;
+}
+
+#convo-list-wrapper:first-child {
+    border-top: solid 4px #777;
 }
 
 .convo-in-list {
-    border-top: solid 1px #bbb;
-    padding: 5px;
+    border-bottom: solid 1px #bbb;
+    padding: 10px 25px 10px 10px;
+    text-align: right;
+    cursor: pointer;
 }
 
 #convo-list-pane .selected {
@@ -12,8 +46,8 @@
 }
 
 #convo-form-row {
-    border-top: solid 1px #bbb;
-    padding: 5px;
+    border-top: solid 2px #777;
+    padding: 15px 5px 5px 5px;
 }
 
 #convos-select {

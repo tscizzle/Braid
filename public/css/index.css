@@ -1,9 +1,9 @@
-#margin-fixer-grid-wrapper {
-    padding: 0 15px;
+#main-content {
+    position: relative;
 }
 
-#convo-view-col {
-    background-color: #ddd;
+#margin-fixer-grid-wrapper {
+    padding: 0 15px;
 }
 
 #message-view-col {
