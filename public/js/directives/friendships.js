@@ -45,16 +45,23 @@ angular.module('friendshipsDirective', [])
 
         // define page control functions used in the template
 
+        vm.showFriendship = function(friendship) {
+            return vm.show_all || friendship.status === 'pending';
+        };
+
         vm.conditionalStatus = function(friendship) {
-            if (friendship.status !== 'accepted' && friendship.requester_id === vm.selected_user._id) {
-                return '(' + friendship.status + ')';
-            };
+            return (friendship.status !== 'accepted' && friendship.requester_id === vm.selected_user._id) ? '(' + friendship.status + ')' : '';
+        };
+
+        vm.showAcceptButton = function(friendship) {
+            return friendship.status === 'pending' && friendship.target_id === vm.selected_user._id;
         };
 
 
         // initialization
 
         vm.friendships = [];
+        vm.show_all = false;
         vm.newFriendshipFormData = {};
 
         Friendships.get(vm.selected_user._id)

@@ -8,6 +8,8 @@
     width: 200px;
     font-size: 0.85em;
     background-color: #ddd;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
 }
 
 #friendship-list-pane:hover {

@@ -8,6 +8,8 @@
     width: 200px;
     font-size: 0.85em;
     background-color: #ddd;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
 }
 
 #convo-list-pane:hover {
