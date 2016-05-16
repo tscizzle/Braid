@@ -226,12 +226,12 @@ module.exports = function(app, io) {
 
     // apply the dynamic middleware-generating function to each route (there should be one for every api route)
 
-    app.get('/api/messages/:convo_id', resourceBelongsToUser(['params', 'convo_id'], Convo));
+    app.get('/api/messages/:convo_id/:num_messages', resourceBelongsToUser(['params', 'convo_id'], Convo));
 
-    app.post('/api/messages', resourceBelongsToUser(['body', 'sender_id'], User),
-                              resourceBelongsToUser(['body', 'strand_id'], Strand),
-                              resourceBelongsToUser(['body', 'convo_id'], Convo),
-                              bodyReceiverIdIsFriend);
+    app.post('/api/messages/:num_messages', resourceBelongsToUser(['body', 'sender_id'], User),
+                                            resourceBelongsToUser(['body', 'strand_id'], Strand),
+                                            resourceBelongsToUser(['body', 'convo_id'], Convo),
+                                            bodyReceiverIdIsFriend);
 
     app.delete('/api/messages/:message_id/:convo_id', resourceBelongsToUser(['params', 'message_id'], Message),
                                                       resourceBelongsToUser(['params', 'convo_id'], Convo));
@@ -293,22 +293,28 @@ module.exports = function(app, io) {
     // define the api route handlers
 
     // --- get messages for a convo
-    app.get('/api/messages/:convo_id', function(req, res) {
+    app.get('/api/messages/:convo_id/:num_messages', function(req, res) {
+        console.log(req.params);
 
         Message.find({
             'convo_id': req.params.convo_id
-        }, function(err, messages) {
+        }).sort({
+            time_sent: -1
+        }).limit(
+            req.params.num_messages
+        ).exec(function(err, messages) {
             if (err) {
                 return res.status(500).send(err);
             };
 
+            messages.reverse();
             return res.json(messages);
         });
 
     });
 
     // --- create a message and send back the new message_id as well as messages for the convo after creation
-    app.post('/api/messages', function(req, res) {
+    app.post('/api/messages/:num_messages', function(req, res) {
 
         Message.create({
             'text': req.body.text,
@@ -324,11 +330,16 @@ module.exports = function(app, io) {
 
             Message.find({
                 'convo_id': req.body.convo_id
-            }, function(err, messages) {
+            }).sort({
+                time_sent: -1
+            }).limit(
+                req.body.num_messages
+            ).exec(function(err, messages) {
                 if (err) {
                     return res.status(500).send(err);
                 };
 
+                messages.reverse();
                 return res.json(messages);
             });
         });
@@ -352,11 +363,16 @@ module.exports = function(app, io) {
 
             Message.find({
                 'convo_id': req.params.convo_id
-            }, function(err, messages) {
+            }).sort({
+                time_sent: -1
+            }).limit(
+                req.body.num_messages
+            ).exec(function(err, messages) {
                 if (err) {
                     return res.status(500).send(err);
                 };
 
+                messages.reverse();
                 return res.json(messages);
             });
         });
@@ -389,11 +405,16 @@ module.exports = function(app, io) {
 
             Message.find({
                 'convo_id': req.params.convo_id
-            }, function(err, messages) {
+            }).sort({
+                time_sent: -1
+            }).limit(
+                req.body.num_messages
+            ).exec(function(err, messages) {
                 if (err) {
                     return res.status(500).send(err);
                 };
 
+                messages.reverse();
                 return res.json(messages);
             });
         });
@@ -423,11 +444,16 @@ module.exports = function(app, io) {
 
             Message.find({
                 'convo_id': req.params.convo_id
-            }, function(err, messages) {
+            }).sort({
+                time_sent: -1
+            }).limit(
+                req.body.num_messages
+            ).exec(function(err, messages) {
                 if (err) {
                     return res.status(500).send(err);
                 };
 
+                messages.reverse();
                 return res.json(messages);
             });
         });

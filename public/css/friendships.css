@@ -1,8 +1,74 @@
-.friendship-in-list {
-    border-bottom: solid 1px black;
-    padding: 5px;
+#friendship-list-pane {
+    position: absolute;
+    top: 50px;
+    right: -85px;
+    -webkit-transition: right 0.3s ease-out 1s;
+    transition: right 0.3s ease-out 1s;
+    width: 200px;
+    font-size: 0.85em;
+    background-color: #ddd;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
 }
 
-#friendship-list-pane .selected {
-    background-color: #bbb;
+#friendship-list-pane:hover {
+    right: 0;
+    -webkit-transition: right 0.3s ease-out 0s;
+    transition: right 0.3s ease-out 0s;
+}
+
+#friendship-list-col {
+    padding-left: 0;
+}
+
+#friendship-list-wrapper {
+    height: 40vh;
+    overflow-y: scroll;
+}
+
+#friendship-list-wrapper:first-child {
+    border-top: solid 4px #777;
+}
+
+.friendship-in-list {
+    border-bottom: solid 1px #bbb;
+    padding: 5px 5px 5px 10px;
+    margin-right: 20px;
+}
+
+.friendship-needs-answer {
+    color: #FF3333;
+}
+
+#friendship-form-row {
+    border-top: solid 2px #777;
+    padding: 15px 15px 10px 0px;
+}
+
+#friendships-input {
+    width: 100%;
+}
+
+.no-left-padding {
+    padding-left: 0;
+}
+
+#friendship-notification-bubble {
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    width: 18px;
+    height: 18px;
+    border-radius: 10px;
+    background-color: #FF4444;
+}
+
+#friendship-notification-inner-bubble {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    width: 6px;
+    height: 6px;
+    border-radius: 3px;
+    background-color: white;
 }

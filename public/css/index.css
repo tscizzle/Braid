@@ -1,17 +1,21 @@
+html, body {
+    height: 100%;
+    overflow: hidden;
+}
+
+#main-content {
+    position: relative;
+    height: 100%;
+}
+
 #margin-fixer-grid-wrapper {
     padding: 0 15px;
 }
 
-#convo-view-col {
-    background-color: #ddd;
-}
-
 #message-view-col {
     background-color: #eee;
-}
-
-#friendship-view-col {
-    background-color: #ddd;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
 }
 
 textarea {

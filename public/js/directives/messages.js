@@ -32,12 +32,13 @@ angular.module('messagesDirective', [])
 
 
                             // update the primed messages to be part of the new strand
-                            Messages.assignMessagesToStrand(message_ids, strand_data.new_strand._id, vm.selected_convo._id)
+                            Messages.assignMessagesToStrand(message_ids, strand_data.new_strand._id, vm.selected_convo._id, vm.num_messages)
                                 .success(function(assign_messages_data) {
                                     vm.messages = assign_messages_data;
 
                                     // create the new message as part of the new strand
-                                    Messages.create(vm.newMessageFormData)
+                                    vm.num_messages += 1;
+                                    Messages.create(vm.newMessageFormData, vm.num_messages)
                                         .success(function(create_messages_data) {
                                             vm.newMessageFormData = {};
                                             vm.messages = create_messages_data;
@@ -55,7 +56,7 @@ angular.module('messagesDirective', [])
                         vm.newMessageFormData.strand_id = vm.selected_strand._id;
                     };
 
-                    Messages.create(vm.newMessageFormData)
+                    Messages.create(vm.newMessageFormData, vm.num_messages)
                         .success(function(data) {
                             vm.newMessageFormData = {};
                             vm.messages = data.messages;
@@ -68,7 +69,7 @@ angular.module('messagesDirective', [])
         vm.deleteMessage = function(message_id) {
             if (vm.selected_convo) {
 
-                Messages.delete(message_id, vm.selected_convo._id)
+                Messages.delete(message_id, vm.selected_convo._id, vm.num_messages)
                     .success(function(data) {
                         vm.messages = data;
                         vm.primed_messages = vm.primed_messages.filter(function(primed_message) {
@@ -91,6 +92,14 @@ angular.module('messagesDirective', [])
 
 
         // define page control functions used in the template
+
+        vm.showLoadMoreMessagesLink = function() {
+            return vm.messages.length >= vm.num_messages;
+        };
+
+        vm.increaseNumMessages = function() {
+            vm.num_messages += 30;
+        };
 
         vm.messageIsPrimed = function(message) {
             var primed_message_ids = vm.primed_messages.map(function(primed_message) {
@@ -135,7 +144,7 @@ angular.module('messagesDirective', [])
 
         vm.removeMessageFromStrand = function(message_id) {
 
-            Messages.unassignMessageFromStrand(message_id, vm.selected_convo._id)
+            Messages.unassignMessageFromStrand(message_id, vm.selected_convo._id, vm.num_messages)
                 .success(function(assign_message_data) {
                     vm.messages = assign_message_data;
 
@@ -157,7 +166,7 @@ angular.module('messagesDirective', [])
                 return primed_message._id;
             });
 
-            Messages.assignMessagesToStrand(primed_message_ids, strand_message.strand_id, vm.selected_convo._id)
+            Messages.assignMessagesToStrand(primed_message_ids, strand_message.strand_id, vm.selected_convo._id, vm.num_messages)
                 .success(function(assign_messages_data) {
                     vm.messages = assign_messages_data;
                     vm.primed_messages = [];
@@ -303,7 +312,7 @@ angular.module('messagesDirective', [])
         var refreshMessages = function() {
             if (vm.selected_convo) {
 
-                Messages.get(vm.selected_convo._id)
+                Messages.get(vm.selected_convo._id, vm.num_messages)
                     .success(function(data) {
                         vm.messages = data;
                     });
@@ -342,12 +351,13 @@ angular.module('messagesDirective', [])
             vm.strand_map = temp_strand_map;
         };
 
+        var num_messages_watcher = function(scope) {return vm.num_messages;};
         var strands_watcher = function(scope) {return vm.strands;};
         var selected_strand_watcher = function(scope) {return vm.selected_strand;};
         var selected_convo_watcher = function(scope) {return vm.selected_convo;};
         var selected_user_watcher = function(scope) {return vm.selected_user;};
         $scope.$watch(selected_strand_watcher, focusSendableTextarea);
-        $scope.$watchGroup([selected_strand_watcher, selected_convo_watcher], refreshMessages);
+        $scope.$watchGroup([num_messages_watcher, selected_strand_watcher, selected_convo_watcher], refreshMessages);
         $scope.$watchGroup([selected_strand_watcher, selected_convo_watcher, selected_user_watcher], clearPrimedMessages);
         $scope.$watch(selected_convo_watcher, refreshStrands);
         $scope.$watchGroup([selected_convo_watcher, selected_user_watcher], deselectStrand);
@@ -406,6 +416,7 @@ angular.module('messagesDirective', [])
 
         vm.messages = [];
         vm.strands = [];
+        vm.num_messages = 30;
         vm.selected_strand = undefined;
         vm.strand_map = {};
         vm.primed_messages = [];

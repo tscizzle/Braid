@@ -70,6 +70,7 @@ angular.module('braidController', [])
 
         // initialization
 
+        vm.login_object = true;
         vm.friend_users = [];
         vm.friendships = [];
         vm.selected_convo = undefined;

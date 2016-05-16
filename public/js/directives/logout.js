@@ -10,6 +10,7 @@ angular.module('logoutDirective', [])
         vm.logout = function() {
             auth.logout()
                 .then(function() {
+                    vm.login_object = true;
                     vm.selected_user = undefined;
                     $location.path('/');
                     $route.reload();
@@ -22,6 +23,7 @@ angular.module('logoutDirective', [])
         return {
             restrict: 'E',
             scope: {
+                login_object: '=loginObject',
                 selected_user: '=selectedUser'
             },
             templateUrl: 'views/logout.html',
