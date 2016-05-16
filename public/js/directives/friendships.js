@@ -49,12 +49,20 @@ angular.module('friendshipsDirective', [])
             return vm.show_all || friendship.status === 'pending';
         };
 
+        vm.friendshipNeedsAnswer = function(friendship) {
+            return friendship.status === 'pending' && friendship.target_id === vm.selected_user._id;
+        };
+
         vm.conditionalStatus = function(friendship) {
             return (friendship.status !== 'accepted' && friendship.requester_id === vm.selected_user._id) ? '(' + friendship.status + ')' : '';
         };
 
         vm.showAcceptButton = function(friendship) {
             return friendship.status === 'pending' && friendship.target_id === vm.selected_user._id;
+        };
+
+        vm.friendshipsNeedingAnswer = function() {
+            return _.filter(vm.friendships, vm.friendshipNeedsAnswer).length > 0;
         };
 
 

@@ -1,5 +1,4 @@
 <div id="friendship-list-pane" class="container-fluid">
-
     <div class="row">
         <div class="col-sm-12">
             <h3>Friends <label class="pull-right"><input type="checkbox" ng-model="friendshipCtrl.show_all"> All</input></label></h3>
@@ -10,7 +9,7 @@
         <div id="friendship-list-col" class="col-sm-12">
             <div id="friendship-list-wrapper">
                 <div class="friendship-in-list clearfix" ng-show="friendshipCtrl.showFriendship(friendship)" ng-repeat="friendship in friendshipCtrl.friendships">
-                    {{ friendship | friend:friendshipCtrl.selected_user | username:friendshipCtrl.friend_user_map }} {{ friendshipCtrl.conditionalStatus(friendship) }}
+                    <span ng-class="{'friendship-needs-answer': friendshipCtrl.friendshipNeedsAnswer(friendship)}">{{ friendship | friend:friendshipCtrl.selected_user | username:friendshipCtrl.friend_user_map }} {{ friendshipCtrl.conditionalStatus(friendship) }}</span>
                     <button class="btn btn-default pull-right" ng-click="friendshipCtrl.deleteFriendship(friendship._id); $event.stopPropagation();">&#10005;</button>
                     <button class="btn btn-default pull-right" ng-click="friendshipCtrl.acceptFriendship(friendship._id); $event.stopPropagation();" ng-show="friendshipCtrl.showAcceptButton(friendship)">&#10003;</button>
                 </div>
@@ -30,4 +29,7 @@
         </form>
     </div>
 
+    <div id="friendship-notification-bubble" ng-show="friendshipCtrl.friendshipsNeedingAnswer()">
+        <div id="friendship-notification-inner-bubble"></div>
+    </div>
 </div>

@@ -1,5 +1,4 @@
 #friendship-list-pane {
-    z-index: 200;
     position: absolute;
     top: 50px;
     right: -85px;
@@ -37,6 +36,10 @@
     margin-right: 20px;
 }
 
+.friendship-needs-answer {
+    color: #FF3333;
+}
+
 #friendship-form-row {
     border-top: solid 2px #777;
     padding: 15px 15px 10px 0px;
@@ -48,4 +51,24 @@
 
 .no-left-padding {
     padding-left: 0;
+}
+
+#friendship-notification-bubble {
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    width: 18px;
+    height: 18px;
+    border-radius: 10px;
+    background-color: #FF4444;
+}
+
+#friendship-notification-inner-bubble {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    width: 6px;
+    height: 6px;
+    border-radius: 3px;
+    background-color: white;
 }
