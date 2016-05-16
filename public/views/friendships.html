@@ -10,7 +10,13 @@
             <div id="friendship-list-wrapper">
                 <div class="friendship-in-list clearfix" ng-show="friendshipCtrl.showFriendship(friendship)" ng-repeat="friendship in friendshipCtrl.friendships">
                     <span ng-class="{'friendship-needs-answer': friendshipCtrl.friendshipNeedsAnswer(friendship)}">{{ friendship | friend:friendshipCtrl.selected_user | username:friendshipCtrl.friend_user_map }} {{ friendshipCtrl.conditionalStatus(friendship) }}</span>
-                    <button class="btn btn-default pull-right" ng-click="friendshipCtrl.deleteFriendship(friendship._id); $event.stopPropagation();">&#10005;</button>
+                    <!-- TODO: only show the delete button on hover over the friendship -->
+                    <div class="btn-group pull-right">
+                        <a class="btn btn-danger dropdown-toggle" href="#" data-toggle="dropdown">&#10005;</a>
+                        <ul class="dropdown-menu">
+                            <li ng-click="friendshipCtrl.deleteFriendship(friendship._id)"><a class="btn btn-danger">Delete friendship</a></li>
+                        </ul>
+                    </div>
                     <button class="btn btn-default pull-right" ng-click="friendshipCtrl.acceptFriendship(friendship._id); $event.stopPropagation();" ng-show="friendshipCtrl.showAcceptButton(friendship)">&#10003;</button>
                 </div>
             </div>
@@ -24,7 +30,7 @@
             </div>
 
             <div class="col-sm-4 no-left-padding">
-                <button class="btn btn-default" ng-click="friendshipCtrl.createFriendship()">Request</button>
+                <button class="btn btn-success" ng-click="friendshipCtrl.createFriendship()">Request</button>
             </div>
         </form>
     </div>
