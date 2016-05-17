@@ -8,16 +8,16 @@
     <div class="row">
         <div id="friendship-list-col" class="col-sm-12">
             <div id="friendship-list-wrapper">
-                <div class="friendship-in-list clearfix" ng-show="friendshipCtrl.showFriendship(friendship)" ng-repeat="friendship in friendshipCtrl.friendships">
+                <div class="friendship-in-list clearfix" ng-show="friendshipCtrl.showFriendship(friendship)" ng-mouseover="friendshipCtrl.hoverFriendship(friendship)" ng-mouseleave="friendshipCtrl.unhoverFriendship(friendship)" ng-repeat="friendship in friendshipCtrl.friendships">
                     <span ng-class="{'friendship-needs-answer': friendshipCtrl.friendshipNeedsAnswer(friendship)}">{{ friendship | friend:friendshipCtrl.selected_user | username:friendshipCtrl.friend_user_map }} {{ friendshipCtrl.conditionalStatus(friendship) }}</span>
                     <!-- TODO: only show the delete button on hover over the friendship -->
-                    <div class="btn-group pull-right">
+                    <div class="btn-group pull-right" ng-style="{'opacity': friendshipCtrl.friendshipOpacity(friendship)}">
                         <a class="btn btn-danger dropdown-toggle" href="#" data-toggle="dropdown">&#10005;</a>
                         <ul class="dropdown-menu">
                             <li ng-click="friendshipCtrl.deleteFriendship(friendship._id)"><a class="btn btn-danger">Delete friendship</a></li>
                         </ul>
                     </div>
-                    <button class="btn btn-default pull-right" ng-click="friendshipCtrl.acceptFriendship(friendship._id); $event.stopPropagation();" ng-show="friendshipCtrl.showAcceptButton(friendship)">&#10003;</button>
+                    <button class="btn btn-success pull-right" ng-click="friendshipCtrl.acceptFriendship(friendship._id); $event.stopPropagation();" ng-show="friendshipCtrl.showAcceptButton(friendship)">&#10003;</button>
                 </div>
             </div>
         </div>
