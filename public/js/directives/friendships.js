@@ -61,6 +61,18 @@ angular.module('friendshipsDirective', [])
             return friendship.status === 'pending' && friendship.target_id === vm.selected_user._id;
         };
 
+        vm.hoverFriendship = function(friendship) {
+            vm.hovered_friendship = friendship._id;
+        };
+
+        vm.unhoverFriendship = function(friendship) {
+            vm.hovered_friendship = undefined;
+        };
+
+        vm.friendshipOpacity = function(friendship) {
+            return (vm.hovered_friendship === friendship._id || vm.showAcceptButton(friendship)) ? 1 : 0;
+        };
+
         vm.friendshipsNeedingAnswer = function() {
             return _.filter(vm.friendships, vm.friendshipNeedsAnswer).length > 0;
         };
@@ -70,6 +82,7 @@ angular.module('friendshipsDirective', [])
 
         vm.friendships = [];
         vm.show_all = false;
+        vm.hovered_friendship = undefined;
         vm.newFriendshipFormData = {};
 
         Friendships.get(vm.selected_user._id)

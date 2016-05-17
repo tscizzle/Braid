@@ -94,7 +94,9 @@ angular.module('messagesDirective', [])
         // define page control functions used in the template
 
         vm.showLoadMoreMessagesLink = function() {
-            return vm.messages.length >= vm.num_messages;
+            if (vm.messages) {
+                return vm.messages.length >= vm.num_messages;
+            };
         };
 
         vm.increaseNumMessages = function() {
@@ -242,7 +244,7 @@ angular.module('messagesDirective', [])
         vm.paintStrand = function(message) {
             var message_color;
             // if a message is in a strand, color it that strand's color
-            if (message.strand_id) {
+            if (message.strand_id && vm.strand_map[message.strand_id]) {
                 message_color = vm.strand_map[message.strand_id].color;
             // if a message is primed, color it the faded version of what color it would be next
             } else if (vm.messageIsPrimed(message)) {
