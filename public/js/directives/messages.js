@@ -95,7 +95,10 @@ angular.module('messagesDirective', [])
 
         vm.showLoadMoreMessagesLink = function() {
             if (vm.messages) {
-                return vm.messages.length >= vm.num_messages;
+                var visible_messages = _.filter(vm.messages, function(message) {
+                    return !vm.messageIsHidden(message);
+                });
+                return visible_messages.length >= vm.num_messages;
             };
         };
 
