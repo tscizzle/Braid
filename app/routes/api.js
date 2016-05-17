@@ -294,7 +294,6 @@ module.exports = function(app, io) {
 
     // --- get messages for a convo
     app.get('/api/messages/:convo_id/:num_messages', function(req, res) {
-        console.log(req.params);
 
         Message.find({
             'convo_id': req.params.convo_id
