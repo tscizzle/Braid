@@ -254,7 +254,7 @@ angular.module('messagesDirective', [])
                 message_color = COLOR_TO_FADED_MAP[vm.thisColor()];
             // if a message is neither in a strand nor primed, make it no color
             } else {
-                message_color = 'white';
+                message_color = '#DDD';
             };
             return message_color;
         };
@@ -302,7 +302,7 @@ angular.module('messagesDirective', [])
                 textarea_color = COLOR_TO_FADED_MAP[vm.thisColor()];
             // if there is no selected strand and no primed messages, make it no color
             } else {
-                textarea_color = 'white';
+                textarea_color = '#EEE';
             };
             return textarea_color;
         };
