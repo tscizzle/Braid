@@ -93,6 +93,12 @@ angular.module('messagesDirective', [])
 
         // define page control functions used in the template
 
+        vm.clickMessageListWrapper = function() {
+            if (vm.selected_strand) {
+                vm.selected_strand = undefined;
+            }
+        }
+
         vm.showLoadMoreMessagesLink = function() {
             if (vm.messages) {
                 var visible_messages = _.filter(vm.messages, function(message) {
@@ -283,11 +289,10 @@ angular.module('messagesDirective', [])
 
         vm.borderRadius = function(message) {
             // depending on who sent the message, set the radius to either 15px or 0 px
-            if (message.sender_id===vm.selected_user._id) {
+            if (message.sender_id === vm.selected_user._id) {
                 radius = '15px';
             } else {
                 radius = '0px';
-
             };
             return radius;
         };
