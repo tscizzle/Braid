@@ -14,8 +14,8 @@
     <div class="row">
         <div class="col-sm-12">
             <div id="message-list-wrapper" ng-click="" scroll-glue>
-                <a id="load-more-messages-link" ng-show="messageCtrl.showLoadMoreMessagesLink()" ng-click="messageCtrl.increaseNumMessages()">Load earlier messages</a>
-                <div class="message-in-list" ng-style="{'margin-left': messageCtrl.alignMessage(message), 'text-align': messageCtrl.alignBubble(message)}" ng-hide="messageCtrl.messageIsHidden(message)" ng-mouseover="messageCtrl.hoverMessage(message)" ng-mouseleave="messageCtrl.unhoverMessage(message)" ng-click="messageCtrl.toggleMessage(message)" ng-repeat="message in messageCtrl.messages">
+                <a class="clickable" ng-show="messageCtrl.showLoadMoreMessagesLink()" ng-click="messageCtrl.increaseNumMessages()">Load earlier messages</a>
+                <div class="clickable" ng-style="{'margin-left': messageCtrl.alignMessage(message), 'text-align': messageCtrl.alignBubble(message)}" ng-hide="messageCtrl.messageIsHidden(message)" ng-mouseover="messageCtrl.hoverMessage(message)" ng-mouseleave="messageCtrl.unhoverMessage(message)" ng-click="messageCtrl.toggleMessage(message)" ng-repeat="message in messageCtrl.messages">
                     <div class="bubble" ng-style="{'background-color': messageCtrl.paintStrand(message), 'border-radius': messageCtrl.borderRadius(message)}" ng-class="{'hovered-messages': messageCtrl.oneOfHoveredMessages(message)}">
                         <span class="message-text">{{ message.text }}</span>
                     </div>

@@ -302,7 +302,7 @@ angular.module('messagesDirective', [])
                 textarea_color = COLOR_TO_FADED_MAP[vm.thisColor()];
             // if there is no selected strand and no primed messages, make it no color
             } else {
-                textarea_color = '#EEE';
+                textarea_color = '#F0F0F0';
             };
             return textarea_color;
         };

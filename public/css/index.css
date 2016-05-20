@@ -28,3 +28,7 @@ html, body {
 textarea {
     resize: none;
 }
+
+.clickable {
+    cursor: pointer;
+}

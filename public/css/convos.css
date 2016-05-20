@@ -40,7 +40,6 @@
     border-bottom: solid 1px #bbb;
     padding: 10px 25px 10px 10px;
     text-align: right;
-    cursor: pointer;
 }
 
 #convo-list-pane .selected {
