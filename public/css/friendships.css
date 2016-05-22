@@ -6,9 +6,11 @@
     transition: right 0.3s ease-out 1s;
     width: 200px;
     font-size: 0.85em;
-    background-color: #ddd;
-    border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px;
+    background-color: white;
+    border-top: solid 1px #999;
+    border-bottom: solid 1px #999;
+    border-left: solid 1px #999;
+    box-shadow: 1px 2px 2px #777;
 }
 
 #friendship-list-pane:hover {

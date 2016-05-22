@@ -6,9 +6,11 @@
     transition: left 0.3s ease-out 1s;
     width: 200px;
     font-size: 0.85em;
-    background-color: #ddd;
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
+    background-color: white;
+    border-top: solid 1px #999;
+    border-right: solid 1px #999;
+    border-bottom: solid 1px #999;
+    box-shadow: -1px 2px 2px #777;
 }
 
 #convo-list-pane:hover {
@@ -38,7 +40,6 @@
     border-bottom: solid 1px #bbb;
     padding: 10px 25px 10px 10px;
     text-align: right;
-    cursor: pointer;
 }
 
 #convo-list-pane .selected {

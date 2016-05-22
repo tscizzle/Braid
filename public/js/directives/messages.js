@@ -93,9 +93,18 @@ angular.module('messagesDirective', [])
 
         // define page control functions used in the template
 
+        vm.clickMessageListWrapper = function() {
+            if (vm.selected_strand) {
+                vm.selected_strand = undefined;
+            }
+        }
+
         vm.showLoadMoreMessagesLink = function() {
             if (vm.messages) {
-                return vm.messages.length >= vm.num_messages;
+                var visible_messages = _.filter(vm.messages, function(message) {
+                    return !vm.messageIsHidden(message);
+                });
+                return visible_messages.length >= vm.num_messages;
             };
         };
 
@@ -251,7 +260,7 @@ angular.module('messagesDirective', [])
                 message_color = COLOR_TO_FADED_MAP[vm.thisColor()];
             // if a message is neither in a strand nor primed, make it no color
             } else {
-                message_color = 'white';
+                message_color = '#DDD';
             };
             return message_color;
         };
@@ -280,11 +289,10 @@ angular.module('messagesDirective', [])
 
         vm.borderRadius = function(message) {
             // depending on who sent the message, set the radius to either 15px or 0 px
-            if (message.sender_id===vm.selected_user._id) {
+            if (message.sender_id === vm.selected_user._id) {
                 radius = '15px';
             } else {
                 radius = '0px';
-
             };
             return radius;
         };
@@ -299,7 +307,7 @@ angular.module('messagesDirective', [])
                 textarea_color = COLOR_TO_FADED_MAP[vm.thisColor()];
             // if there is no selected strand and no primed messages, make it no color
             } else {
-                textarea_color = 'white';
+                textarea_color = '#F0F0F0';
             };
             return textarea_color;
         };
