@@ -300,7 +300,7 @@ module.exports = function(app, io) {
         }).sort({
             time_sent: -1
         }).limit(
-            req.params.num_messages
+            parseInt(req.params.num_messages)
         ).exec(function(err, messages) {
             if (err) {
                 return res.status(500).send(err);
@@ -332,7 +332,7 @@ module.exports = function(app, io) {
             }).sort({
                 time_sent: -1
             }).limit(
-                req.body.num_messages
+                parseInt(req.body.num_messages)
             ).exec(function(err, messages) {
                 if (err) {
                     return res.status(500).send(err);
@@ -365,7 +365,7 @@ module.exports = function(app, io) {
             }).sort({
                 time_sent: -1
             }).limit(
-                req.body.num_messages
+                parseInt(req.body.num_messages)
             ).exec(function(err, messages) {
                 if (err) {
                     return res.status(500).send(err);
@@ -407,7 +407,7 @@ module.exports = function(app, io) {
             }).sort({
                 time_sent: -1
             }).limit(
-                req.body.num_messages
+                parseInt(req.body.num_messages)
             ).exec(function(err, messages) {
                 if (err) {
                     return res.status(500).send(err);
@@ -446,7 +446,7 @@ module.exports = function(app, io) {
             }).sort({
                 time_sent: -1
             }).limit(
-                req.body.num_messages
+                parseInt(req.body.num_messages)
             ).exec(function(err, messages) {
                 if (err) {
                     return res.status(500).send(err);
