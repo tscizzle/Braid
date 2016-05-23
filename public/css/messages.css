@@ -29,3 +29,8 @@
     font-size: 0.8em;
     height: 90px;
 }
+
+.typingDisplay {
+    background-color: :blue;
+    content:"PREEEEET";
+}

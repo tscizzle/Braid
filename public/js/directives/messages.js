@@ -312,6 +312,28 @@ angular.module('messagesDirective', [])
             return textarea_color;
         };
 
+        // emit when this user is typing
+        vm.userIsTyping = function() {
+            console.log("userIsTyping was triggered")
+            var recipient = partnerIdFromSelectedConvo()
+            //get partner from convo and pass that in as the second socket.emit arg
+            socket.emit('this_user_typing', recipient);
+        }
+
+        // listen for the other user typing
+        socket.on('other_user_typing', function(recipient) {
+            if (vm.selected_user._id == recipient) {
+                vm.hide_typing=false;
+            } else {
+                vm.hide_typing=true;
+            };
+
+        });
+
+        // don't display "<other user> is typing..." when they are not typing.
+        vm.noOneIsTyping = function(message) {
+            return vm.hide_typing;
+        };
 
         // register listeners
 
@@ -423,7 +445,7 @@ angular.module('messagesDirective', [])
 
 
         // initialization
-
+        vm.hide_typing = true;
         vm.messages = [];
         vm.strands = [];
         vm.num_messages = 30;
