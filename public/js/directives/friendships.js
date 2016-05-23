@@ -1,6 +1,6 @@
 angular.module('friendshipsDirective', [])
 
-    .controller('friendshipController', ['$scope', 'Users', 'Friendships', function($scope, Users, Friendships) {
+    .controller('friendshipController', ['$scope', 'socket', 'Friendships', 'Convos', function($scope, socket, Friendships, Convos) {
 
         var vm = this;
 
@@ -37,6 +37,7 @@ angular.module('friendshipsDirective', [])
                 Friendships.delete(friendship_id, vm.selected_user._id)
                     .success(function(data) {
                         vm.friendships = data;
+                        vm.selected_convo = undefined;
                     });
 
             };
@@ -45,20 +46,22 @@ angular.module('friendshipsDirective', [])
 
         // define page control functions used in the template
 
-        vm.showFriendship = function(friendship) {
-            return vm.show_all || friendship.status === 'pending';
-        };
-
         vm.friendshipNeedsAnswer = function(friendship) {
-            return friendship.status === 'pending' && friendship.target_id === vm.selected_user._id;
+            if (vm.selected_user) {
+                return friendship.status === 'pending' && friendship.target_id === vm.selected_user._id;
+            };
         };
 
         vm.conditionalStatus = function(friendship) {
-            return (friendship.status !== 'accepted' && friendship.requester_id === vm.selected_user._id) ? '(' + friendship.status + ')' : '';
+            if (vm.selected_user) {
+                return (friendship.status !== 'accepted' && friendship.requester_id === vm.selected_user._id) ? '(' + friendship.status + ')' : '';
+            };
         };
 
         vm.showAcceptButton = function(friendship) {
-            return friendship.status === 'pending' && friendship.target_id === vm.selected_user._id;
+            if (vm.selected_user) {
+                return friendship.status === 'pending' && friendship.target_id === vm.selected_user._id;
+            };
         };
 
         vm.hoverFriendship = function(friendship) {
@@ -77,13 +80,97 @@ angular.module('friendshipsDirective', [])
             return _.filter(vm.friendships, vm.friendshipNeedsAnswer).length > 0;
         };
 
+        vm.friendshipConvoIsSelected = function(friendship) {
+            var friendship_convo = convoFromFriendship(friendship);
+            if (vm.selected_convo && friendship_convo) {
+                return friendship_convo._id === vm.selected_convo._id;
+            };
+        };
+
+        vm.selectConvo = function(friendship) {
+            var friendship_convo = convoFromFriendship(friendship);
+            if (friendship && friendship.status === 'accepted' && !friendship_convo) {
+                createConvo(friendship);
+            } else if (friendship_convo) {
+                vm.selected_convo = friendship_convo;
+            };
+        };
+
+
+        // helpers
+
+        var convoFromFriendship = function(friendship) {
+            if (vm.selected_user) {
+                var matching_convo = _.find(vm.convos, function(convo) {
+                    var convo_pair = [convo.user_id_0, convo.user_id_1].sort();
+                    var freindship_pair = [friendship.requester_id, friendship.target_id].sort();
+                    return convo_pair[0] === freindship_pair[0] && convo_pair[1] === freindship_pair[1];
+                });
+                return matching_convo;
+            };
+        };
+
+        var partnerIdFromFriendship = function(friendship) {
+            if (vm.selected_user) {
+                if (friendship.requester_id === vm.selected_user._id) {
+                    return friendship.target_id;
+                } else if (friendship.target_id === vm.selected_user._id) {
+                    return friendship.requester_id;
+                };
+            };
+        };
+
+        var createConvo = function(friendship) {
+            vm.newConvoFormData.user_id_1 = partnerIdFromFriendship(friendship);
+            if (vm.newConvoFormData.user_id_1) {
+                vm.newConvoFormData.user_id_0 = vm.selected_user._id;
+
+                Convos.create(vm.newConvoFormData)
+                    .success(function(data) {
+                        vm.newConvoFormData = {};
+                        vm.convos = data.convos;
+                        vm.selected_convo = data.new_convo;
+                    });
+
+            };
+        };
+
+
+        // register listeners
+
+        var refreshConvos = function() {
+            if (vm.selected_user) {
+
+                Convos.get(vm.selected_user._id)
+                    .success(function(data) {
+                        vm.convos = data;
+                    });
+
+            } else {
+                vm.convos = [];
+                vm.selected_convo = undefined;
+            };
+        };
+
+        var friend_users_watcher = function(scope) {return vm.friend_users;};
+        var selected_user_watcher = function(scope) {return vm.selected_user;};
+        $scope.$watchGroup([friend_users_watcher, selected_user_watcher], refreshConvos);
+
+
+        // register socket listeners
+
+        socket.on('convos:receive_update', function() {
+            refreshConvos();
+        });
+
 
         // initialization
 
         vm.friendships = [];
-        vm.show_all = false;
+        vm.convos = [];
         vm.hovered_friendship = undefined;
         vm.newFriendshipFormData = {};
+        vm.newConvoFormData = {user_id_1: ""};
 
         Friendships.get(vm.selected_user._id)
             .success(function(data) {
@@ -98,6 +185,7 @@ angular.module('friendshipsDirective', [])
             scope: {
                 friend_users: '=friendUsers',
                 friendships: "=",
+                selected_convo: '=selectedConvo',
                 selected_user: '=selectedUser',
                 friend_user_map: '=friendUserMap'
             },

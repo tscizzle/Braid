@@ -1,19 +1,20 @@
 <div id="friendship-list-pane" class="container-fluid">
+
     <div class="row">
         <div class="col-sm-12">
-            <h3>Friends <label class="pull-right clickable"><input class="clickable" type="checkbox" ng-model="friendshipCtrl.show_all"> All</input></label></h3>
+            <h3>Friends</h3>
         </div>
     </div>
 
     <div class="row">
         <div id="friendship-list-col" class="col-sm-12">
             <div id="friendship-list-wrapper">
-                <div class="friendship-in-list clearfix" ng-show="friendshipCtrl.showFriendship(friendship)" ng-mouseover="friendshipCtrl.hoverFriendship(friendship)" ng-mouseleave="friendshipCtrl.unhoverFriendship(friendship)" ng-repeat="friendship in friendshipCtrl.friendships">
+                <div class="friendship-in-list clearfix" ng-class="{'clickable': friendship.status==='accepted', 'selected': friendshipCtrl.friendshipConvoIsSelected(friendship)}" ng-click="friendshipCtrl.selectConvo(friendship)" ng-mouseover="friendshipCtrl.hoverFriendship(friendship)" ng-mouseleave="friendshipCtrl.unhoverFriendship(friendship)" ng-repeat="friendship in friendshipCtrl.friendships">
                     <span ng-class="{'friendship-needs-answer': friendshipCtrl.friendshipNeedsAnswer(friendship)}">{{ friendship | friend:friendshipCtrl.selected_user | username:friendshipCtrl.friend_user_map }} {{ friendshipCtrl.conditionalStatus(friendship) }}</span>
                     <div class="btn-group pull-right" ng-style="{'opacity': friendshipCtrl.friendshipOpacity(friendship)}">
-                        <a class="btn btn-danger dropdown-toggle" href="#" data-toggle="dropdown">&#10005;</a>
+                        <a class="btn btn-danger dropdown-toggle" data-toggle="dropdown">&#10005;</a>
                         <ul class="dropdown-menu">
-                            <li ng-click="friendshipCtrl.deleteFriendship(friendship._id)"><a class="btn btn-danger">Delete friendship</a></li>
+                            <li ng-click="friendshipCtrl.deleteFriendship(friendship._id); $event.stopPropagation();"><a class="btn btn-danger">Delete friendship</a></li>
                         </ul>
                     </div>
                     <button class="btn btn-success pull-right" ng-click="friendshipCtrl.acceptFriendship(friendship._id); $event.stopPropagation();" ng-show="friendshipCtrl.showAcceptButton(friendship)">&#10003;</button>
@@ -37,4 +38,5 @@
     <div id="friendship-notification-bubble" ng-show="friendshipCtrl.friendshipsNeedingAnswer()">
         <div id="friendship-notification-inner-bubble"></div>
     </div>
+
 </div>

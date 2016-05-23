@@ -725,6 +725,12 @@ module.exports = function(app, io) {
                 return res.status(500).send(err);
             };
 
+            // if this call fails because a convo already exists for these users, that's fine
+            Convo.create({
+                user_id_0: req.body.user_id_0,
+                user_id_1: req.body.user_id_1
+            });
+
             // unfortunately have to call .emit() here instead of in a post hook on .update(), since mongoose doesn't have document middleware for .update()
             Friendship.findOne({
                 _id: req.params.friendship_id
