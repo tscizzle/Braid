@@ -28,8 +28,6 @@
     <script src="/js/directives/login.js"></script>
     <script src="/js/directives/logout.js"></script>
     <script src="/js/directives/messages.js"></script>
-    <script src="/js/directives/convos.js"></script>
-    <script src="/js/directives/users.js"></script>
     <script src="/js/directives/friendships.js"></script>
     <script src="/js/filters/main.js"></script>
     <script src="/js/services/focus.js"></script>
@@ -46,7 +44,6 @@
     <link rel="stylesheet" href="/css/customize_bootstrap.css">
     <link rel="stylesheet" href="/css/index.css">
     <link rel="stylesheet" href="/css/messages.css">
-    <link rel="stylesheet" href="/css/convos.css">
     <link rel="stylesheet" href="/css/users.css">
     <link rel="stylesheet" href="/css/friendships.css">
     <link rel="stylesheet" href="/css/firstview.css">
@@ -74,17 +71,10 @@
                 </div>
             </div>
 
-            <!-- slide in from left -->
-            <braid-convos friend_users="mainCtrl.friend_users"
-                          friendships="mainCtrl.friendships"
-                          selected_convo="mainCtrl.selected_convo"
-                          selected_user="mainCtrl.selected_user"
-                          friend_user_map="mainCtrl.friend_user_map">
-            </braid-convos>
-
             <!-- slide in from right -->
             <braid-friendships friend_users="mainCtrl.friend_users"
                                friendships="mainCtrl.friendships"
+                               selected_convo="mainCtrl.selected_convo"
                                selected_user="mainCtrl.selected_user"
                                friend_user_map="mainCtrl.friend_user_map">
             </braid-friendships>

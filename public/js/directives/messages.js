@@ -266,35 +266,40 @@ angular.module('messagesDirective', [])
         };
 
         vm.alignMessage = function(message) {
-            // depending on who sent the message, set 'margin-left' to either auto (right justified) or 0 (left justified)
-            if (message.sender_id===vm.selected_user._id) {
-                message_alignment = 'auto';
-            } else {
-                message_alignment = 0;
-
+            if (vm.selected_user) {
+                // depending on who sent the message, set 'margin-left' to either auto (right justified) or 0 (left justified)
+                if (message.sender_id === vm.selected_user._id) {
+                    message_alignment = 'auto';
+                } else {
+                    message_alignment = 0;
+                };
+                return message_alignment;
             };
-            return message_alignment;
         };
 
         vm.alignBubble = function(message) {
-            // depending on who sent the message, set 'margin-left' to either auto (right justified) or 0 (left justified)
-            if (message.sender_id===vm.selected_user._id) {
-                message_alignment = 'right';
-            } else {
-                message_alignment = 'left';
+            if (vm.selected_user) {
+                // depending on who sent the message, set 'margin-left' to either auto (right justified) or 0 (left justified)
+                if (message.sender_id === vm.selected_user._id) {
+                    message_alignment = 'right';
+                } else {
+                    message_alignment = 'left';
 
+                };
+                return message_alignment;
             };
-            return message_alignment;
         };
 
         vm.borderRadius = function(message) {
-            // depending on who sent the message, set the radius to either 15px or 0 px
-            if (message.sender_id === vm.selected_user._id) {
-                radius = '15px';
-            } else {
-                radius = '0px';
+            if (vm.selected_user) {
+                // depending on who sent the message, set the radius to either 15px or 0 px
+                if (message.sender_id === vm.selected_user._id) {
+                    radius = '15px';
+                } else {
+                    radius = '0px';
+                };
+                return radius;
             };
-            return radius;
         };
 
         vm.paintTextarea = function() {

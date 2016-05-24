@@ -19,6 +19,10 @@
     transition: right 0.3s ease-out 0s;
 }
 
+#friendship-list-pane .selected {
+    background-color: #bbb;
+}
+
 #friendship-list-col {
     padding-left: 0;
 }
