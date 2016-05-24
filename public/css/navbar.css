@@ -13,3 +13,8 @@
     height: 45px;
     margin-top: 10px
 }
+
+#sound-checkbox-label {
+    margin-top: 10px;
+    margin-right: 10px;
+}

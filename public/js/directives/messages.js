@@ -389,7 +389,7 @@ angular.module('messagesDirective', [])
                 };
             };
 
-            if (data.play_message_sound) {
+            if (vm.sound_on && data.play_message_sound) {
                 var ooooh = new Audio('audio/ooooh.wav');
                 ooooh.play();
             };
@@ -438,7 +438,6 @@ angular.module('messagesDirective', [])
         vm.hovered_message = undefined;
         vm.hovered_strand = undefined;
         vm.sendable_text_focus = false;
-        vm.sound_on = false;
         vm.newMessageFormData = {};
         vm.newStrandFormData = {};
 
@@ -450,7 +449,8 @@ angular.module('messagesDirective', [])
             scope: {
                 selected_convo: '=selectedConvo',
                 selected_user: '=selectedUser',
-                friend_user_map: '=friendUserMap'
+                friend_user_map: '=friendUserMap',
+                sound_on: '=soundOn'
             },
             templateUrl: 'views/messages.html',
             controller: 'messageController',

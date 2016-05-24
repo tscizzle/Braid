@@ -3,14 +3,18 @@
 
         <img class="navbar-logo" src="/img/poop_logo.jpeg" alt="">
         <img class="navbar-words" src="/img/braid_words.png" alt="">
-        <div class="navbar-header navbar-right" ng-show="selected_user">
+
+        <a class="navbar-brand navbar-right">{{ selected_user.username }}</a>
+        <div class="navbar-right" ng-show="selected_user">
             <braid-logout login_object="login_object"
                           selected_user="selected_user">
             </braid-logout>
         </div>
-        <div class="navbar-header navbar-right">
-            <a class="navbar-brand">{{ selected_user.username }}</a>
-        </div>
+        <label id="sound-checkbox-label" class="btn btn-default navbar-right">
+            <input id="sound-checkbox" type="checkbox" ng-model="sound_on" hidden>
+            <i class="fa fa-volume-up" ng-show="sound_on"></i>
+            <i class="fa fa-volume-off" ng-hide="sound_on"></i>
+        </label>
 
     </div>
 </nav>
