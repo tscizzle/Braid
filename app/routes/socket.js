@@ -15,7 +15,6 @@ module.exports = function(io) {
     
         socket.on('this_user_typing', function(recipient){
             io.to(recipient).emit('other_user_typing', recipient)
-            console.log("socket.on method")
         });
     };
 
