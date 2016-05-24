@@ -314,7 +314,6 @@ angular.module('messagesDirective', [])
 
         // emit when this user is typing
         vm.userIsTyping = function() {
-            console.log("userIsTyping was triggered")
             var recipient = partnerIdFromSelectedConvo()
             //get partner from convo and pass that in as the second socket.emit arg
             socket.emit('this_user_typing', recipient);
@@ -327,11 +326,11 @@ angular.module('messagesDirective', [])
             } else {
                 vm.hide_typing=true;
             };
-
+            console.log(vm.hide_typing)
         });
 
         // don't display "<other user> is typing..." when they are not typing.
-        vm.noOneIsTyping = function(message) {
+        vm.otherUserIsNotTyping = function(message) {
             return vm.hide_typing;
         };
 
