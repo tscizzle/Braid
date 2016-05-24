@@ -23,6 +23,7 @@
     display: inline-block;
     max-width: 80%;
     margin-bottom: 3px;
+    text-align: left;
 }
 
 #sendable-textarea {
