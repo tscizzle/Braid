@@ -389,7 +389,7 @@ angular.module('messagesDirective', [])
                 };
             };
 
-            if (data.play_ooooh) {
+            if (data.play_message_sound) {
                 var ooooh = new Audio('audio/ooooh.wav');
                 ooooh.play();
             };
@@ -438,6 +438,7 @@ angular.module('messagesDirective', [])
         vm.hovered_message = undefined;
         vm.hovered_strand = undefined;
         vm.sendable_text_focus = false;
+        vm.sound_on = false;
         vm.newMessageFormData = {};
         vm.newStrandFormData = {};
 

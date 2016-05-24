@@ -42,3 +42,6 @@ envs/
 
 # TODO tasks
 TODO.txt
+
+# redis
+dump.rdb
