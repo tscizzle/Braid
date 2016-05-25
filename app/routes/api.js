@@ -307,7 +307,6 @@ module.exports = function(app, io) {
             };
 
             messages.reverse();
-            console.info(messages.length, ' messages in get messages');
             return res.json(messages);
         });
 
@@ -340,7 +339,6 @@ module.exports = function(app, io) {
                 };
 
                 messages.reverse();
-                console.info(messages.length, ' messages in post messages');
                 return res.json(messages);
             });
         });
@@ -374,7 +372,6 @@ module.exports = function(app, io) {
                 };
 
                 messages.reverse();
-                console.info(messages.length, ' messages in delete messages');
                 return res.json(messages);
             });
         });
@@ -417,7 +414,6 @@ module.exports = function(app, io) {
                 };
 
                 messages.reverse();
-                console.info(messages.length, ' messages in post assignMessagesToStrand');
                 return res.json(messages);
             });
         });
@@ -457,7 +453,6 @@ module.exports = function(app, io) {
                 };
 
                 messages.reverse();
-                console.info(messages.length, ' messages in post unassignMessageFromStrand');
                 return res.json(messages);
             });
         });
