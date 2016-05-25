@@ -333,7 +333,7 @@ module.exports = function(app, io) {
             }).sort({
                 time_sent: -1
             }).limit(
-                parseInt(req.body.num_messages)
+                parseInt(req.params.num_messages)
             ).exec(function(err, messages) {
                 if (err) {
                     return res.status(500).send(err);

@@ -57,9 +57,9 @@ angular.module('messagesDirective', [])
                     };
 
                     Messages.create(vm.newMessageFormData, vm.num_messages)
-                        .success(function(data) {
+                        .success(function(create_messages_data) {
                             vm.newMessageFormData = {};
-                            vm.messages = data.messages;
+                            vm.messages = create_messages_data;
                         });
 
                 };
