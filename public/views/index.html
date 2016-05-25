@@ -41,6 +41,7 @@
     <script src="/js/core.js"></script>
 
     <link rel="stylesheet" href="/css/bootstrap.min.css"> <!-- Bootswatch Yeti -->
+    <link rel="stylesheet" href="/css/font-awesome-4.6.3/css/font-awesome.min.css">
     <link rel="stylesheet" href="/css/customize_bootstrap.css">
     <link rel="stylesheet" href="/css/index.css">
     <link rel="stylesheet" href="/css/messages.css">
@@ -55,7 +56,8 @@
 <body ng-controller="mainController as mainCtrl">
 
     <braid-navbar login_object="mainCtrl.login_object"
-                  selected_user="mainCtrl.selected_user">
+                  selected_user="mainCtrl.selected_user"
+                  sound_on="mainCtrl.sound_on">
     </braid-navbar>
 
     <div id="main-content" class="container-fluid">
@@ -66,7 +68,8 @@
                 <div id="message-view-col" class="col-sm-6 col-sm-offset-3">
                     <braid-messages selected_convo="mainCtrl.selected_convo"
                                     selected_user="mainCtrl.selected_user"
-                                    friend_user_map="mainCtrl.friend_user_map">
+                                    friend_user_map="mainCtrl.friend_user_map"
+                                    sound_on="mainCtrl.sound_on">
                     </braid-messages>
                 </div>
             </div>

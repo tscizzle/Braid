@@ -144,6 +144,11 @@ angular.module('friendshipsDirective', [])
                 Convos.get(vm.selected_user._id)
                     .success(function(data) {
                         vm.convos = data;
+
+                        var arbitrary_friendship = vm.friendships[0]
+                        if (!vm.selected_convo && arbitrary_friendship) {
+                            vm.selected_convo = convoFromFriendship(arbitrary_friendship);
+                        };
                     });
 
             } else {

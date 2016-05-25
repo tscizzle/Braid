@@ -5,7 +5,8 @@ angular.module('navbarDirective', [])
             restrict: 'E',
             scope: {
                 login_object: '=loginObject',
-                selected_user: '=selectedUser'
+                selected_user: '=selectedUser',
+                sound_on: '=soundOn'
             },
             templateUrl: 'views/navbar.html'
         };
