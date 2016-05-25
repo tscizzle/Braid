@@ -3,7 +3,7 @@ angular.module('messagesDirective', [])
     .controller('messageController', ['$scope', 'focus', 'socket', 'Messages', 'Strands', function($scope, focus, socket, Messages, Strands) {
 
         var vm = this;
-        window.SCOPE = vm;
+        window.VM = vm;
 
 
         // define CRUD functions used in the template

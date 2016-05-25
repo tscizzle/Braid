@@ -4,8 +4,6 @@ angular.module('braidController', [])
 
         var vm = this;
 
-        window.VM = vm;
-
 
         // register listeners
 
