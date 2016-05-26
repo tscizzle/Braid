@@ -13,6 +13,7 @@ module.exports = function(io) {
         receiver_id: {type: ObjectId, ref: 'User', required: true},
         time_sent: Date,
         time_received: Date,
+        time_read: Date,
         strand_id: {type: ObjectId, ref: 'Strand'}
     });
 
