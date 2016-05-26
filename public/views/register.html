@@ -8,6 +8,8 @@
         </div>
     </div>
 
+    <div class="register-error" ng-style="{'opacity': registerCtrl.registerErrorOpacity()}">{{ registerCtrl.register_error }}</div>
+
     <div class="row">
         <div class="col-sm-12">
             <form ng-submit="registerCtrl.register()">

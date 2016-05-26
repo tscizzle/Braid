@@ -13,6 +13,10 @@
     box-shadow: 1px 2px 2px #777;
 }
 
+.friendship-list-pane .btn {
+    font-size: 0.85em;
+}
+
 .friendship-list-pane:hover {
     right: 0;
     -webkit-transition: right 0.3s ease-out 0s;

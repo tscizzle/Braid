@@ -17,7 +17,6 @@ angular.module('loginDirective', [])
                 })
                 .catch(function(err) {
                     vm.login_error = err.data.err.message;
-                    console.log(vm.login_error);
                     vm.loginForm = {};
                 });
         };
