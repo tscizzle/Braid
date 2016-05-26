@@ -16,16 +16,14 @@ angular.module('friendshipsDirective', [])
                         vm.newFriendshipFormData = {};
                         vm.friendships = data;
                     }).catch(function(err) {
-                        vm.friendship_error.message = err.data.err;
-                        vm.friendship_error.opacity = 1;
-                        vm.friendship_error.last_error = Date.now();
+                        vm.friendship_error = {
+                            message: err.data.err,
+                            opacity: 1,
+                            last_error: Date.now()
+                        };
 
-                        // clear the friendship error after some time
-                        $timeout(function() {
-                            if (Date.now() - vm.friendship_error.last_error >= 3000) {
-                                vm.friendship_error.opacity = 0;
-                            };
-                        }, 3000);
+                        var delay = 3000;
+                        $timeout(friendshipErrorDisappear(delay), delay);
                     });
 
             };
@@ -143,6 +141,14 @@ angular.module('friendshipsDirective', [])
                         vm.selected_convo = data.new_convo;
                     });
 
+            };
+        };
+
+        var friendshipErrorDisappear = function(disappearDelay) {
+            return function() {
+                if (Date.now() - vm.friendship_error.last_error >= disappearDelay) {
+                    vm.friendship_error.opacity = 0;
+                };
             };
         };
 

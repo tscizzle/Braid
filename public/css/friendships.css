@@ -91,9 +91,12 @@
     font-size: 0.85em;
     color: white;
     background-color: #FF5C5C;
+    padding: 5px;
+    opacity: 0;
     transition: opacity 1s;
     pointer-events: none;
     position: absolute;
     top: -5px;
-    left: -5px;
+    left: -15px;
+    max-width: 100%;
 }
