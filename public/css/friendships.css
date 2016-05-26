@@ -82,3 +82,18 @@
     border-radius: 3px;
     background-color: white;
 }
+
+.friendship-error-row {
+    position: relative;
+}
+
+.friendship-error {
+    font-size: 0.85em;
+    color: white;
+    background-color: #FF5C5C;
+    transition: opacity 1s;
+    pointer-events: none;
+    position: absolute;
+    top: -5px;
+    left: -5px;
+}

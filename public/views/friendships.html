@@ -35,6 +35,12 @@
         </form>
     </div>
 
+    <div class="row friendship-error-row">
+        <div class="col-sm-12">
+            <div class="friendship-error" ng-style="{'opacity': friendshipCtrl.friendship_error.opacity}">{{ friendshipCtrl.friendship_error.message }}</div>
+        </div>
+    </div>
+
     <div class="friendship-notification-bubble" ng-show="friendshipCtrl.friendshipsNeedingAnswer()">
         <div class="friendship-notification-inner-bubble"></div>
     </div>
