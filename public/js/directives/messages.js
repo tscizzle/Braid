@@ -326,7 +326,10 @@ angular.module('messagesDirective', [])
 
         // listen for the other user typing
         socket.on('other_user_typing', function(recipient) {
+            console.log(vm)
+            console.log("code is here")
             if (vm.selected_user._id == recipient) {
+                
                 vm.last_typed = new Date();
             }; 
         });
@@ -334,16 +337,17 @@ angular.module('messagesDirective', [])
         // don't display "<other user> is typing..." when they are not typing.
         vm.otherUserIsNotTyping = function(message) {
             var current_time = new Date();
-            console.log(current_time - vm.last_typed)
+            //console.log(current_time)
+            //console.log(current_time - vm.last_typed)
             if (!vm.last_typed){
-                console.log("havent ever typed")
+                //console.log("havent ever typed")
                 return true;
             }
             else if (current_time - vm.last_typed > 3) {
-                console.log("didnt just type")
+                //console.log("didnt just type")
                 return true;
             } else {
-                console.log("just typed")
+                //console.log("just typed")
                 return false;
             }
         };
