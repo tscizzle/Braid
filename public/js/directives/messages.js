@@ -392,14 +392,7 @@ angular.module('messagesDirective', [])
             vm.strand_map = temp_strand_map;
         };
 
-        var markMessagesAsRead = function() {
-            if(if sendable_text_focus==true) {
-                console.log("focused on textbox!!")
-            }
 
-
-            vm.selected_strand = undefined;
-        };
 
         var num_messages_watcher = function(scope) {return vm.num_messages;};
         var strands_watcher = function(scope) {return vm.strands;};
