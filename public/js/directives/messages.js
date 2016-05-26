@@ -334,16 +334,12 @@ angular.module('messagesDirective', [])
         // don't display "<other user> is typing..." when they are not typing.
         vm.otherUserIsNotTyping = function(message) {
             var current_time = new Date();
-            console.log(current_time - vm.last_typed)
             if (!vm.last_typed){
-                console.log("havent ever typed")
                 return true;
             }
             else if (current_time - vm.last_typed > 3) {
-                console.log("didnt just type")
                 return true;
             } else {
-                console.log("just typed")
                 return false;
             }
         };
