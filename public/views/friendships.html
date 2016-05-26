@@ -1,4 +1,4 @@
-<div id="friendship-list-pane" class="container-fluid">
+<div class="container-fluid friendship-list-pane">
 
     <div class="row">
         <div class="col-sm-12">
@@ -7,8 +7,8 @@
     </div>
 
     <div class="row">
-        <div id="friendship-list-col" class="col-sm-12">
-            <div id="friendship-list-wrapper">
+        <div class="col-sm-12 friendship-list-col">
+            <div class="friendship-list-wrapper">
                 <div class="friendship-in-list clearfix" ng-class="{'clickable': friendship.status==='accepted', 'selected': friendshipCtrl.friendshipConvoIsSelected(friendship)}" ng-click="friendshipCtrl.selectConvo(friendship)" ng-mouseover="friendshipCtrl.hoverFriendship(friendship)" ng-mouseleave="friendshipCtrl.unhoverFriendship(friendship)" ng-repeat="friendship in friendshipCtrl.friendships">
                     <span ng-class="{'friendship-needs-answer': friendshipCtrl.friendshipNeedsAnswer(friendship)}">{{ friendship | friend:friendshipCtrl.selected_user | username:friendshipCtrl.friend_user_map }} {{ friendshipCtrl.conditionalStatus(friendship) }}</span>
                     <div class="btn-group pull-right" ng-style="{'opacity': friendshipCtrl.friendshipOpacity(friendship)}">
@@ -23,10 +23,10 @@
         </div>
     </div>
 
-    <div id="friendship-form-row" class="row">
+    <div class="row friendship-form-row">
         <form>
             <div class="col-sm-8">
-                <input id="friendships-input" type="text" placeholder="Username" ng-model="friendshipCtrl.newFriendshipFormData.username" />
+                <input class="friendships-input" type="text" placeholder="Username" ng-model="friendshipCtrl.newFriendshipFormData.username" />
             </div>
 
             <div class="col-sm-4 no-left-padding">
@@ -35,8 +35,8 @@
         </form>
     </div>
 
-    <div id="friendship-notification-bubble" ng-show="friendshipCtrl.friendshipsNeedingAnswer()">
-        <div id="friendship-notification-inner-bubble"></div>
+    <div class="friendship-notification-bubble" ng-show="friendshipCtrl.friendshipsNeedingAnswer()">
+        <div class="friendship-notification-inner-bubble"></div>
     </div>
 
 </div>
