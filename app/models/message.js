@@ -18,7 +18,7 @@ module.exports = function(io) {
     });
 
     messageSchema.post('save', function() {
-        io.to(this.receiver_id).emit('messages:receive_update', {convo_id: this.convo_id, play_ooooh: true});
+        io.to(this.receiver_id).emit('messages:receive_update', {convo_id: this.convo_id, play_message_sound: true});
         io.to(this.sender_id).emit('messages:receive_update', {convo_id: this.convo_id});
     });
 

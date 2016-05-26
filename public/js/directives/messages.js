@@ -3,7 +3,7 @@ angular.module('messagesDirective', [])
     .controller('messageController', ['$scope', 'focus', 'socket', 'Messages', 'Strands', function($scope, focus, socket, Messages, Strands) {
 
         var vm = this;
-        window.SCOPE = vm;
+        window.VM = vm;
 
 
         // define CRUD functions used in the template
@@ -57,9 +57,9 @@ angular.module('messagesDirective', [])
                     };
 
                     Messages.create(vm.newMessageFormData, vm.num_messages)
-                        .success(function(data) {
+                        .success(function(create_messages_data) {
                             vm.newMessageFormData = {};
-                            vm.messages = data.messages;
+                            vm.messages = create_messages_data;
                         });
 
                 };
@@ -424,7 +424,7 @@ angular.module('messagesDirective', [])
                 };
             };
 
-            if (data.play_ooooh) {
+            if (vm.sound_on && data.play_message_sound) {
                 var ooooh = new Audio('audio/ooooh.wav');
                 ooooh.play();
             };
@@ -484,7 +484,8 @@ angular.module('messagesDirective', [])
             scope: {
                 selected_convo: '=selectedConvo',
                 selected_user: '=selectedUser',
-                friend_user_map: '=friendUserMap'
+                friend_user_map: '=friendUserMap',
+                sound_on: '=soundOn'
             },
             templateUrl: 'views/messages.html',
             controller: 'messageController',
