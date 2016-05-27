@@ -344,6 +344,52 @@ angular.module('messagesDirective', [])
             }
         };
 
+        // ng-hide shows "Read" based on this function
+        vm.showReadTag = function() {
+
+            var visible_messages = _.filter(vm.messages, function(message) {
+                    return !vm.messageIsHidden(message)&&message.receiver_id==vm.selected_user._id ;
+                });
+
+            var most_recent_message = visible_messages[visible_messages.length-1]
+
+            if(most_recent_message){
+                if ('time_read' in most_recent_message){
+                    most_recent_time_read = visible_messages[visible_messages.length-1].time_read
+                    console.log("mostrecen tiem read")
+                    console.log(most_recent_time_read)
+                }
+            }
+            //console.log(most_recent_time_read)
+            // // If the sendable text area is focused and the most recent message was read, show the "Read" tag
+            // if (most_recent_time_read){
+            //     return false
+            // } else {
+            //     return true
+            // };
+        };
+        
+
+        vm.markMessagesAsRead = function() {
+            vm.sendable_text_focus = true;
+            // message_data should just be messages that are in the view
+            // visible_messages are the messages_to_mark
+            if (vm.messages){
+                var visible_messages = _.filter(vm.messages, function(message) {
+                        return !vm.messageIsHidden(message)&&message.receiver_id==vm.selected_user._id ;
+                    });
+                if (visible_messages){
+                    visible_message_ids = visible_messages.map(function(message) {return message._id});
+                    current_time = new Date();
+
+                    Messages.markAsRead(vm.selected_convo._id, visible_message_ids, current_time)
+                        .success(function(data) {
+                            // Success function for if messages get marked as read
+                    });
+                };
+            };
+        };
+
         // register listeners
 
         var focusSendableTextarea = function() {
@@ -384,6 +430,7 @@ angular.module('messagesDirective', [])
             vm.selected_strand = undefined;
         };
 
+
         var refreshStrandMap = function() {
             var temp_strand_map = {};
             _.each(vm.strands, function(strand) {
@@ -391,7 +438,6 @@ angular.module('messagesDirective', [])
             });
             vm.strand_map = temp_strand_map;
         };
-
 
 
         var num_messages_watcher = function(scope) {return vm.num_messages;};
