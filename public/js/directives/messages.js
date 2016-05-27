@@ -317,32 +317,15 @@ angular.module('messagesDirective', [])
             return textarea_color;
         };
 
-        // emit when this user is typing
         vm.userIsTyping = function() {
-            var recipient = partnerIdFromSelectedConvo()
-            //get partner from convo and pass that in as the second socket.emit arg
+            var recipient = partnerIdFromSelectedConvo();
             socket.emit('this_user_typing', recipient);
         }
 
-        // listen for the other user typing
-        socket.on('other_user_typing', function(recipient) {
-            if (vm.selected_user._id == recipient) {
-                vm.last_typed = new Date();
-            }; 
-        });
-
-        // don't display "<other user> is typing..." when they are not typing.
-        vm.otherUserIsNotTyping = function(message) {
-            var current_time = new Date();
-            if (!vm.last_typed){
-                return true;
-            }
-            else if (current_time - vm.last_typed > 3) {
-                return true;
-            } else {
-                return false;
-            }
+        vm.otherUserIsTyping = function() {
+            return new Date() - vm.last_typed < 3000;
         };
+
 
         // register listeners
 
@@ -392,8 +375,6 @@ angular.module('messagesDirective', [])
             vm.strand_map = temp_strand_map;
         };
 
-
-
         var num_messages_watcher = function(scope) {return vm.num_messages;};
         var strands_watcher = function(scope) {return vm.strands;};
         var selected_strand_watcher = function(scope) {return vm.selected_strand;};
@@ -420,6 +401,14 @@ angular.module('messagesDirective', [])
             if (vm.sound_on && data.play_message_sound) {
                 var ooooh = new Audio('audio/ooooh.wav');
                 ooooh.play();
+            };
+        });
+
+        socket.on('other_user_typing', function(recipient) {
+            if (vm.selected_user) {
+                if (vm.selected_user._id === recipient) {
+                    vm.last_typed = new Date();
+                };
             };
         });
 
@@ -456,7 +445,6 @@ angular.module('messagesDirective', [])
 
 
         // initialization
-        vm.last_typed = undefined;
         vm.messages = [];
         vm.strands = [];
         vm.num_messages = 30;
@@ -466,6 +454,7 @@ angular.module('messagesDirective', [])
         vm.hovered_message = undefined;
         vm.hovered_strand = undefined;
         vm.sendable_text_focus = false;
+        vm.last_typed = undefined;
         vm.newMessageFormData = {};
         vm.newStrandFormData = {};
 
