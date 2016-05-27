@@ -323,7 +323,12 @@ angular.module('messagesDirective', [])
         }
 
         vm.otherUserIsTyping = function() {
-            return new Date() - vm.last_typed < 3000;
+            if (vm.messages && vm.messages.length > 1) {
+                var now = new Date();
+                var just_typed = now - vm.last_typed < 1000;
+                var just_sent = now - vm.messages[vm.messages.length].time_sent < 100;
+                return just_typed && !just_sent;
+            };
         };
 
 
