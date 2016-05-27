@@ -21,18 +21,23 @@ angular.module('registerDirective', [])
                             vm.registerForm = {};
                         });
                 })
-                .catch(function() {
+                .catch(function(err) {
+                    vm.register_error = err.data.err.message;
                     vm.registerForm = {};
                 });
         };
 
-        // Clicking on the "already registered" button sets the login_object to true
         vm.switchToLogin = function(){
             vm.login_object = true;
         };
 
+        vm.registerErrorOpacity = function() {
+            return vm.register_error ? 1 : 0;
+        };
+
         // initialization
 
+        vm.register_error = '';
         vm.registerForm = {};
 
     }])

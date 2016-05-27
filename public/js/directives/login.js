@@ -15,18 +15,23 @@ angular.module('loginDirective', [])
                     $route.reload();
                     vm.loginForm = {};
                 })
-                .catch(function() {
+                .catch(function(err) {
+                    vm.login_error = err.data.err.message;
                     vm.loginForm = {};
                 });
         };
 
-        // Clicking on the "go back to login" button sets the register_object to true
-        vm.switchToRegister = function(){
+        vm.switchToRegister = function() {
             vm.login_object = false;
+        };
+
+        vm.loginErrorOpacity = function() {
+            return vm.login_error ? 1 : 0;
         };
 
         // initialization
 
+        vm.login_error = '';
         vm.loginForm = {};
 
     }])

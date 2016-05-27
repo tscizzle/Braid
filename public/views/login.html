@@ -1,4 +1,4 @@
-<div id="login-pane" class="firstview-all">
+<div class="firstview-all">
 
     <div class="row">
         <div class="col-sm-12">
@@ -7,6 +7,8 @@
             </div>
         </div>
     </div>
+
+    <div class="login-error" ng-style="{'opacity': loginCtrl.loginErrorOpacity()}">{{ loginCtrl.login_error }}</div>
 
     <div class="row">
         <div class="col-sm-12">
