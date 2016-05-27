@@ -61,6 +61,10 @@ angular.module('braidController', [])
 
         // register socket listeners
 
+        socket.on('connect', function() {
+            joinUserSocketRoom();
+        });
+
         socket.on('friendships:receive_update', function() {
             refreshFriendships();
         });
