@@ -293,8 +293,7 @@ module.exports = function(app, io) {
     // define the api route handlers
 
     // --- get messages for a convo
-    app.get('/api/messages/:convo_id/:num_messages', function(req, res) {
-
+    app.get('/api/messages/:convo_id/:num_messages', function(req, res) { 
         Message.find({
             'convo_id': req.params.convo_id
         }).sort({

@@ -68,7 +68,7 @@ require('./app/routes/auth')(app, io, passport);
 
 // socket communication
 
-io.sockets.on('connection', require('./app/routes/socket'));
+io.sockets.on('connection', require('./app/routes/socket')(io));
 
 
 // listen
