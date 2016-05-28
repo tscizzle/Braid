@@ -29,11 +29,11 @@
 }
 
 .send-message-form {
-    height: 17vh;
+    height: 15vh;
     margin-top: 3vh;
 }
 
 #sendable-textarea {
     font-size: 0.8em;
-    height: 14vh;
+    height: 13vh;
 }

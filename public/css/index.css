@@ -1,6 +1,6 @@
 html, body {
     height: 100vh;
-    overflow: hidden;
+    overflow-x: hidden;
 
     background: #EEE; /* For browsers that do not support gradients */
     background: -webkit-linear-gradient(#EEE, #DDD); /* For Safari 5.1 to 6.0 */
