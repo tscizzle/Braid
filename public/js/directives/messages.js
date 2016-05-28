@@ -332,7 +332,7 @@ angular.module('messagesDirective', [])
         };
 
         // ng-hide shows "Read" based on this function
-        vm.showReadTag = function() {
+        vm.messagesAreRead = function() {
 
             var visible_messages = _.filter(vm.messages, function(message) {
                     return !vm.messageIsHidden(message)&&message.receiver_id==vm.selected_user._id ;
@@ -348,6 +348,11 @@ angular.module('messagesDirective', [])
             } else {
                 return true};
         };
+
+        vm.userIsTyping = function() {
+            var recipient = partnerIdFromSelectedConvo();
+            socket.emit('this_user_typing', recipient);
+        }
         
 
         vm.markMessagesAsRead = function() {
@@ -458,6 +463,12 @@ angular.module('messagesDirective', [])
                 if (vm.selected_user._id === recipient) {
                     vm.last_typed = new Date();
                 };
+            };
+        });
+
+        socket.on('messages:read', function(recipient) {
+            if (vm.selected_user) {
+                console.log("otheruser read messgs")
             };
         });
 
