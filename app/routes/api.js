@@ -243,7 +243,7 @@ module.exports = function(app, io) {
     app.post('/api/unassignMessageFromStrand/:convo_id', resourceBelongsToUser(['body', 'message_id'], Message),
                                                          resourceBelongsToUser(['params', 'convo_id'], Convo));
 
-    app.get('/api/markAsRead/:convo_id', function(req, res, next) {req.auth_checked = true; return next();});
+    app.post('/api/markAsRead/:convo_id', function(req, res, next) {req.auth_checked = true; return next();});
 
     app.get('/api/strands/:convo_id', resourceBelongsToUser(['params', 'convo_id'], Convo));
 
@@ -465,7 +465,6 @@ module.exports = function(app, io) {
         // respond to original client
         // socket.emit goes here
     app.post('/api/markAsRead/:convo_id', function(req, res) {
-        console.log("LKLKLK")
         Message.update({
             // $in sets 
             "_id":{$in:req.body.message_ids}
@@ -475,9 +474,16 @@ module.exports = function(app, io) {
             if (err) {
                 return res.status(500).send(err);
             };
-            
-            _.each(user_ids, function(user_id) {
-                    io.to(user_id).emit('messages:receive_update', {'convo_id': req.params.convo_id});       
+
+
+            Convo.findOne({
+                _id: req.params.convo_id
+            }, function(err, convo) {
+                var user_ids = [convo.user_id_0, convo.user_id_1];
+
+                _.each(user_ids, function(user_id) {
+                    io.to(user_id).emit('messages:receive_update', {convo_id: req.params.convo_id});
+                });
             });
 
             return res.json(messages);
