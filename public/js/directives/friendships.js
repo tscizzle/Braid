@@ -1,6 +1,6 @@
 angular.module('friendshipsDirective', [])
 
-    .controller('friendshipController', ['$scope', 'socket', 'Friendships', 'Convos', function($scope, socket, Friendships, Convos) {
+    .controller('friendshipController', ['$scope', '$timeout', 'socket', 'Friendships', 'Convos', function($scope, $timeout, socket, Friendships, Convos) {
 
         var vm = this;
 
@@ -15,6 +15,15 @@ angular.module('friendshipsDirective', [])
                     .success(function(data) {
                         vm.newFriendshipFormData = {};
                         vm.friendships = data;
+                    }).catch(function(err) {
+                        vm.friendship_error = {
+                            message: err.data.err,
+                            opacity: 1,
+                            last_error: Date.now()
+                        };
+
+                        var delay = 3000;
+                        $timeout(friendshipErrorDisappear(delay), delay);
                     });
 
             };
@@ -135,6 +144,14 @@ angular.module('friendshipsDirective', [])
             };
         };
 
+        var friendshipErrorDisappear = function(disappearDelay) {
+            return function() {
+                if (Date.now() - vm.friendship_error.last_error >= disappearDelay) {
+                    vm.friendship_error.opacity = 0;
+                };
+            };
+        };
+
 
         // register listeners
 
@@ -174,6 +191,11 @@ angular.module('friendshipsDirective', [])
         vm.friendships = [];
         vm.convos = [];
         vm.hovered_friendship = undefined;
+        vm.friendship_error = {
+            message: '',
+            opacity: 0,
+            last_error: undefined
+        };
         vm.newFriendshipFormData = {};
         vm.newConvoFormData = {user_id_1: ""};
 

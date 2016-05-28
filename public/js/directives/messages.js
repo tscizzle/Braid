@@ -317,40 +317,21 @@ angular.module('messagesDirective', [])
             return textarea_color;
         };
 
-        // emit when this user is typing
         vm.userIsTyping = function() {
-            var recipient = partnerIdFromSelectedConvo()
-            //get partner from convo and pass that in as the second socket.emit arg
+            var recipient = partnerIdFromSelectedConvo();
             socket.emit('this_user_typing', recipient);
         }
 
-        // listen for the other user typing
-        socket.on('other_user_typing', function(recipient) {
-            console.log(vm)
-            console.log("code is here")
-            if (vm.selected_user._id == recipient) {
-                
-                vm.last_typed = new Date();
-            }; 
-        });
 
-        // don't display "<other user> is typing..." when they are not typing.
-        vm.otherUserIsNotTyping = function(message) {
-            var current_time = new Date();
-            //console.log(current_time)
-            //console.log(current_time - vm.last_typed)
-            if (!vm.last_typed){
-                //console.log("havent ever typed")
-                return true;
-            }
-            else if (current_time - vm.last_typed > 3) {
-                //console.log("didnt just type")
-                return true;
-            } else {
-                //console.log("just typed")
-                return false;
-            }
+        vm.otherUserIsTyping = function() {
+            if (vm.messages && vm.messages.length > 1) {
+                var now = new Date();
+                var just_typed = now - vm.last_typed < 1000;
+                var just_sent = now - vm.messages[vm.messages.length - 1].time_sent < 100;
+                return just_typed && !just_sent;
+            };
         };
+
 
         // register listeners
 
@@ -429,6 +410,14 @@ angular.module('messagesDirective', [])
             };
         });
 
+        socket.on('other_user_typing', function(recipient) {
+            if (vm.selected_user) {
+                if (vm.selected_user._id === recipient) {
+                    vm.last_typed = new Date();
+                };
+            };
+        });
+
 
         // helpers
 
@@ -462,7 +451,6 @@ angular.module('messagesDirective', [])
 
 
         // initialization
-        vm.last_typed = undefined;
         vm.messages = [];
         vm.strands = [];
         vm.num_messages = 30;
@@ -472,6 +460,7 @@ angular.module('messagesDirective', [])
         vm.hovered_message = undefined;
         vm.hovered_strand = undefined;
         vm.sendable_text_focus = false;
+        vm.last_typed = undefined;
         vm.newMessageFormData = {};
         vm.newStrandFormData = {};
 
