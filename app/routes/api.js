@@ -469,7 +469,7 @@ module.exports = function(app, io) {
             // $in sets 
             "_id":{$in:req.body.message_ids}
         }, { 
-            $set: { "time_read" : req.body.time_read }
+            $set: { "time_read" : Date.parse(req.body.time_read), }
         }, function(err, messages) {
             if (err) {
                 return res.status(500).send(err);

@@ -339,12 +339,10 @@ angular.module('messagesDirective', [])
                 });
 
             var most_recent_message = visible_messages[visible_messages.length-1]
-
             if(most_recent_message){
                 if ('time_read' in most_recent_message){
+                    console.log("THIS EXISTS")
                     most_recent_time_read = visible_messages[visible_messages.length-1].time_read
-                    console.log("mostrecen tiem read")
-                    console.log(most_recent_time_read)
                 }
             }
             //console.log(most_recent_time_read)
@@ -366,11 +364,16 @@ angular.module('messagesDirective', [])
                         return !vm.messageIsHidden(message)&&message.receiver_id==vm.selected_user._id ;
                     });
                 if (visible_messages){
-                    visible_message_ids = visible_messages.map(function(message) {return message._id});
+                    unread_visible_message_ids = visible_messages.map(function(message) {
+                        if (!message.time_read) {
+                        return message._id
+                        };
+                    });
                     current_time = new Date();
 
-                    Messages.markAsRead(vm.selected_convo._id, visible_message_ids, current_time)
+                    Messages.markAsRead(vm.selected_convo._id, unread_visible_message_ids, current_time)
                         .success(function(data) {
+
                             // Success function for if messages get marked as read
                     });
                 };
