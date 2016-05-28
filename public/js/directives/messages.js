@@ -341,17 +341,12 @@ angular.module('messagesDirective', [])
             var most_recent_message = visible_messages[visible_messages.length-1]
             if(most_recent_message){
                 if ('time_read' in most_recent_message){
-                    most_recent_time_read = visible_messages[visible_messages.length-1].time_read
+                    return false
+                } else {
+                    return true
                 }
-            }
-
-            // If the sendable text area is focused and the most recent message was read, show the "Read" tag
-            console.log(most_recent_time_read)
-            if (most_recent_time_read){
-                return false
             } else {
-                return true
-            };
+                return true};
         };
         
 
