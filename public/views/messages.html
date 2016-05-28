@@ -2,18 +2,15 @@
 
     <div class="row">
         <div class="col-sm-12">
-            <h1>{{ messageCtrl.selected_convo | partner:messageCtrl.selected_user | username:messageCtrl.friend_user_map }}</h1>
+            <div class="message-header-div">
+                <h1>{{ messageCtrl.selected_convo | partner:messageCtrl.selected_user | username:messageCtrl.friend_user_map }}</h1>
+            </div>
         </div>
     </div>
 
     <div class="row">
         <div class="col-sm-12">
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-sm-12">
-            <div id="message-list-wrapper" ng-class="{'clickable': messageCtrl.selected_strand}" ng-click="messageCtrl.clickMessageListWrapper()" scroll-glue>
+            <div class="message-list-wrapper" ng-class="{'clickable': messageCtrl.selected_strand}" ng-click="messageCtrl.clickMessageListWrapper()" scroll-glue>
                 <a class="clickable" ng-show="messageCtrl.showLoadMoreMessagesLink()" ng-click="messageCtrl.increaseNumMessages(); $event.stopPropagation();">Load earlier messages</a>
                 <div class="clickable" ng-style="{'margin-left': messageCtrl.alignMessage(message), 'text-align': messageCtrl.alignBubble(message)}" ng-hide="messageCtrl.messageIsHidden(message)" ng-mouseover="messageCtrl.hoverMessage(message)" ng-mouseleave="messageCtrl.unhoverMessage(message)" ng-click="messageCtrl.toggleMessage(message); $event.stopPropagation();" ng-repeat="message in messageCtrl.messages">
                     <div class="bubble" ng-style="{'background-color': messageCtrl.paintStrand(message), 'border-radius': messageCtrl.borderRadius(message)}" ng-class="{'hovered-messages': messageCtrl.oneOfHoveredMessages(message)}">
@@ -27,7 +24,7 @@
 
     <div class="row">
         <div class="col-sm-12">
-            <form>
+            <form class="send-message-form">
                 <div class="row">
                     <div class="col-sm-10">
                         <div class="form-group">

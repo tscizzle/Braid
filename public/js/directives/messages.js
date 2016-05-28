@@ -109,7 +109,7 @@ angular.module('messagesDirective', [])
         };
 
         vm.increaseNumMessages = function() {
-            vm.num_messages += 30;
+            vm.num_messages += DEFAULT_NUM_MESSAGES;
         };
 
         vm.messageIsPrimed = function(message) {
@@ -380,6 +380,10 @@ angular.module('messagesDirective', [])
             vm.strand_map = temp_strand_map;
         };
 
+        var resetNumMessages = function() {
+            vm.num_messages = DEFAULT_NUM_MESSAGES;
+        };
+
         var num_messages_watcher = function(scope) {return vm.num_messages;};
         var strands_watcher = function(scope) {return vm.strands;};
         var selected_strand_watcher = function(scope) {return vm.selected_strand;};
@@ -391,6 +395,7 @@ angular.module('messagesDirective', [])
         $scope.$watch(selected_convo_watcher, refreshStrands);
         $scope.$watchGroup([selected_convo_watcher, selected_user_watcher], deselectStrand);
         $scope.$watch(strands_watcher, refreshStrandMap);
+        $scope.$watch(selected_convo_watcher, resetNumMessages);
 
 
         // register socket listeners
@@ -440,6 +445,7 @@ angular.module('messagesDirective', [])
             '#FFC99E',
             '#F2969F'
         ];
+
         var COLOR_TO_FADED_MAP = {
             '#EFBFFF': '#F2DBFF',
             '#9EEFD0': '#CEF2ED',
@@ -448,11 +454,13 @@ angular.module('messagesDirective', [])
             '#F2969F': '#F2C2AE'
         };
 
+        var DEFAULT_NUM_MESSAGES = 30;
+
 
         // initialization
         vm.messages = [];
         vm.strands = [];
-        vm.num_messages = 30;
+        vm.num_messages = DEFAULT_NUM_MESSAGES;
         vm.selected_strand = undefined;
         vm.strand_map = {};
         vm.primed_messages = [];
