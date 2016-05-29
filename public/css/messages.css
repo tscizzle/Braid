@@ -10,8 +10,42 @@
     border-top: solid 1px #EEE
 }
 
-.hovered-messages {
+.message-wrapper {
+    position: relative;
+}
+
+.sender-message {
+    margin-left: auto;
+    text-align: right;
+}
+
+.sender-message .bubble {
+    border-radius: 15px;
+}
+
+.sender-message .message-time-sent {
+    left: 0;
+}
+
+.receiver-message {
+    margin-left: 0;
+    text-align: left;
+}
+
+.receiver-message .bubble {
+    border-radius: 0;
+}
+
+.receiver-message .message-time-sent {
+    right: 0;
+}
+
+.hovered-messages .bubble {
     box-shadow: 2px 2px 2px #777;
+}
+
+.hovered-messages .message-time-sent {
+    opacity: 0.5;
 }
 
 .bubble {
@@ -26,6 +60,15 @@
 
 .message-text {
     white-space: pre-wrap;
+}
+
+.message-time-sent {
+    margin: auto;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    height: 1em;
+    opacity: 0;
 }
 
 .send-message-form {

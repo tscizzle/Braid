@@ -153,38 +153,6 @@ angular.module('messagesDirective', [])
             };
         };
 
-        vm.removeMessageFromStrand = function(message_id) {
-
-            Messages.unassignMessageFromStrand(message_id, vm.selected_convo._id, vm.num_messages)
-                .success(function(assign_message_data) {
-                    vm.messages = assign_message_data;
-
-                    if (vm.selected_strand) {
-                        var strand_messages = vm.messages.filter(function(message) {
-                            return message.strand_id === vm.selected_strand._id;
-                        });
-
-                        if (strand_messages.length === 0) {
-                            vm.selected_strand = undefined;
-                        };
-                    };
-            });
-
-        };
-
-        vm.addMessagesToStrand = function(strand_message) {
-            var primed_message_ids = vm.primed_messages.map(function(primed_message) {
-                return primed_message._id;
-            });
-
-            Messages.assignMessagesToStrand(primed_message_ids, strand_message.strand_id, vm.selected_convo._id, vm.num_messages)
-                .success(function(assign_messages_data) {
-                    vm.messages = assign_messages_data;
-                    vm.primed_messages = [];
-            });
-
-        };
-
         vm.hoverMessage = function(message) {
             vm.hovered_message = message._id;
             vm.hovered_strand = message.strand_id;
@@ -201,22 +169,6 @@ angular.module('messagesDirective', [])
             } else {
                 return vm.hovered_strand === message.strand_id;
             }
-        };
-
-        vm.deleteButtonOpacity = function(message) {
-            return vm.hovered_message === message._id ? 1 : 0;
-        };
-
-        vm.removeButtonIsHidden = function(message) {
-            return !message.strand_id;
-        };
-
-        vm.addButtonIsHidden = function(message) {
-            if (vm.primed_messages.length > 0) {
-                return !message.strand_id;
-            } else {
-                return true;
-            };
         };
 
         vm.thisColor = function() {
@@ -265,40 +217,9 @@ angular.module('messagesDirective', [])
             return message_color;
         };
 
-        vm.alignMessage = function(message) {
+        vm.messageUserClass = function(message) {
             if (vm.selected_user) {
-                // depending on who sent the message, set 'margin-left' to either auto (right justified) or 0 (left justified)
-                if (message.sender_id === vm.selected_user._id) {
-                    message_alignment = 'auto';
-                } else {
-                    message_alignment = 0;
-                };
-                return message_alignment;
-            };
-        };
-
-        vm.alignBubble = function(message) {
-            if (vm.selected_user) {
-                // depending on who sent the message, set 'margin-left' to either auto (right justified) or 0 (left justified)
-                if (message.sender_id === vm.selected_user._id) {
-                    message_alignment = 'right';
-                } else {
-                    message_alignment = 'left';
-
-                };
-                return message_alignment;
-            };
-        };
-
-        vm.borderRadius = function(message) {
-            if (vm.selected_user) {
-                // depending on who sent the message, set the radius to either 15px or 0 px
-                if (message.sender_id === vm.selected_user._id) {
-                    radius = '15px';
-                } else {
-                    radius = '0px';
-                };
-                return radius;
+                return message.sender_id === vm.selected_user._id ? 'sender-message' : 'receiver-message';
             };
         };
 
