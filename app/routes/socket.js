@@ -15,7 +15,7 @@ module.exports = function(io) {
             socket.join(user_data._id);
         });
 
-        socket.on('this_user_typing', function(recipient){
+        socket.on('this_user_typing', function(recipient) {
             io.to(recipient).emit('other_user_typing', recipient)
         });
 

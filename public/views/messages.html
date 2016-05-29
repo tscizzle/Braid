@@ -17,9 +17,9 @@
                         <span class="message-text">{{ message.text }}</span>
                     </div>
                 </div>
+                <div class="typing-indicator" ng-show="messageCtrl.otherUserIsTyping()"></div>
             </div>
         </div>
-        <div class="typing-indicator" ng-show="messageCtrl.otherUserIsTyping()"></div>
     </div>
 
     <div class="row">

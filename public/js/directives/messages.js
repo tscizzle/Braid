@@ -320,15 +320,18 @@ angular.module('messagesDirective', [])
         vm.userIsTyping = function() {
             var recipient = partnerIdFromSelectedConvo();
             socket.emit('this_user_typing', recipient);
-        }
+        };
 
         vm.otherUserIsTyping = function() {
+            var now = new Date();
+            var just_typed = now - vm.last_typed < 1000;
+            var just_sent;
             if (vm.messages && vm.messages.length > 1) {
-                var now = new Date();
-                var just_typed = now - vm.last_typed < 1000;
-                var just_sent = now - vm.messages[vm.messages.length - 1].time_sent < 100;
-                return just_typed && !just_sent;
+                just_sent = now - vm.messages[vm.messages.length - 1].time_sent < 100;
+            } else {
+                just_sent = false;
             };
+            return just_typed && !just_sent;
         };
 
 
