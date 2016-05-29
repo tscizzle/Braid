@@ -335,20 +335,18 @@ angular.module('messagesDirective', [])
         vm.showReadTag = function() {
             // visible_messages: the visible messages sent to the other user
             var visible_messages = _.filter(vm.messages, function(message) {
-                    return !vm.messageIsHidden(message)&&message.receiver_id!=vm.selected_user._id ;
+                    return !vm.messageIsHidden(message)&&message.sender_id==vm.selected_user._id ;
                 });
-            var most_recent_message = visible_messages[visible_messages.length-1]
-            if(most_recent_message && most_recent_message.time_read){
-                var most_recent_time_read = most_recent_message.time_read
-                return false
-            } else {
-                return true };
+            if (visible_messages.length > 0){
+                var most_recent_message = visible_messages[visible_messages.length-1];
+                if(most_recent_message && most_recent_message.time_read){
+                    vm.most_recent_time_read = most_recent_message.time_read;
+                    return false;
+                } else {
+                    return true; 
+                };
+            };
         };
-
-        vm.userIsTyping = function() {
-            var recipient = partnerIdFromSelectedConvo();
-            socket.emit('this_user_typing', recipient);
-        }
         
 
         vm.markMessagesAsRead = function() {
@@ -374,6 +372,11 @@ angular.module('messagesDirective', [])
                 };
             };
         };
+
+        vm.userIsTyping = function() {
+            var recipient = partnerIdFromSelectedConvo();
+            socket.emit('this_user_typing', recipient);
+        }
 
         // register listeners
 
@@ -508,6 +511,7 @@ angular.module('messagesDirective', [])
         vm.last_typed = undefined;
         vm.newMessageFormData = {};
         vm.newStrandFormData = {};
+        vm.most_recent_time_read = undefined;
 
     }])
 
