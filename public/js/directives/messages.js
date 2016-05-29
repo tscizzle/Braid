@@ -163,7 +163,7 @@ angular.module('messagesDirective', [])
             vm.hovered_strand = undefined;
         };
 
-        vm.oneOfHoveredMessages = function(message) {
+        vm.isOneOfHoveredMessages = function(message) {
             if (!message.strand_id) {
                 return vm.hovered_message === message._id;
             } else {

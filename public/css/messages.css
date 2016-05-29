@@ -44,10 +44,6 @@
     box-shadow: 2px 2px 2px #777;
 }
 
-.hovered-messages .message-time-sent {
-    opacity: 0.5;
-}
-
 .bubble {
     position: relative;
     padding: 7px 13px;
@@ -68,7 +64,7 @@
     top: 0;
     bottom: 0;
     height: 1em;
-    opacity: 0;
+    opacity: 0.5;
 }
 
 .send-message-form {
