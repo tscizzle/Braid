@@ -332,21 +332,17 @@ angular.module('messagesDirective', [])
         };
 
         // ng-hide shows "Read" based on this function
-        vm.messagesAreRead = function() {
-
+        vm.showReadTag = function() {
+            // visible_messages: the visible messages sent to the other user
             var visible_messages = _.filter(vm.messages, function(message) {
-                    return !vm.messageIsHidden(message)&&message.receiver_id==vm.selected_user._id ;
+                    return !vm.messageIsHidden(message)&&message.receiver_id!=vm.selected_user._id ;
                 });
-            var most_recent_time_read
             var most_recent_message = visible_messages[visible_messages.length-1]
-            if(most_recent_message){
-                if ('time_read' in most_recent_message){
-                    return false
-                } else {
-                    return true
-                }
+            if(most_recent_message && most_recent_message.time_read){
+                var most_recent_time_read = most_recent_message.time_read
+                return false
             } else {
-                return true};
+                return true };
         };
 
         vm.userIsTyping = function() {
@@ -466,11 +462,6 @@ angular.module('messagesDirective', [])
             };
         });
 
-        socket.on('messages:read', function(recipient) {
-            if (vm.selected_user) {
-                console.log("otheruser read messgs")
-            };
-        });
 
 
         // helpers
