@@ -21,7 +21,7 @@ module.exports = function(io) {
 
             if (!user) {
                 // TODO: pass the password in as an environment variable
-                User.register(new User({username: 'bob'}), 'bobby_password', function(err, user) {
+                User.register(new User({username: 'bob'}), process.env.BOB_PASSWORD, function(err, user) {
                     if (err) {
                         return res.status(500).json({
                             err: err
@@ -34,9 +34,22 @@ module.exports = function(io) {
     };
 
 
-    var befriendBob = function(username) {
+    var befriendBob = function(new_user) {
 
-        console.log(username + ' befriended bob');
+        User.findOne({username: 'bob'}, {_id: 1}, function(err, bob) {
+            if (err) {
+                return res.status(500).json({
+                    err: err
+                });
+            };
+
+            var bob_id = bob._id;
+            var new_user_id = new_user._id;
+
+            // TODO: make friendship between new_user and bob
+            // TODO: make convo between new_user and bob
+            // TODO: make
+        });
 
     };
 

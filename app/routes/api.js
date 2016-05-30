@@ -478,7 +478,7 @@ module.exports = function(app, io) {
     app.post('/api/strands', function(req, res) {
         Strand.create({
             'convo_id': req.body.convo_id,
-            'color': req.body.color,
+            'color_number': req.body.color_number,
             'time_created': Date.parse(req.body.time_created),
             'user_id_0': req.body.user_id_0,
             'user_id_1': req.body.user_id_1

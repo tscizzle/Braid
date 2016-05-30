@@ -16,7 +16,7 @@ module.exports = function(app, io, passport) {
                 });
             };
 
-            bob.befriendBob(req.body.username);
+            bob.befriendBob(user);
 
             passport.authenticate('local')(req, res, function() {
                 return res.json({

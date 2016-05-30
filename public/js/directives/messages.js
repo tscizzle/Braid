@@ -18,7 +18,7 @@ angular.module('messagesDirective', [])
                 // if responding to a new strand
                 if (vm.primed_messages.length > 0) {
                     vm.newStrandFormData.convo_id = vm.selected_convo._id;
-                    vm.newStrandFormData.color = vm.thisColor();
+                    vm.newStrandFormData.color_number = vm.thisColorNumber();
                     vm.newStrandFormData.time_created = new Date();
                     vm.newStrandFormData.user_id_0 = vm.selected_convo.user_id_0;
                     vm.newStrandFormData.user_id_1 = vm.selected_convo.user_id_1;
@@ -168,11 +168,11 @@ angular.module('messagesDirective', [])
                 return vm.hovered_message === message._id;
             } else {
                 return vm.hovered_strand === message.strand_id;
-            }
+            };
         };
 
-        vm.thisColor = function() {
-            /* looks at the previous strand's color, and returns the next one in the queue. */
+        vm.thisColorNumber = function() {
+            /* looks at the previous strand's color_number, and returns the next one in the queue. */
 
             var thisColorIndex;
 
@@ -186,6 +186,7 @@ angular.module('messagesDirective', [])
             messageStrands = _.filter(messageStrands, function(strand) {
                 return strand;
             });
+
             // if there are no existing strands, start at the beginning of the order
             if (messageStrands.length === 0) {
                 thisColorIndex = 0;
@@ -195,26 +196,30 @@ angular.module('messagesDirective', [])
                     return Date.parse(strand.time_created);
                 });
                 // take the next color in the order after the most recent existing strand's color
-                var prevStrandColor = strandsByTime[strandsByTime.length - 1].color;
-                thisColorIndex = (STRAND_COLOR_ORDER.indexOf(prevStrandColor) + 1) % STRAND_COLOR_ORDER.length;
+                var prevStrandColorNumber = strandsByTime[strandsByTime.length - 1].color_number;
+                thisColorIndex = (prevStrandColorNumber + 1) % STRAND_COLOR_ORDER.length;
             };
 
-            return STRAND_COLOR_ORDER[thisColorIndex];
+            return thisColorIndex;
         };
 
         vm.paintStrand = function(message) {
-            var message_color;
+            var message_color_number;
+            var faded = false;
             // if a message is in a strand, color it that strand's color
             if (message.strand_id && vm.strand_map[message.strand_id]) {
-                message_color = vm.strand_map[message.strand_id].color;
+                message_color_number = vm.strand_map[message.strand_id].color_number;
             // if a message is primed, color it the faded version of what color it would be next
             } else if (vm.messageIsPrimed(message)) {
-                message_color = COLOR_TO_FADED_MAP[vm.thisColor()];
+                message_color_number = vm.thisColorNumber();
+                faded = true;
             // if a message is neither in a strand nor primed, make it no color
             } else {
-                message_color = '#DDD';
+                message_color_number = -1;
             };
-            return message_color;
+            var color = STRAND_COLOR_ORDER[message_color_number];
+            // return either the color or the faded version of the color
+            return faded ? COLOR_TO_FADED_MAP[color] : color;
         };
 
         vm.messageUserClass = function(message) {
@@ -227,10 +232,10 @@ angular.module('messagesDirective', [])
             var textarea_color;
             // if a strand is selected, color it the faded version of that color
             if (vm.selected_strand) {
-                textarea_color = COLOR_TO_FADED_MAP[vm.selected_strand.color];
+                textarea_color = COLOR_TO_FADED_MAP[STRAND_COLOR_ORDER[vm.selected_strand.color_number]];
             // if there are any primed messages, color it the faded version of what color it would be next
             } else if (vm.primed_messages.length > 0) {
-                textarea_color = COLOR_TO_FADED_MAP[vm.thisColor()];
+                textarea_color = COLOR_TO_FADED_MAP[STRAND_COLOR_ORDER[vm.thisColorNumber()]];
             // if there is no selected strand and no primed messages, make it no color
             } else {
                 textarea_color = '#F0F0F0';
@@ -393,6 +398,7 @@ angular.module('messagesDirective', [])
             '#FFC99E',
             '#F2969F'
         ];
+        STRAND_COLOR_ORDER[-1] = '#DDD';
 
         var COLOR_TO_FADED_MAP = {
             '#EFBFFF': '#F2DBFF',
@@ -406,6 +412,7 @@ angular.module('messagesDirective', [])
 
 
         // initialization
+
         vm.messages = [];
         vm.strands = [];
         vm.num_messages = DEFAULT_NUM_MESSAGES;
