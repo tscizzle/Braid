@@ -247,7 +247,7 @@ angular.module('messagesDirective', [])
             var now = new Date();
             var just_typed = now - vm.last_typed < 1000;
             var just_sent;
-            if (vm.messages && vm.messages.length > 1) {
+            if (vm.messages && vm.messages.length > 0) {
                 just_sent = now - vm.messages[vm.messages.length - 1].time_sent < 100;
             } else {
                 just_sent = false;
@@ -308,7 +308,30 @@ angular.module('messagesDirective', [])
             vm.num_messages = DEFAULT_NUM_MESSAGES;
         };
 
+        var resetPageTitle = function() {
+            if (vm.selected_user) {
+                var received_messages = _.filter(vm.messages, function(message) {
+                    return message.receiver_id === vm.selected_user._id;
+                });
+                var num_received_messages = received_messages.length;
+                var unread_received_messages = _.filter(received_messages, function(message) {
+                    return !message.time_read;
+                });
+                var num_unread_received_messages = unread_received_messages.length;
+
+                if (num_unread_received_messages > 0) {
+                    var num_notifications = num_unread_received_messages;
+                    if (num_received_messages === num_unread_received_messages) {
+                        num_notifications += '+';
+                    };
+
+                    vm.page_title = 'Braid (' + num_notifications + ')';
+                };
+            };
+        };
+
         var num_messages_watcher = function(scope) {return vm.num_messages;};
+        var messages_watcher = function(scope) {return vm.messages;};
         var strands_watcher = function(scope) {return vm.strands;};
         var selected_strand_watcher = function(scope) {return vm.selected_strand;};
         var selected_convo_watcher = function(scope) {return vm.selected_convo;};
@@ -320,6 +343,7 @@ angular.module('messagesDirective', [])
         $scope.$watchGroup([selected_convo_watcher, selected_user_watcher], deselectStrand);
         $scope.$watch(strands_watcher, refreshStrandMap);
         $scope.$watch(selected_convo_watcher, resetNumMessages);
+        $scope.$watch(messages_watcher, resetPageTitle);
 
 
         // register socket listeners
@@ -404,6 +428,7 @@ angular.module('messagesDirective', [])
                 selected_convo: '=selectedConvo',
                 selected_user: '=selectedUser',
                 friend_user_map: '=friendUserMap',
+                page_title: '=pageTitle',
                 sound_on: '=soundOn'
             },
             templateUrl: 'views/messages.html',

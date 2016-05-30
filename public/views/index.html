@@ -1,6 +1,6 @@
 <!doctype html>
 
-<html ng-app="Braid">
+<html ng-app="Braid" ng-controller="mainController as mainCtrl">
 
 <head>
 
@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <base href="/">
 
-    <title>Braid</title>
+    <title ng-bind="mainCtrl.page_title">Braid</title>
 
     <link rel="shortcut icon" href="/img/poop_logo.ico">
 
@@ -56,7 +56,7 @@
 
 </head>
 
-<body ng-controller="mainController as mainCtrl">
+<body>
 
     <braid-navbar login_object="mainCtrl.login_object"
                   selected_user="mainCtrl.selected_user"
@@ -72,6 +72,7 @@
                     <braid-messages selected_convo="mainCtrl.selected_convo"
                                     selected_user="mainCtrl.selected_user"
                                     friend_user_map="mainCtrl.friend_user_map"
+                                    page_title="mainCtrl.page_title"
                                     sound_on="mainCtrl.sound_on">
                     </braid-messages>
                 </div>
