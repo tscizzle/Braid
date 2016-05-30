@@ -46,7 +46,7 @@ angular.module('braidFilters', [])
             var date_formats;
             if (datetime.toDateString() === right_now.toDateString()) { // today
                 date_formats = ['shortTime'];
-            } else if (DAY < time_since && time_since < 5 * DAY) { // within a week
+            } else if (time_since < 7 * DAY) { // within a week
                 date_formats = ['EEE', 'shortTime'];
             } else { // more than a week ago
                 date_formats = ['mediumDate'];
