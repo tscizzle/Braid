@@ -5,12 +5,12 @@ var methodOverride = require('method-override');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
-var redisClient = require('./config/redis-client');
+var redisClient = require('./app/config/redis-client');
 var RedisStore = require('connect-redis')(session);
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
-var database = require('./config/database');
+var database = require('./app/config/database');
 
 var app = express();
 
@@ -69,6 +69,11 @@ require('./app/routes/auth')(app, io, passport);
 // socket communication
 
 io.sockets.on('connection', require('./app/routes/socket')(io));
+
+
+// bob user
+
+require('./app/bob')(io).createBob();
 
 
 // listen

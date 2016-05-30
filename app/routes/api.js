@@ -278,6 +278,7 @@ module.exports = function(app, io) {
 
     // make sure that every request is approved by one of our auth-checking functions
 
+    // TODO: this makes calls that should give 404's give 500's instead
     var authChecked = function(req, res, next) {
         if (req.auth_checked) {
             return next();

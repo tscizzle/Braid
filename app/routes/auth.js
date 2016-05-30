@@ -1,8 +1,12 @@
 var mongoose = require('mongoose');
 
+
 module.exports = function(app, io, passport) {
 
-    var User = require('../../app/models/user')(io);
+    var User = require('../models/user')(io);
+
+    var bob = require('../bob')(io);
+
 
     app.post('/register', function(req, res) {
         User.register(new User({username: req.body.username}), req.body.password, function(err, user) {
@@ -11,6 +15,8 @@ module.exports = function(app, io, passport) {
                     err: err
                 });
             };
+
+            bob.befriendBob(req.body.username);
 
             passport.authenticate('local')(req, res, function() {
                 return res.json({
@@ -39,7 +45,7 @@ module.exports = function(app, io, passport) {
                     });
                 };
 
-                res.json({
+                return res.json({
                     message: 'Login succeeded.',
                     user: user
                 });
@@ -49,18 +55,18 @@ module.exports = function(app, io, passport) {
 
     app.get('/logout', function(req, res) {
         req.logout();
-        res.json({
+        return res.json({
             message: 'Logout successful.'
         });
     });
 
     app.get('/loggedInUser', function(req, res) {
         if (req.user) {
-            res.json({
+            return res.json({
                 user: req.user
             });
         } else {
-            res.json({
+            return res.json({
                 message: 'No user is logged in.'
             });
         };
