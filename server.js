@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 var express  = require('express');
 var mongoose = require('mongoose');
 var morgan = require('morgan');
@@ -5,12 +7,12 @@ var methodOverride = require('method-override');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
-var redisClient = require('./config/redis-client');
+var redisClient = require('./app/config/redis-client');
 var RedisStore = require('connect-redis')(session);
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
-var database = require('./config/database');
+var database = require('./app/config/database');
 
 var app = express();
 
@@ -31,7 +33,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
 app.use(cookieParser());
 app.use(session({
-    secret: 'keyboard cat', // TODO: make this use process.env.SESSION_SECRET
+    secret: process.env.SESSION_SECRET,
     maxAge: Date.now() + 108000000, // 30 hour expire
     store: new RedisStore({client: redisClient.client}),
     resave: false,
@@ -69,6 +71,11 @@ require('./app/routes/auth')(app, io, passport);
 // socket communication
 
 io.sockets.on('connection', require('./app/routes/socket')(io));
+
+
+// bob user
+
+require('./app/bob')(io).createBob();
 
 
 // listen

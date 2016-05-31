@@ -11,10 +11,10 @@ module.exports = function(io) {
         convo_id: {type: ObjectId, ref: 'Convo', required: true},
         sender_id: {type: ObjectId, ref: 'User', required: true},
         receiver_id: {type: ObjectId, ref: 'User', required: true},
-        time_sent: Date,
+        strand_id: {type: ObjectId, ref: 'Strand'},
+        time_sent: {type: Date, required: true},
         time_received: Date,
-        time_read: Date,
-        strand_id: {type: ObjectId, ref: 'Strand'}
+        time_read: Date
     });
 
     messageSchema.post('save', function() {

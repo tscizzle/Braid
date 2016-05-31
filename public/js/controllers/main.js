@@ -73,6 +73,7 @@ angular.module('braidController', [])
         // initialization
 
         vm.login_object = true;
+        vm.page_title = 'Braid';
         vm.sound_on = false;
         vm.friend_users = [];
         vm.friendships = [];

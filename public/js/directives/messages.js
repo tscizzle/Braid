@@ -18,7 +18,7 @@ angular.module('messagesDirective', [])
                 // if responding to a new strand
                 if (vm.primed_messages.length > 0) {
                     vm.newStrandFormData.convo_id = vm.selected_convo._id;
-                    vm.newStrandFormData.color = vm.thisColor();
+                    vm.newStrandFormData.color_number = vm.thisColorNumber();
                     vm.newStrandFormData.time_created = new Date();
                     vm.newStrandFormData.user_id_0 = vm.selected_convo.user_id_0;
                     vm.newStrandFormData.user_id_1 = vm.selected_convo.user_id_1;
@@ -109,7 +109,7 @@ angular.module('messagesDirective', [])
         };
 
         vm.increaseNumMessages = function() {
-            vm.num_messages += 30;
+            vm.num_messages += DEFAULT_NUM_MESSAGES;
         };
 
         vm.messageIsPrimed = function(message) {
@@ -153,38 +153,6 @@ angular.module('messagesDirective', [])
             };
         };
 
-        vm.removeMessageFromStrand = function(message_id) {
-
-            Messages.unassignMessageFromStrand(message_id, vm.selected_convo._id, vm.num_messages)
-                .success(function(assign_message_data) {
-                    vm.messages = assign_message_data;
-
-                    if (vm.selected_strand) {
-                        var strand_messages = vm.messages.filter(function(message) {
-                            return message.strand_id === vm.selected_strand._id;
-                        });
-
-                        if (strand_messages.length === 0) {
-                            vm.selected_strand = undefined;
-                        };
-                    };
-            });
-
-        };
-
-        vm.addMessagesToStrand = function(strand_message) {
-            var primed_message_ids = vm.primed_messages.map(function(primed_message) {
-                return primed_message._id;
-            });
-
-            Messages.assignMessagesToStrand(primed_message_ids, strand_message.strand_id, vm.selected_convo._id, vm.num_messages)
-                .success(function(assign_messages_data) {
-                    vm.messages = assign_messages_data;
-                    vm.primed_messages = [];
-            });
-
-        };
-
         vm.hoverMessage = function(message) {
             vm.hovered_message = message._id;
             vm.hovered_strand = message.strand_id;
@@ -195,32 +163,16 @@ angular.module('messagesDirective', [])
             vm.hovered_strand = undefined;
         };
 
-        vm.oneOfHoveredMessages = function(message) {
+        vm.isOneOfHoveredMessages = function(message) {
             if (!message.strand_id) {
                 return vm.hovered_message === message._id;
             } else {
                 return vm.hovered_strand === message.strand_id;
-            }
-        };
-
-        vm.deleteButtonOpacity = function(message) {
-            return vm.hovered_message === message._id ? 1 : 0;
-        };
-
-        vm.removeButtonIsHidden = function(message) {
-            return !message.strand_id;
-        };
-
-        vm.addButtonIsHidden = function(message) {
-            if (vm.primed_messages.length > 0) {
-                return !message.strand_id;
-            } else {
-                return true;
             };
         };
 
-        vm.thisColor = function() {
-            /* looks at the previous strand's color, and returns the next one in the queue. */
+        vm.thisColorNumber = function() {
+            /* looks at the previous strand's color_number, and returns the next one in the queue. */
 
             var thisColorIndex;
 
@@ -234,6 +186,7 @@ angular.module('messagesDirective', [])
             messageStrands = _.filter(messageStrands, function(strand) {
                 return strand;
             });
+
             // if there are no existing strands, start at the beginning of the order
             if (messageStrands.length === 0) {
                 thisColorIndex = 0;
@@ -243,62 +196,35 @@ angular.module('messagesDirective', [])
                     return Date.parse(strand.time_created);
                 });
                 // take the next color in the order after the most recent existing strand's color
-                var prevStrandColor = strandsByTime[strandsByTime.length - 1].color;
-                thisColorIndex = (STRAND_COLOR_ORDER.indexOf(prevStrandColor) + 1) % STRAND_COLOR_ORDER.length;
+                var prevStrandColorNumber = strandsByTime[strandsByTime.length - 1].color_number;
+                thisColorIndex = (prevStrandColorNumber + 1) % STRAND_COLOR_ORDER.length;
             };
 
-            return STRAND_COLOR_ORDER[thisColorIndex];
+            return thisColorIndex;
         };
 
         vm.paintStrand = function(message) {
-            var message_color;
+            var message_color_number;
+            var faded = false;
             // if a message is in a strand, color it that strand's color
             if (message.strand_id && vm.strand_map[message.strand_id]) {
-                message_color = vm.strand_map[message.strand_id].color;
+                message_color_number = vm.strand_map[message.strand_id].color_number;
             // if a message is primed, color it the faded version of what color it would be next
             } else if (vm.messageIsPrimed(message)) {
-                message_color = COLOR_TO_FADED_MAP[vm.thisColor()];
+                message_color_number = vm.thisColorNumber();
+                faded = true;
             // if a message is neither in a strand nor primed, make it no color
             } else {
-                message_color = '#DDD';
+                message_color_number = -1;
             };
-            return message_color;
+            var color = STRAND_COLOR_ORDER[message_color_number];
+            // return either the color or the faded version of the color
+            return faded ? COLOR_TO_FADED_MAP[color] : color;
         };
 
-        vm.alignMessage = function(message) {
+        vm.messageUserClass = function(message) {
             if (vm.selected_user) {
-                // depending on who sent the message, set 'margin-left' to either auto (right justified) or 0 (left justified)
-                if (message.sender_id === vm.selected_user._id) {
-                    message_alignment = 'auto';
-                } else {
-                    message_alignment = 0;
-                };
-                return message_alignment;
-            };
-        };
-
-        vm.alignBubble = function(message) {
-            if (vm.selected_user) {
-                // depending on who sent the message, set 'margin-left' to either auto (right justified) or 0 (left justified)
-                if (message.sender_id === vm.selected_user._id) {
-                    message_alignment = 'right';
-                } else {
-                    message_alignment = 'left';
-
-                };
-                return message_alignment;
-            };
-        };
-
-        vm.borderRadius = function(message) {
-            if (vm.selected_user) {
-                // depending on who sent the message, set the radius to either 15px or 0 px
-                if (message.sender_id === vm.selected_user._id) {
-                    radius = '15px';
-                } else {
-                    radius = '0px';
-                };
-                return radius;
+                return message.sender_id === vm.selected_user._id ? 'sender-message' : 'receiver-message';
             };
         };
 
@@ -306,10 +232,10 @@ angular.module('messagesDirective', [])
             var textarea_color;
             // if a strand is selected, color it the faded version of that color
             if (vm.selected_strand) {
-                textarea_color = COLOR_TO_FADED_MAP[vm.selected_strand.color];
+                textarea_color = COLOR_TO_FADED_MAP[STRAND_COLOR_ORDER[vm.selected_strand.color_number]];
             // if there are any primed messages, color it the faded version of what color it would be next
             } else if (vm.primed_messages.length > 0) {
-                textarea_color = COLOR_TO_FADED_MAP[vm.thisColor()];
+                textarea_color = COLOR_TO_FADED_MAP[STRAND_COLOR_ORDER[vm.thisColorNumber()]];
             // if there is no selected strand and no primed messages, make it no color
             } else {
                 textarea_color = '#F0F0F0';
@@ -320,23 +246,29 @@ angular.module('messagesDirective', [])
         vm.userIsTyping = function() {
             var recipient = partnerIdFromSelectedConvo();
             socket.emit('this_user_typing', recipient);
-        }
+        };
+
 
         vm.otherUserIsTyping = function() {
-            if (vm.messages && vm.messages.length > 1) {
-                var now = new Date();
-                var just_typed = now - vm.last_typed < 1000;
-                var just_sent = now - vm.messages[vm.messages.length - 1].time_sent < 100;
-                return just_typed && !just_sent;
+            var now = new Date();
+            var just_typed = now - vm.last_typed < 1000;
+            var just_sent;
+            if (vm.messages && vm.messages.length > 0) {
+                just_sent = now - vm.messages[vm.messages.length - 1].time_sent < 100;
+            } else {
+                just_sent = false;
             };
+            return just_typed && !just_sent;
         };
 
         // ng-hide shows "Read" based on this function
         vm.showReadTag = function() {
             // visible_messages: the visible messages sent to the other user
-            var visible_messages = _.filter(vm.messages, function(message) {
-                    return !vm.messageIsHidden(message)&&message.sender_id==vm.selected_user._id ;
-                });
+            if (vm.messages){
+                var visible_messages = _.filter(vm.messages, function(message) {
+                        return !vm.messageIsHidden(message)&&message.sender_id==vm.selected_user._id ;
+                    });
+            }
             if (visible_messages.length > 0){
                 var most_recent_message = visible_messages[visible_messages.length-1];
                 if(most_recent_message && most_recent_message.time_read){
@@ -427,8 +359,34 @@ angular.module('messagesDirective', [])
             vm.strand_map = temp_strand_map;
         };
 
+        var resetNumMessages = function() {
+            vm.num_messages = DEFAULT_NUM_MESSAGES;
+        };
+
+        var resetPageTitle = function() {
+            if (vm.selected_user) {
+                var received_messages = _.filter(vm.messages, function(message) {
+                    return message.receiver_id === vm.selected_user._id;
+                });
+                var num_received_messages = received_messages.length;
+                var unread_received_messages = _.filter(received_messages, function(message) {
+                    return !message.time_read;
+                });
+                var num_unread_received_messages = unread_received_messages.length;
+
+                if (num_unread_received_messages > 0) {
+                    var num_notifications = num_unread_received_messages;
+                    if (num_received_messages === num_unread_received_messages) {
+                        num_notifications += '+';
+                    };
+
+                    vm.page_title = 'Braid (' + num_notifications + ')';
+                };
+            };
+        };
 
         var num_messages_watcher = function(scope) {return vm.num_messages;};
+        var messages_watcher = function(scope) {return vm.messages;};
         var strands_watcher = function(scope) {return vm.strands;};
         var selected_strand_watcher = function(scope) {return vm.selected_strand;};
         var selected_convo_watcher = function(scope) {return vm.selected_convo;};
@@ -439,6 +397,8 @@ angular.module('messagesDirective', [])
         $scope.$watch(selected_convo_watcher, refreshStrands);
         $scope.$watchGroup([selected_convo_watcher, selected_user_watcher], deselectStrand);
         $scope.$watch(strands_watcher, refreshStrandMap);
+        $scope.$watch(selected_convo_watcher, resetNumMessages);
+        $scope.$watch(messages_watcher, resetPageTitle);
 
 
         // register socket listeners
@@ -489,6 +449,8 @@ angular.module('messagesDirective', [])
             '#FFC99E',
             '#F2969F'
         ];
+        STRAND_COLOR_ORDER[-1] = '#DDD';
+
         var COLOR_TO_FADED_MAP = {
             '#EFBFFF': '#F2DBFF',
             '#9EEFD0': '#CEF2ED',
@@ -497,11 +459,14 @@ angular.module('messagesDirective', [])
             '#F2969F': '#F2C2AE'
         };
 
+        var DEFAULT_NUM_MESSAGES = 30;
+
 
         // initialization
+
         vm.messages = [];
         vm.strands = [];
-        vm.num_messages = 30;
+        vm.num_messages = DEFAULT_NUM_MESSAGES;
         vm.selected_strand = undefined;
         vm.strand_map = {};
         vm.primed_messages = [];
@@ -522,6 +487,7 @@ angular.module('messagesDirective', [])
                 selected_convo: '=selectedConvo',
                 selected_user: '=selectedUser',
                 friend_user_map: '=friendUserMap',
+                page_title: '=pageTitle',
                 sound_on: '=soundOn'
             },
             templateUrl: 'views/messages.html',

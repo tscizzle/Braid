@@ -12,6 +12,8 @@ angular.module('logoutDirective', [])
                 .then(function() {
                     vm.login_object = true;
                     vm.selected_user = undefined;
+                    vm.page_title = 'Braid';
+
                     $location.path('/');
                     $route.reload();
                 });
@@ -24,7 +26,8 @@ angular.module('logoutDirective', [])
             restrict: 'E',
             scope: {
                 login_object: '=loginObject',
-                selected_user: '=selectedUser'
+                selected_user: '=selectedUser',
+                page_title: '=pageTitle'
             },
             templateUrl: 'views/logout.html',
             controller: 'logoutController',
