@@ -1,19 +1,47 @@
-#message-list-wrapper {
-    min-height: 60vh;
-    max-height: 60vh;
+.message-header-div {
+    height: 8vh;
+}
+
+.message-list-wrapper {
+    height: 62vh;
     overflow: auto;
     padding: 0 15px;
-    margin-bottom: 10px;
     text-align: center;
     border-top: solid 1px #EEE
 }
 
-.hovered-messages {
-    box-shadow: 2px 2px 2px #777;
+.message-wrapper {
+    position: relative;
 }
 
-.message-text {
-    white-space: pre-wrap;
+.sender-message {
+    margin-left: auto;
+    text-align: right;
+}
+
+.sender-message .bubble {
+    border-radius: 15px;
+}
+
+.sender-message .message-time-sent {
+    left: 0;
+}
+
+.receiver-message {
+    margin-left: 0;
+    text-align: left;
+}
+
+.receiver-message .bubble {
+    border-radius: 0;
+}
+
+.receiver-message .message-time-sent {
+    right: 0;
+}
+
+.hovered-messages .bubble {
+    box-shadow: 2px 2px 2px #777;
 }
 
 .bubble {
@@ -26,7 +54,25 @@
     text-align: left;
 }
 
+.message-text {
+    white-space: pre-wrap;
+}
+
+.message-time-sent {
+    margin: auto;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    height: 1em;
+    opacity: 0.5;
+}
+
+.send-message-form {
+    height: 15vh;
+    margin-top: 3vh;
+}
+
 #sendable-textarea {
     font-size: 0.8em;
-    height: 90px;
+    height: 13vh;
 }
