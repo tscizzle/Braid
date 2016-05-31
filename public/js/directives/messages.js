@@ -278,23 +278,12 @@ angular.module('messagesDirective', [])
             } else {
                 vm.messages = [];
             };
+
+            refreshStrands();
         };
 
         var clearPrimedMessages = function() {
             vm.primed_messages = [];
-        };
-
-        var refreshStrands = function() {
-            if (vm.selected_convo) {
-
-                Strands.get(vm.selected_convo._id)
-                    .success(function(data) {
-                        vm.strands = data;
-                    });
-
-            } else {
-                vm.strands = [];
-            };
         };
 
         var deselectStrand = function() {
@@ -344,7 +333,6 @@ angular.module('messagesDirective', [])
         $scope.$watch(selected_strand_watcher, focusSendableTextarea);
         $scope.$watchGroup([num_messages_watcher, selected_strand_watcher, selected_convo_watcher], refreshMessages);
         $scope.$watchGroup([selected_strand_watcher, selected_convo_watcher, selected_user_watcher], clearPrimedMessages);
-        $scope.$watch(selected_convo_watcher, refreshStrands);
         $scope.$watchGroup([selected_convo_watcher, selected_user_watcher], deselectStrand);
         $scope.$watch(strands_watcher, refreshStrandMap);
         $scope.$watch(selected_convo_watcher, resetNumMessages);
@@ -357,7 +345,6 @@ angular.module('messagesDirective', [])
             if (vm.selected_convo) {
                 if (data.convo_id == vm.selected_convo._id) {
                     refreshMessages();
-                    refreshStrands();
                 };
             };
 
@@ -385,6 +372,19 @@ angular.module('messagesDirective', [])
                 } else if (vm.selected_convo.user_id_1 == vm.selected_user._id) {
                     return vm.selected_convo.user_id_0;
                 };
+            };
+        };
+
+        var refreshStrands = function() {
+            if (vm.selected_convo) {
+
+                Strands.get(vm.selected_convo._id)
+                    .success(function(data) {
+                        vm.strands = data;
+                    });
+
+            } else {
+                vm.strands = [];
             };
         };
 
