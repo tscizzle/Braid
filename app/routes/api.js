@@ -303,9 +303,7 @@ module.exports = function(app, io) {
         }).limit(
             parseInt(req.params.num_messages)
         ).exec(function(err, messages) {
-            if (err) {
-                return res.status(500).send(err);
-            };
+            if (err) {return res.status(500).send(err);};
 
             messages.reverse();
             return res.json(messages);
@@ -335,9 +333,7 @@ module.exports = function(app, io) {
             }).limit(
                 parseInt(req.params.num_messages)
             ).exec(function(err, messages) {
-                if (err) {
-                    return res.status(500).send(err);
-                };
+                if (err) {return res.status(500).send(err);};
 
                 messages.reverse();
                 return res.json(messages);
@@ -352,9 +348,7 @@ module.exports = function(app, io) {
         Message.findOneAndRemove({
             '_id': req.params.message_id
         }, function(err, message) {
-            if (err) {
-                return res.status(500).send(err);
-            };
+            if (err) {return res.status(500).send(err);};
 
             // to trigger the middleware
             if (message) {
@@ -368,9 +362,7 @@ module.exports = function(app, io) {
             }).limit(
                 parseInt(req.body.num_messages)
             ).exec(function(err, messages) {
-                if (err) {
-                    return res.status(500).send(err);
-                };
+                if (err) {return res.status(500).send(err);};
 
                 messages.reverse();
                 return res.json(messages);
@@ -410,9 +402,7 @@ module.exports = function(app, io) {
             }).limit(
                 parseInt(req.body.num_messages)
             ).exec(function(err, messages) {
-                if (err) {
-                    return res.status(500).send(err);
-                };
+                if (err) {return res.status(500).send(err);};
 
                 messages.reverse();
                 return res.json(messages);
@@ -449,9 +439,7 @@ module.exports = function(app, io) {
             }).limit(
                 parseInt(req.body.num_messages)
             ).exec(function(err, messages) {
-                if (err) {
-                    return res.status(500).send(err);
-                };
+                if (err) {return res.status(500).send(err);};
 
                 messages.reverse();
                 return res.json(messages);
@@ -465,9 +453,7 @@ module.exports = function(app, io) {
         Strand.find({
             'convo_id': req.params.convo_id
         }, function(err, strands) {
-            if (err) {
-                return res.status(500).send(err);
-            };
+            if (err) {return res.status(500).send(err);};
 
             return res.json(strands);
         });
@@ -483,16 +469,12 @@ module.exports = function(app, io) {
             'user_id_0': req.body.user_id_0,
             'user_id_1': req.body.user_id_1
         }, function(err, strand) {
-            if (err) {
-                return res.status(500).send(err);
-            };
+            if (err) {return res.status(500).send(err);};
 
             Strand.find({
                 'convo_id': req.body.convo_id
             }, function(err, strands) {
-                if (err) {
-                    return res.status(500).send(err);
-                };
+                if (err) {return res.status(500).send(err);};
 
                 return res.json({strands: strands, new_strand: strand});
             });
@@ -507,9 +489,7 @@ module.exports = function(app, io) {
         Convo.find({
             $or: [{user_id_0: req.params.user_id}, {user_id_1: req.params.user_id}]
         }, function(err, convos) {
-            if (err) {
-                return res.status(500).send(err);
-            };
+            if (err) {return res.status(500).send(err);};
 
             return res.json(convos);
         });
@@ -536,9 +516,7 @@ module.exports = function(app, io) {
             Convo.find({
                 $or: [{user_id_0: req.body.user_id_0}, {user_id_1: req.body.user_id_0}]
             }, function(err, convos) {
-                if (err) {
-                    return res.status(500).send(err);
-                };
+                if (err) {return res.status(500).send(err);};
 
                 return res.json({convos: convos, new_convo: convo});
             });
@@ -552,9 +530,7 @@ module.exports = function(app, io) {
         Convo.findOneAndRemove({
             _id: req.params.convo_id
         }, function(err, convo) {
-            if (err) {
-                return res.status(500).send(err);
-            };
+            if (err) {return res.status(500).send(err);};
 
             // to trigger the middleware
             if (convo) {
@@ -564,9 +540,7 @@ module.exports = function(app, io) {
             Convo.find({
                 $or: [{user_id_0: req.params.user_id}, {user_id_1: req.params.user_id}]
             }, function(err, convos) {
-                if (err) {
-                    return res.status(500).send(err);
-                };
+                if (err) {return res.status(500).send(err);};
 
                 return res.json(convos);
             });
@@ -578,9 +552,7 @@ module.exports = function(app, io) {
     app.get('/api/users', function(req, res) {
 
         User.find(function(err, users) {
-            if (err) {
-                return res.status(500).send(err);
-            };
+            if (err) {return res.status(500).send(err);};
 
             return res.json(users);
         });
@@ -593,9 +565,7 @@ module.exports = function(app, io) {
         Friendship.find({
             $or: [{requester_id: req.params.user_id}, {target_id: req.params.user_id}]
         }, function(err, friendships) {
-            if (err) {
-                return res.status(500).send(err);
-            };
+            if (err) {return res.status(500).send(err);};
 
             var friend_ids = friendships.map(function(friendship) {
                 if (friendship.requester_id == req.params.user_id) {
@@ -608,9 +578,7 @@ module.exports = function(app, io) {
             User.find({
                 _id: {$in: friend_ids}
             }, function(err, friend_users) {
-                if (err) {
-                    return res.status(500).send(err);
-                };
+                if (err) {return res.status(500).send(err);};
 
                 return res.json(friend_users);
             });
@@ -625,9 +593,7 @@ module.exports = function(app, io) {
         User.findOneAndRemove({
             _id: req.params.user_id
         }, function(err, user) {
-            if (err) {
-                return res.status(500).send(err);
-            };
+            if (err) {return res.status(500).send(err);};
 
             // to trigger the middleware
             if (user) {
@@ -635,9 +601,7 @@ module.exports = function(app, io) {
             };
 
             User.find(function(err, users) {
-                if (err) {
-                    return res.status(500).send(err);
-                };
+                if (err) {return res.status(500).send(err);};
 
                 return res.json(users);
             });
@@ -651,9 +615,7 @@ module.exports = function(app, io) {
         Friendship.find({
             $or: [{requester_id: req.params.user_id}, {target_id: req.params.user_id}]
         }, function(err, friendships) {
-            if (err) {
-                return res.status(500).send(err);
-            };
+            if (err) {return res.status(500).send(err);};
 
             return res.json(friendships);
         });
@@ -666,9 +628,7 @@ module.exports = function(app, io) {
         User.findOne({
             username: req.body.username
         }, function(err, user) {
-            if (err) {
-                return res.status(500).send(err);
-            };
+            if (err) {return res.status(500).send(err);};
 
             if (!user) {
                 return res.status(422).json({
@@ -698,9 +658,7 @@ module.exports = function(app, io) {
                     Friendship.find({
                         $or: [{requester_id: req.body.requester_id}, {target_id: req.body.requester_id}]
                     }, function(err, friendships) {
-                        if (err) {
-                            return res.status(500).send(err);
-                        };
+                        if (err) {return res.status(500).send(err);};
 
                         return res.json(friendships);
                     });
@@ -722,9 +680,7 @@ module.exports = function(app, io) {
                 status: 'accepted'
             }
         }, function(err, numAffected) {
-            if (err) {
-                return res.status(500).send(err);
-            };
+            if (err) {return res.status(500).send(err);};
 
             // if this call fails because a convo already exists for these users, that's fine
             Convo.create({
@@ -746,9 +702,7 @@ module.exports = function(app, io) {
             Friendship.find({
                 $or: [{requester_id: req.params.user_id}, {target_id: req.params.user_id}]
             }, function(err, friendships) {
-                if (err) {
-                    return res.status(500).send(err);
-                };
+                if (err) {return res.status(500).send(err);};
 
                 return res.json(friendships);
             });
@@ -763,9 +717,7 @@ module.exports = function(app, io) {
         Friendship.findOneAndRemove({
             _id: req.params.friendship_id
         }, function(err, friendship) {
-            if (err) {
-                return res.status(500).send(err);
-            };
+            if (err) {return res.status(500).send(err);};
 
             // to trigger the middleware
             if (friendship) {
@@ -775,9 +727,7 @@ module.exports = function(app, io) {
             Friendship.find({
                 $or: [{requester_id: req.params.user_id}, {target_id: req.params.user_id}]
             }, function(err, friendships) {
-                if (err) {
-                    return res.status(500).send(err);
-                };
+                if (err) {return res.status(500).send(err);};
 
                 return res.json(friendships);
             });
