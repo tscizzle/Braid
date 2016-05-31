@@ -34,29 +34,28 @@ angular.module('braidFilters', [])
                 };
             };
         };
-    
     })
- +
- +  .filter('dateStretchy', ['$filter', function($filter) {
-+        return function(datestring) {
-+            var datetime = new Date(datestring);
-+            var right_now = new Date();
-+            var time_since = right_now - datetime;
-+            var DAY = 24 * 3600 * 1000;
-+
-+            var date_formats;
-+            if (datetime.toDateString() === right_now.toDateString()) { // today
-+                date_formats = ['shortTime'];
-+            } else if (DAY < time_since && time_since < 5 * DAY) { // within a week
-+                date_formats = ['EEE', 'shortTime'];
-+            } else { // more than a week ago
-+                date_formats = ['mediumDate'];
-+            };
-+
-+            var joined_formats = _.map(date_formats, function(date_format) {
-+                return $filter('date')(datetime, date_format);
-+            }).join(' ');
-+
-+            return joined_formats;
-+        };
-+    }]);
+
+    .filter('dateStretchy', ['$filter', function($filter) {
+        return function(datestring) {
+            var datetime = new Date(datestring);
+            var right_now = new Date();
+            var time_since = right_now - datetime;
+            var DAY = 24 * 3600 * 1000;
+
+            var date_formats;
+            if (datetime.toDateString() === right_now.toDateString()) { // today
+                date_formats = ['shortTime'];
+            } else if (time_since < 7 * DAY) { // within a week
+                date_formats = ['EEE', 'shortTime'];
+            } else { // more than a week ago
+                date_formats = ['mediumDate'];
+            };
+
+            var joined_formats = _.map(date_formats, function(date_format) {
+                return $filter('date')(datetime, date_format);
+            }).join(' ');
+
+            return joined_formats;
+        };
+    }]);
