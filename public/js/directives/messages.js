@@ -341,6 +341,8 @@ angular.module('messagesDirective', [])
                 var most_recent_message = visible_messages[visible_messages.length-1];
                 if(most_recent_message && most_recent_message.time_read){
                     vm.most_recent_time_read = most_recent_message.time_read;
+                    console.log("reached!")
+                    var formatted_time = vm.most_recent_time_read.filter()
                     return false;
                 } else {
                     return true; 
