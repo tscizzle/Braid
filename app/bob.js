@@ -18,7 +18,7 @@ module.exports = function(io) {
         User.findOne({username: 'bob'}, function(err, user) {
             if (!user) {
 
-                User.register(new User({username: 'bob'}), process.env.BOB_PASSWORD);
+                User.register(new User({username: 'bob'}), process.env.BOB_PASSWORD, function() {});
 
             };
         });
