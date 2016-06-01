@@ -243,6 +243,8 @@ module.exports = function(app, io) {
     app.post('/api/unassignMessageFromStrand/:convo_id', resourceBelongsToUser(['body', 'message_id'], Message),
                                                          resourceBelongsToUser(['params', 'convo_id'], Convo));
 
+    app.post('/api/markAsRead/:convo_id', function(req, res, next) {req.auth_checked = true; return next();});
+
     app.get('/api/strands/:convo_id', resourceBelongsToUser(['params', 'convo_id'], Convo));
 
     app.post('/api/strands', resourceBelongsToUser(['body', 'convo_id'], Convo),
@@ -446,6 +448,39 @@ module.exports = function(app, io) {
             });
         });
     });
+
+    // --- mark messages as read 
+        // mark messages as read in mongo
+        // respond to original client
+        // socket.emit goes here
+    app.post('/api/markAsRead/:convo_id', function(req, res) {
+        Message.update({
+            // $in sets 
+            "_id":{$in:req.body.message_ids}
+        }, { 
+            $set: { "time_read" : Date.parse(req.body.time_read), }
+        }, function(err, messages) {
+            if (err) {
+                return res.status(500).send(err);
+            };
+
+
+            Convo.findOne({
+                _id: req.params.convo_id
+            }, function(err, convo) {
+                var user_ids = [convo.user_id_0, convo.user_id_1];
+
+                _.each(user_ids, function(user_id) {
+                    io.to(user_id).emit('messages:receive_update', {convo_id: req.params.convo_id});
+                });
+            });
+
+            return res.json(messages);
+        });
+    });
+
+
+   
 
     // --- get strands for a convo
     app.get('/api/strands/:convo_id', function(req, res) {
