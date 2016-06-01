@@ -325,6 +325,8 @@ angular.module('messagesDirective', [])
                     };
 
                     vm.page_title = 'Braid (' + num_notifications + ')';
+                } else {
+                    vm.page_title = 'Braid';
                 };
             };
         };
