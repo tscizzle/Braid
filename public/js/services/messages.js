@@ -18,8 +18,8 @@ angular.module('messageService', [])
             unassignMessageFromStrand: function(message_id, convo_id, num_messages_to_get) {
                 return $http.post('/api/unassignMessageFromStrand/' + convo_id, {message_id: message_id, num_messages: num_messages_to_get});
             },
-            markAsRead: function(convo_id, message_ids, time_read) {
-                return $http.post('/api/markAsRead/' + convo_id, {message_ids: message_ids, time_read:time_read});
+            markMessagesAsRead: function(message_ids, convo_id, time_read, num_messages_to_get) {
+                return $http.post('/api/markMessagesAsRead/' + convo_id, {message_ids: message_ids, time_read: time_read, num_messages: num_messages_to_get});
             },
         };
 

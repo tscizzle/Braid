@@ -243,11 +243,15 @@ angular.module('messagesDirective', [])
             return textarea_color;
         };
 
+        vm.focusTextarea = function() {
+            vm.sendable_text_focus = true;
+            markMessagesAsRead();
+        };
+
         vm.userIsTyping = function() {
             var recipient = partnerIdFromSelectedConvo();
             socket.emit('this_user_typing', recipient);
         };
-
 
         vm.otherUserIsTyping = function() {
             var now = new Date();
@@ -261,54 +265,6 @@ angular.module('messagesDirective', [])
             return just_typed && !just_sent;
         };
 
-        // ng-hide shows "Read" based on this function
-        vm.showReadTag = function() {
-            // visible_messages: the visible messages sent to the other user
-            if (vm.messages){
-                var visible_messages = _.filter(vm.messages, function(message) {
-                        return !vm.messageIsHidden(message)&&message.sender_id==vm.selected_user._id ;
-                    });
-            }
-            if (visible_messages.length > 0){
-                var most_recent_message = visible_messages[visible_messages.length-1];
-                if(most_recent_message && most_recent_message.time_read){
-                    vm.most_recent_time_read = most_recent_message.time_read;
-                    return false;
-                } else {
-                    return true; 
-                };
-            };
-        };
-        
-
-        vm.markMessagesAsRead = function() {
-            vm.sendable_text_focus = true;
-            // message_data should just be messages that are in the view
-            // visible_messages are the messages_to_mark
-            if (vm.messages){
-                var visible_messages = _.filter(vm.messages, function(message) {
-                        return !vm.messageIsHidden(message)&&message.receiver_id==vm.selected_user._id ;
-                    });
-                if (visible_messages){
-                    unread_visible_message_ids = visible_messages.map(function(message) {
-                        if (!message.time_read) {
-                        return message._id
-                        };
-                    });
-                    current_time = new Date();
-
-                    Messages.markAsRead(vm.selected_convo._id, unread_visible_message_ids, current_time)
-                        .success(function(data) {
-                            vm.messages = data;
-                    });
-                };
-            };
-        };
-
-        vm.userIsTyping = function() {
-            var recipient = partnerIdFromSelectedConvo();
-            socket.emit('this_user_typing', recipient);
-        }
 
         // register listeners
 
@@ -338,7 +294,6 @@ angular.module('messagesDirective', [])
         var deselectStrand = function() {
             vm.selected_strand = undefined;
         };
-
 
         var refreshStrandMap = function() {
             var temp_strand_map = {};
@@ -374,6 +329,15 @@ angular.module('messagesDirective', [])
             };
         };
 
+        var resetMostRecentTimeRead = function() {
+            var visible_messages = _.filter(vm.messages, function(message) {
+                return !vm.messageIsHidden(message) && message.sender_id === vm.selected_user._id;
+            });
+            if (visible_messages.length > 0) {
+                vm.most_recent_time_read = visible_messages[visible_messages.length - 1].time_read;
+            };
+        };
+
         var num_messages_watcher = function(scope) {return vm.num_messages;};
         var messages_watcher = function(scope) {return vm.messages;};
         var strands_watcher = function(scope) {return vm.strands;};
@@ -387,6 +351,7 @@ angular.module('messagesDirective', [])
         $scope.$watch(strands_watcher, refreshStrandMap);
         $scope.$watch(selected_convo_watcher, resetNumMessages);
         $scope.$watch(messages_watcher, resetPageTitle);
+        $scope.$watchGroup([messages_watcher, selected_strand_watcher], resetMostRecentTimeRead);
 
 
         // register socket listeners
@@ -436,6 +401,25 @@ angular.module('messagesDirective', [])
 
             } else {
                 vm.strands = [];
+            };
+        };
+
+        var markMessagesAsRead = function() {
+            var current_time = new Date();
+            var unread_visible_messages = _.filter(vm.messages, function(message) {
+                return !vm.messageIsHidden(message) && message.receiver_id === vm.selected_user._id && !message.time_read;
+            });
+            var unread_visible_message_ids = unread_visible_messages.map(function(message) {
+                return message._id
+            });
+
+            if (unread_visible_message_ids.length > 0) {
+
+                Messages.markMessagesAsRead(unread_visible_message_ids, vm.selected_convo._id, current_time, vm.num_messages)
+                    .success(function(data) {
+                        vm.messages = data;
+                    });
+
             };
         };
 
