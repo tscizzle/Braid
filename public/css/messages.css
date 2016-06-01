@@ -72,6 +72,11 @@
     margin-top: 3vh;
 }
 
+.read-receipt {
+    font-size: 0.8em;
+    opacity: 0.5;
+}
+
 #sendable-textarea {
     font-size: 0.8em;
     height: 13vh;
