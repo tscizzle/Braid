@@ -29,7 +29,7 @@ module.exports = function(io) {
     var befriendBob = function(new_user, res, callback) {
 
         User.findOne({username: 'bob'}, {_id: 1}, function(err, bob) {
-            if (err) {return callback(err, bob);};
+            if (err) return callback(err, bob);
 
             var bob_id = bob._id;
             var new_user_id = new_user._id;
@@ -39,13 +39,13 @@ module.exports = function(io) {
                 target_id: new_user_id,
                 status: 'accepted'
             }, function(err, friendship) {
-                if (err) {return callback(err, bob);};
+                if (err) return callback(err, bob);
 
                 Convo.create({
                     user_id_0: bob_id,
                     user_id_1: new_user_id
                 }, function(err, convo) {
-                    if (err) {return callback(err, bob);};
+                    if (err) return callback(err, bob);
 
                     var convo_id = convo._id;
 
@@ -66,7 +66,7 @@ module.exports = function(io) {
                     });
 
                     Strand.create(intro_strands, function(err, strands) {
-                        if (err) {return callback(err, bob);};
+                        if (err) return callback(err, bob);
 
                         var strand_ids = _.map(strands, function(strand) {
                             return strand._id;
@@ -123,7 +123,7 @@ module.exports = function(io) {
                         });
 
                         Message.create(intro_messages, function(err, messages) {
-                            if (err) {return callback(err, bob);};
+                            if (err) return callback(err, bob);
 
                             return callback(err, bob);
                         });

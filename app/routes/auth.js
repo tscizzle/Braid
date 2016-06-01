@@ -11,7 +11,7 @@ module.exports = function(app, io, passport) {
     app.post('/register', function(req, res) {
 
         User.register(new User({username: req.body.username}), req.body.password, function(err, user) {
-            if (err) {return res.status(500).json({err: err});};
+            if (err) return res.status(500).json({err: err});
 
             bob.befriendBob(user, res, function(err, bobby) {
                 if (err) {console.log('bobby err', err);};
