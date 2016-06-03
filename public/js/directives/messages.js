@@ -127,7 +127,13 @@ angular.module('messagesDirective', [])
             };
         };
 
-        vm.toggleMessage = function(message) {
+        vm.toggleMessage = function(message, event) {
+            // if the click was on a link, don't toggle the message
+            var target = event.target || event.srcElement;
+            if (target.tagName === 'A') {
+                return;
+            };
+
             // if no strand is selected
             if (!vm.selected_strand) {
                 // if the clicked message is already in a strand then we should select that strand
