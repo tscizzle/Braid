@@ -451,7 +451,7 @@ angular.module('messagesDirective', [])
             '#F2969F': '#F2C2AE'
         };
 
-        var DEFAULT_NUM_MESSAGES = 30;
+        var DEFAULT_NUM_MESSAGES = 50;
 
 
         // initialization
