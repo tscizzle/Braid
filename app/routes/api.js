@@ -243,7 +243,8 @@ module.exports = function(app, io) {
     app.post('/api/unassignMessageFromStrand/:convo_id', resourceBelongsToUser(['body', 'message_id'], Message),
                                                          resourceBelongsToUser(['params', 'convo_id'], Convo));
 
-    app.post('/api/markMessagesAsRead/:convo_id', function(req, res, next) {req.auth_checked = true; return next();});
+    app.post('/api/markMessagesAsRead/:convo_id', resourceBelongsToUser(['params', 'convo_id'], Convo),
+                                                  bodyMessageIdsBelongToUser);
 
     app.get('/api/strands/:convo_id', resourceBelongsToUser(['params', 'convo_id'], Convo));
 
