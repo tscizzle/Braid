@@ -12,6 +12,7 @@
 
 .message-wrapper {
     position: relative;
+    font-size: 0.9em;
 }
 
 .sender-message {
@@ -46,7 +47,7 @@
 
 .bubble {
     position: relative;
-    padding: 7px 13px;
+    padding: 5px 10px;
     margin-top: 3px;
     display: inline-block;
     max-width: 80%;
