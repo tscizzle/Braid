@@ -4,7 +4,7 @@ angular.module('enterSubmitDirective', [])
         return {
             restrict: 'A',
             link: function(scope, elem, attrs) {
-                elem.bind('keyup', function(event) {
+                elem.bind('keydown', function(event) {
                     var code = event.keyCode || event.which;
                     if (code === 13 && !event.shiftKey) {
                             event.preventDefault();
