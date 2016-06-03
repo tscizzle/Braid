@@ -287,7 +287,7 @@ module.exports = function(app, io) {
             return next();
         } else {
             return res.status(500).json({
-                err: 'Internal server error.'
+                err: 'Aah! Internal server error.'
             });
         };
     };
