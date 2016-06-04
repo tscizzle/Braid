@@ -109,7 +109,7 @@ angular.module('friendshipsDirective', [])
         // helpers
 
         var convoFromFriendship = function(friendship) {
-            if (vm.selected_user) {
+            if (friendship) {
                 var matching_convo = _.find(vm.convos, function(convo) {
                     var convo_pair = [convo.user_id_0, convo.user_id_1].sort();
                     var freindship_pair = [friendship.requester_id, friendship.target_id].sort();
@@ -162,8 +162,9 @@ angular.module('friendshipsDirective', [])
                     .success(function(data) {
                         vm.convos = data;
 
-                        var arbitrary_friendship = vm.friendships[0]
-                        if (!vm.selected_convo && arbitrary_friendship) {
+                        var noFriendshipIsSelected = !_.any(vm.friendships, vm.friendshipConvoIsSelected);
+                        var arbitrary_friendship = vm.friendships[0];
+                        if (noFriendshipIsSelected && arbitrary_friendship) {
                             vm.selected_convo = convoFromFriendship(arbitrary_friendship);
                         };
                     });
@@ -188,7 +189,6 @@ angular.module('friendshipsDirective', [])
 
         // initialization
 
-        vm.friendships = [];
         vm.convos = [];
         vm.hovered_friendship = undefined;
         vm.friendship_error = {
@@ -197,7 +197,7 @@ angular.module('friendshipsDirective', [])
             last_error: undefined
         };
         vm.newFriendshipFormData = {};
-        vm.newConvoFormData = {user_id_1: ""};
+        vm.newConvoFormData = {};
 
         Friendships.get(vm.selected_user._id)
             .success(function(data) {
