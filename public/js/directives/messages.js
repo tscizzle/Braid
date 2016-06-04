@@ -1,6 +1,6 @@
 angular.module('messagesDirective', [])
 
-    .controller('messageController', ['$scope', 'focus', 'socket', 'Messages', 'Strands', function($scope, focus, socket, Messages, Strands) {
+    .controller('messageController', ['$scope', '$window', 'focus', 'socket', 'Messages', 'Strands', function($scope, $window, focus, socket, Messages, Strands) {
 
         var vm = this;
         window.VM = vm;
@@ -131,6 +131,10 @@ angular.module('messagesDirective', [])
             // if the click was on a link, don't toggle the message
             var target = event.target || event.srcElement;
             if (target.tagName === 'A') {
+                return;
+            };
+            // if there is highlighted text, don't toggle the message
+            if ($window.getSelection().toString()) {
                 return;
             };
 
