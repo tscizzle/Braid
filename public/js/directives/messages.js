@@ -265,10 +265,11 @@ angular.module('messagesDirective', [])
 
         vm.otherUserIsTyping = function() {
             var now = new Date();
-            var just_typed = now - vm.last_typed < 1000;
+            var SECOND = 1000;
+            var just_typed = now - vm.last_typed < SECOND;
             var just_sent;
             if (vm.messages && vm.messages.length > 0) {
-                just_sent = now - vm.messages[vm.messages.length - 1].time_sent < 100;
+                just_sent = now - vm.messages[vm.messages.length - 1].time_sent < 0.1 * SECOND;
             } else {
                 just_sent = false;
             };
@@ -346,7 +347,9 @@ angular.module('messagesDirective', [])
                 return !vm.messageIsHidden(message) && message.sender_id === vm.selected_user._id;
             });
             if (visible_messages.length > 0) {
-                vm.most_recent_time_read = visible_messages[visible_messages.length - 1].time_read;
+                vm.last_time_read = visible_messages[visible_messages.length - 1].time_read;
+            } else {
+                vm.last_time_read = undefined;
             };
         };
 
@@ -375,9 +378,13 @@ angular.module('messagesDirective', [])
                 };
             };
 
-            if (vm.sound_on && data.play_message_sound) {
+            var now = new Date();
+            var SECOND = 1000;
+            var just_received_message_sound = now - vm.last_message_received_sound < SECOND;
+            if (vm.sound_on && data.play_message_sound && !just_received_message_sound) {
                 var ooooh = new Audio('audio/ooooh.wav');
                 ooooh.play();
+                vm.last_message_received_sound = new Date();
             };
         });
 
@@ -470,9 +477,10 @@ angular.module('messagesDirective', [])
         vm.hovered_strand = undefined;
         vm.sendable_text_focus = false;
         vm.last_typed = undefined;
+        vm.last_time_read = undefined;
+        vm.last_message_received_sound = undefined;
         vm.newMessageFormData = {};
         vm.newStrandFormData = {};
-        vm.most_recent_time_read = undefined;
 
     }])
 
