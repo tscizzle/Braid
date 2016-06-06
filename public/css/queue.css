@@ -1,0 +1,14 @@
+.queue-pane {
+    font-size: 0.85em;
+    margin-top: 50px;
+}
+
+.strand-in-list {
+    margin-top: 10px;
+    height: 40px;
+    border: solid 2px #666;
+}
+
+.strand-in-list:hover {
+    box-shadow: 2px 2px 2px #777;
+}

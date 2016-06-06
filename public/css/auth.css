@@ -1,4 +1,4 @@
-.firstview-all {
+.auth-all {
     position: fixed;
     right: 0;
     left: 0;
@@ -8,11 +8,11 @@
     margin-top: 30px;
 }
 
-.firstview-header {
+.auth-header {
     margin-bottom: 30px;
 }
 
-.firstview-button {
+.auth-button {
     -webkit-border-radius: 8;
     -moz-border-radius: 8;
     border-radius: 8px;
@@ -22,11 +22,18 @@
     border: none;
 }
 
-.firstview-button:hover {
+.auth-button:hover {
     background: #7a7a7a;
     text-decoration: none;
 }
 
-.firstview-switch {
+.auth-switch {
     margin-top: 10px;
+}
+
+.auth-error {
+    font-size: 0.9em;
+    color: #FF5C5C;
+    margin-bottom: 1em;
+    height: 1em;
 }

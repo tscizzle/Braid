@@ -74,10 +74,14 @@ angular.module('braidController', [])
 
         vm.login_object = true;
         vm.page_title = 'Braid';
+        vm.messages = [];
+        vm.strands = [];
         vm.friend_users = [];
         vm.friendships = [];
+        vm.selected_strand = undefined;
         vm.selected_convo = undefined;
         vm.selected_user = undefined;
+        vm.strand_map = {};
         vm.friend_user_map = {};
 
         auth.getLoggedInUser()

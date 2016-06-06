@@ -30,6 +30,7 @@
     <script src="/js/directives/logout.js"></script>
     <script src="/js/directives/messages.js"></script>
     <script src="/js/directives/friendships.js"></script>
+    <script src="/js/directives/queue.js"></script>
     <script src="/js/filters/main.js"></script>
     <script src="/js/services/focus.js"></script>
     <script src="/js/services/socket.js"></script>
@@ -46,12 +47,10 @@
     <link rel="stylesheet" href="/css/customize_bootstrap.css">
     <link rel="stylesheet" href="/css/index.css">
     <link rel="stylesheet" href="/css/messages.css">
-    <link rel="stylesheet" href="/css/users.css">
     <link rel="stylesheet" href="/css/friendships.css">
-    <link rel="stylesheet" href="/css/firstview.css">
+    <link rel="stylesheet" href="/css/queue.css">
+    <link rel="stylesheet" href="/css/auth.css">
     <link rel="stylesheet" href="/css/navbar.css">
-    <link rel="stylesheet" href="/css/register.css">
-    <link rel="stylesheet" href="/css/login.css">
     <link rel="stylesheet" href="/css/logout.css">
     <link rel="stylesheet" href="/css/typing_indicator.css">
 
@@ -71,9 +70,24 @@
 
         <div id="chat-view" ng-if="mainCtrl.selected_user">
             <div class="row">
-                <div id="message-view-col" class="col-sm-6 col-sm-offset-4">
-                    <braid-messages selected_convo="mainCtrl.selected_convo"
+                <div class="col-sm-2 col-sm-offset-2">
+                    <braid-queue messages="mainCtrl.messages"
+                                 strands="mainCtrl.strands"
+                                 selected_strand="mainCtrl.selected_strand"
+                                 selected_convo="mainCtrl.selected_convo"
+                                 selected_user="mainCtrl.selected_user"
+                                 strand_map="mainCtrl.strand_map"
+                                 friend_user_map="mainCtrl.friend_user_map">
+                    </braid-queue>
+                </div>
+
+                <div id="message-view-col" class="col-sm-6">
+                    <braid-messages messages="mainCtrl.messages"
+                                    strands="mainCtrl.strands"
+                                    selected_strand="mainCtrl.selected_strand"
+                                    selected_convo="mainCtrl.selected_convo"
                                     selected_user="mainCtrl.selected_user"
+                                    strand_map="mainCtrl.strand_map"
                                     friend_user_map="mainCtrl.friend_user_map"
                                     page_title="mainCtrl.page_title"
                                     sound_on="mainCtrl.sound_on">

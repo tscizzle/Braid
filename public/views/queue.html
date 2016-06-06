@@ -1,0 +1,11 @@
+<div class="container-fluid queue-pane">
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="pull-right strand-in-list" ng-style="{'background-color': queueCtrl.strandColor(strand)}" ng-click="queueCtrl.selected_strand=strand" ng-repeat="strand in queueCtrl.unaddressedStrands()">
+                {{ queueCtrl.strandPreview(strand) }}
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -1,14 +1,14 @@
-<div class="firstview-all">
+<div class="auth-all">
 
     <div class="row">
         <div class="col-sm-12">
-            <div class="firstview-header">
+            <div class="auth-header">
                 <h1>Login</h1>
             </div>
         </div>
     </div>
 
-    <div class="login-error" ng-style="{'opacity': loginCtrl.loginErrorOpacity()}">{{ loginCtrl.login_error }}</div>
+    <div class="auth-error" ng-style="{'opacity': loginCtrl.loginErrorOpacity()}">{{ loginCtrl.login_error }}</div>
 
     <div class="row">
         <div class="col-sm-12">
@@ -21,9 +21,9 @@
                     <label for="login-password-input">Password:&nbsp;</label><input id="login-password-input" type="password" name="password" ng-model="loginCtrl.loginForm.password">
                 </div>
                 <br>
-                <button class="firstview-button" type="submit">Login</button>
+                <button class="auth-button" type="submit">Login</button>
                 <br>
-                <button class="firstview-switch firstview-button" ng-click="loginCtrl.switchToRegister()" type="button">Don't have an account? Register here.</button>
+                <button class="auth-switch auth-button" ng-click="loginCtrl.switchToRegister()" type="button">Don't have an account? Register here.</button>
             </form>
         </div>
     </div>

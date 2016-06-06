@@ -13,6 +13,7 @@ var Braid = angular.module('Braid', [
     'logoutDirective',
     'friendshipsDirective',
     'messagesDirective',
+    'queueDirective',
     'braidFilters',
     'focusService',
     'socketService',

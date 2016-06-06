@@ -488,8 +488,12 @@ angular.module('messagesDirective', [])
         return {
             restrict: 'E',
             scope: {
+                messages: '=',
+                strands: '=',
+                selected_strand: '=selectedStrand',
                 selected_convo: '=selectedConvo',
                 selected_user: '=selectedUser',
+                strand_map: '=strandMap',
                 friend_user_map: '=friendUserMap',
                 page_title: '=pageTitle',
                 sound_on: '=soundOn'
