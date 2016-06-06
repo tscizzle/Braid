@@ -334,8 +334,7 @@ angular.module('messagesDirective', [])
                     if (num_received_messages === num_unread_received_messages) {
                         num_notifications += '+';
                     };
-
-                    vm.page_title = 'Braid (' + num_notifications + ')';
+                    vm.page_title = '(' + num_notifications + ') Braid';
                 } else {
                     vm.page_title = 'Braid';
                 };
