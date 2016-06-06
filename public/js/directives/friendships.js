@@ -22,7 +22,7 @@ angular.module('friendshipsDirective', [])
                             last_error: Date.now()
                         };
 
-                        var delay = 3000;
+                        var delay = 5000;
                         $timeout(friendshipErrorDisappear(delay), delay);
                     });
 

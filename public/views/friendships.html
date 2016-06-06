@@ -1,48 +1,60 @@
 <div class="container-fluid friendship-list-pane">
 
-    <div class="row">
-        <div class="col-sm-12">
+    <div class="row friendships-header-row">
+        <div class="col-sm-8">
             <h3>Friends</h3>
+        </div>
+
+        <div class="col-sm-4 show-friendships-button-col">
+            <label class="btn btn-default">
+                <input type="checkbox" ng-model="friendshipCtrl.show_friendships" hidden>
+                <i class="fa fa-lg fa-caret-right" ng-hide="friendshipCtrl.show_friendships"></i>
+                <i class="fa fa-lg fa-caret-down" ng-show="friendshipCtrl.show_friendships"></i>
+            </label>
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-sm-12 friendship-list-col">
-            <div class="friendship-list-wrapper">
-                <div class="friendship-in-list clearfix" ng-class="{'clickable': friendship.status==='accepted', 'selected': friendshipCtrl.friendshipConvoIsSelected(friendship)}" ng-click="friendshipCtrl.selectConvo(friendship)" ng-mouseover="friendshipCtrl.hoverFriendship(friendship)" ng-mouseleave="friendshipCtrl.unhoverFriendship(friendship)" ng-repeat="friendship in friendshipCtrl.friendships">
-                    <span ng-class="{'friendship-needs-answer': friendshipCtrl.friendshipNeedsAnswer(friendship)}">{{ friendship | friend:friendshipCtrl.selected_user | username:friendshipCtrl.friend_user_map }} {{ friendshipCtrl.conditionalStatus(friendship) }}</span>
-                    <div class="btn-group pull-right" ng-style="{'opacity': friendshipCtrl.friendshipOpacity(friendship)}">
-                        <a class="btn btn-danger dropdown-toggle" data-toggle="dropdown">&#10005;</a>
-                        <ul class="dropdown-menu">
-                            <li ng-click="friendshipCtrl.deleteFriendship(friendship._id); $event.stopPropagation();"><a class="btn btn-danger">Delete friendship</a></li>
-                        </ul>
+    <div class="friendships-content" ng-show="friendshipCtrl.show_friendships">
+
+        <div class="row">
+            <div class="col-sm-12 friendship-list-col">
+                <div class="friendship-list-wrapper">
+                    <div class="friendship-in-list clearfix" ng-class="{'clickable': friendship.status==='accepted', 'selected': friendshipCtrl.friendshipConvoIsSelected(friendship)}" ng-click="friendshipCtrl.selectConvo(friendship)" ng-mouseover="friendshipCtrl.hoverFriendship(friendship)" ng-mouseleave="friendshipCtrl.unhoverFriendship(friendship)" ng-repeat="friendship in friendshipCtrl.friendships">
+                        <span ng-class="{'friendship-needs-answer': friendshipCtrl.friendshipNeedsAnswer(friendship)}">{{ friendship | friend:friendshipCtrl.selected_user | username:friendshipCtrl.friend_user_map }} {{ friendshipCtrl.conditionalStatus(friendship) }}</span>
+                        <div class="btn-group pull-right" ng-style="{'opacity': friendshipCtrl.friendshipOpacity(friendship)}">
+                            <a class="btn btn-danger dropdown-toggle" data-toggle="dropdown">&#10005;</a>
+                            <ul class="dropdown-menu">
+                                <li ng-click="friendshipCtrl.deleteFriendship(friendship._id); $event.stopPropagation();"><a class="btn btn-danger">Delete friendship</a></li>
+                            </ul>
+                        </div>
+                        <button class="btn btn-success pull-right" ng-click="friendshipCtrl.acceptFriendship(friendship._id); $event.stopPropagation();" ng-show="friendshipCtrl.showAcceptButton(friendship)">&#10003;</button>
                     </div>
-                    <button class="btn btn-success pull-right" ng-click="friendshipCtrl.acceptFriendship(friendship._id); $event.stopPropagation();" ng-show="friendshipCtrl.showAcceptButton(friendship)">&#10003;</button>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="row friendship-form-row">
-        <form>
-            <div class="col-sm-8">
-                <input class="friendships-input" type="text" placeholder="Username" ng-model="friendshipCtrl.newFriendshipFormData.username" />
-            </div>
+        <div class="row friendship-form-row">
+            <form>
+                <div class="col-sm-8">
+                    <input class="friendships-input" type="text" placeholder="Username" ng-model="friendshipCtrl.newFriendshipFormData.username" />
+                </div>
 
-            <div class="col-sm-4 no-left-padding">
-                <button class="btn btn-success" ng-click="friendshipCtrl.createFriendship()">Request</button>
-            </div>
-        </form>
-    </div>
-
-    <div class="row friendship-error-row">
-        <div class="col-sm-12">
-            <div class="friendship-error" ng-style="{'opacity': friendshipCtrl.friendship_error.opacity}">{{ friendshipCtrl.friendship_error.message }}</div>
+                <div class="col-sm-4 no-left-padding">
+                    <button class="btn btn-success" ng-click="friendshipCtrl.createFriendship()">Request</button>
+                </div>
+            </form>
         </div>
-    </div>
 
-    <div class="friendship-notification-bubble" ng-show="friendshipCtrl.friendshipsNeedingAnswer()">
-        <div class="friendship-notification-inner-bubble"></div>
+        <div class="row friendship-error-row">
+            <div class="col-sm-12">
+                <div class="friendship-error" ng-style="{'opacity': friendshipCtrl.friendship_error.opacity}">{{ friendshipCtrl.friendship_error.message }}</div>
+            </div>
+        </div>
+
+        <div class="friendship-notification-bubble" ng-show="friendshipCtrl.friendshipsNeedingAnswer()">
+            <div class="friendship-notification-inner-bubble"></div>
+        </div>
+
     </div>
 
 </div>

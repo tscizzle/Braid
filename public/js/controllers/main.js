@@ -74,7 +74,6 @@ angular.module('braidController', [])
 
         vm.login_object = true;
         vm.page_title = 'Braid';
-        vm.sound_on = false;
         vm.friend_users = [];
         vm.friendships = [];
         vm.selected_convo = undefined;

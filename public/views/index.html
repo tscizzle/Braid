@@ -71,7 +71,7 @@
 
         <div id="chat-view" ng-if="mainCtrl.selected_user">
             <div class="row">
-                <div id="message-view-col" class="col-sm-6 col-sm-offset-3">
+                <div id="message-view-col" class="col-sm-6 col-sm-offset-4">
                     <braid-messages selected_convo="mainCtrl.selected_convo"
                                     selected_user="mainCtrl.selected_user"
                                     friend_user_map="mainCtrl.friend_user_map"
@@ -79,15 +79,16 @@
                                     sound_on="mainCtrl.sound_on">
                     </braid-messages>
                 </div>
-            </div>
 
-            <!-- slide in from right -->
-            <braid-friendships friend_users="mainCtrl.friend_users"
-                               friendships="mainCtrl.friendships"
-                               selected_convo="mainCtrl.selected_convo"
-                               selected_user="mainCtrl.selected_user"
-                               friend_user_map="mainCtrl.friend_user_map">
-            </braid-friendships>
+                <div class="col-sm-2">
+                    <braid-friendships friend_users="mainCtrl.friend_users"
+                                       friendships="mainCtrl.friendships"
+                                       selected_convo="mainCtrl.selected_convo"
+                                       selected_user="mainCtrl.selected_user"
+                                       friend_user_map="mainCtrl.friend_user_map">
+                    </braid-friendships>
+                </div>
+            </div>
         </div>
 
 
