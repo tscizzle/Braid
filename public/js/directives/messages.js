@@ -213,6 +213,26 @@ angular.module('messagesDirective', [])
             return thisColorIndex;
         };
 
+        vm.typingIndicatorColor = function() {
+            return vm.other_user_typing_color
+        };
+
+        vm.typingIndicatorTriangleColor = function() {
+            return vm.other_user_typing_color + " transparent"
+        };
+
+        vm.userIsTyping = function() {
+            var recipient = partnerIdFromSelectedConvo();
+            if (vm.selected_strand) {
+                var message_color_number = vm.selected_strand.color_number
+                var typing_color = STRAND_COLOR_ORDER[message_color_number]
+            }
+            else {
+                var typing_color = STRAND_COLOR_ORDER[-1]
+            }
+            socket.emit('this_user_typing', recipient, typing_color);
+        };
+
         vm.paintStrand = function(message) {
             var message_color_number;
             var faded = false;
@@ -258,10 +278,6 @@ angular.module('messagesDirective', [])
             markMessagesAsRead();
         };
 
-        vm.userIsTyping = function() {
-            var recipient = partnerIdFromSelectedConvo();
-            socket.emit('this_user_typing', recipient);
-        };
 
         vm.otherUserIsTyping = function() {
             var now = new Date();
@@ -387,9 +403,10 @@ angular.module('messagesDirective', [])
             };
         });
 
-        socket.on('other_user_typing', function(recipient) {
+        socket.on('other_user_typing', function(recipient, typing_color) {
             if (vm.selected_user) {
                 if (vm.selected_user._id === recipient) {
+                    vm.other_user_typing_color = typing_color;
                     vm.last_typed = new Date();
                 };
             };
@@ -476,6 +493,7 @@ angular.module('messagesDirective', [])
         vm.hovered_strand = undefined;
         vm.sendable_text_focus = false;
         vm.last_typed = undefined;
+        vm.other_user_typing_color = undefined;
         vm.last_time_read = undefined;
         vm.last_message_received_sound = undefined;
         vm.newMessageFormData = {};
