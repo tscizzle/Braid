@@ -213,23 +213,10 @@ angular.module('messagesDirective', [])
             return thisColorIndex;
         };
 
-        vm.typingIndicatorColor = function() {
-            return vm.other_user_typing_color
-        };
-
-        vm.typingIndicatorTriangleColor = function() {
-            return vm.other_user_typing_color + " transparent"
-        };
-
         vm.userIsTyping = function() {
             var recipient = partnerIdFromSelectedConvo();
-            if (vm.selected_strand) {
-                var message_color_number = vm.selected_strand.color_number
-                var typing_color = STRAND_COLOR_ORDER[message_color_number]
-            }
-            else {
-                var typing_color = STRAND_COLOR_ORDER[-1]
-            }
+            var color_number = vm.selected_strand ? vm.selected_strand.color_number : -1;
+            var typing_color = STRAND_COLOR_ORDER[color_number];
             socket.emit('this_user_typing', recipient, typing_color);
         };
 
