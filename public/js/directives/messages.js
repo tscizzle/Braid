@@ -3,7 +3,6 @@ angular.module('messagesDirective', [])
     .controller('messageController', ['$scope', '$window', 'focus', 'socket', 'Messages', 'Strands', function($scope, $window, focus, socket, Messages, Strands) {
 
         var vm = this;
-        window.VM = vm;
 
 
         // define CRUD functions used in the template
@@ -353,6 +352,17 @@ angular.module('messagesDirective', [])
             };
         };
 
+        var markStrandAsAddressed = function() {
+            if (vm.selected_strand && vm.selected_convo) {
+
+                Strands.markStrandAsAddressed(vm.selected_strand._id, vm.selected_convo._id)
+                    .success(function(data) {
+                        vm.strands = data;
+                    });
+
+            };
+        };
+
         var num_messages_watcher = function(scope) {return vm.num_messages;};
         var messages_watcher = function(scope) {return vm.messages;};
         var strands_watcher = function(scope) {return vm.strands;};
@@ -367,6 +377,7 @@ angular.module('messagesDirective', [])
         $scope.$watch(selected_convo_watcher, resetNumMessages);
         $scope.$watch(messages_watcher, resetPageTitle);
         $scope.$watchGroup([messages_watcher, selected_strand_watcher], resetMostRecentTimeRead);
+        $scope.$watch(selected_strand_watcher, markStrandAsAddressed);
 
 
         // register socket listeners
@@ -386,6 +397,7 @@ angular.module('messagesDirective', [])
                 ooooh.play();
                 vm.last_message_received_sound = new Date();
             };
+
         });
 
         socket.on('other_user_typing', function(recipient) {

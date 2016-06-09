@@ -41,6 +41,11 @@
     right: 0;
 }
 
+.hovered-messages {
+    top: -1px;
+    left: -1px;
+}
+
 .hovered-messages .bubble {
     box-shadow: 2px 2px 2px #777;
 }

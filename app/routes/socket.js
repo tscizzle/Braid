@@ -5,6 +5,8 @@ module.exports = function(io) {
 
     return function(socket) {
 
+        // TODO: put auth around sockets?
+
         socket.on('room:join', function(user_data) {
             // leave any other rooms
             _.each(socket.rooms, function(room) {

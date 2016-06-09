@@ -106,7 +106,7 @@ module.exports = function(app, io) {
             $or: [{requester_id: req.user._id}, {target_id: req.user._id}],
             status: 'accepted'
         }, function(err, friendships) {
-            var friend_ids = friendships.map(function(friendship) {
+            var friend_ids = _.map(friendships, function(friendship) {
                 if (friendship.requester_id.equals(req.user._id)) {
                     return friendship.target_id;
                 } else if (friendship.target_id.equals(req.user._id)) {
@@ -165,7 +165,7 @@ module.exports = function(app, io) {
             $or: [{requester_id: req.user._id}, {target_id: req.user._id}],
             status: 'accepted'
         }, function(err, friendships) {
-            var friend_ids = friendships.map(function(friendship) {
+            var friend_ids = _.map(friendships, function(friendship) {
                 if (friendship.requester_id.equals(req.user._id)) {
                     return friendship.target_id;
                 } else if (friendship.target_id.equals(req.user._id)) {
@@ -252,6 +252,9 @@ module.exports = function(app, io) {
                              bodyUserId0OrUserId1IsUser,
                              bodyOtherUserIdXIsFriend);
 
+    app.post('/api/markStrandAsAddressed/:strand_id/:convo_id', resourceBelongsToUser(['params', 'strand_id'], Strand),
+                                                                resourceBelongsToUser(['params', 'convo_id'], Convo));
+
     app.get('/api/convos/:user_id', resourceBelongsToUser(['params', 'user_id'], User));
 
     app.post('/api/convos', bodyUserId0OrUserId1IsUser,
@@ -327,6 +330,43 @@ module.exports = function(app, io) {
         }, function(err, message) {
             if (err) return res.status(500).send(err);
 
+            // if the message is in a strand, mark that strand as unaddressed for the receiver of the message
+            if (req.body.strand_id) {
+
+                Strand.findOne({
+                    _id: req.body.strand_id
+                }, function(err, strand) {
+                    if (err) {
+                        console.error('Error getting the strand in message creation: ', err);
+                        return;
+                    };
+
+                    if (strand) {
+                        if (strand.user_id_0 == req.body.receiver_id) {
+                            var addressed_doc = {'addressed.user_id_0': false};
+                        } else if (strand.user_id_1 == req.body.receiver_id) {
+                            var addressed_doc = {'addressed.user_id_1': false};
+                        } else {
+                            console.error('Neither of the strand\'s users is the receiver of the message.');
+                            return;
+                        };
+
+                        Strand.update({
+                            _id: req.body.strand_id
+                        }, {
+                            $set: addressed_doc
+                        }, function(err, numAffected) {
+                            if (err) {
+                                console.error('Error marking the strand as unaddressed in message creation: ', err);
+                                return;
+                            };
+                        });
+
+                    };
+                });
+
+            };
+
             Message.find({
                 'convo_id': req.body.convo_id
             }).sort({
@@ -339,6 +379,7 @@ module.exports = function(app, io) {
                 messages.reverse();
                 return res.json(messages);
             });
+
         });
 
     });
@@ -477,7 +518,7 @@ module.exports = function(app, io) {
                 var user_ids = [convo.user_id_0, convo.user_id_1];
 
                 _.each(user_ids, function(user_id) {
-                    io.to(user_id).emit('messages:receive_update', {convo_id: req.params.convo_id, 'marked': true});
+                    io.to(user_id).emit('messages:receive_update', {convo_id: req.params.convo_id});
                 });
             });
 
@@ -496,9 +537,6 @@ module.exports = function(app, io) {
         });
 
     });
-
-
-
 
     // --- get strands for a convo
     app.get('/api/strands/:convo_id', function(req, res) {
@@ -531,10 +569,49 @@ module.exports = function(app, io) {
 
                 return res.json({strands: strands, new_strand: strand});
             });
+
         });
 
     });
 
+    // --- mark strand as addressed and send back strands for the convo after update
+    app.post('/api/markStrandAsAddressed/:strand_id/:convo_id', function(req, res) {
+
+        Strand.findOne({
+            _id: req.params.strand_id
+        }, function(err, strand) {
+            if (err) return res.status(500).send(err);
+
+            if (strand.user_id_0.equals(req.user._id)) {
+                var addressed_doc = {'addressed.user_id_0': true};
+            } else if (strand.user_id_1.equals(req.user._id)) {
+                var addressed_doc = {'addressed.user_id_1': true};
+            } else {
+                return res.status(422).json({
+                    err: 'Neither of the strand\'s users is the logged in user.'
+                });
+            };
+
+            Strand.update({
+                _id: req.params.strand_id
+            }, {
+                $set: addressed_doc
+            }, function(err, numAffected) {
+                if (err) return res.status(500).send(err);
+
+                Strand.find({
+                    'convo_id': req.params.convo_id
+                }, function(err, strands) {
+                    if (err) return res.status(500).send(err);
+
+                    return res.json(strands);
+                });
+
+            });
+
+        });
+
+    });
 
     // --- get convos for a user
     app.get('/api/convos/:user_id', function(req, res) {
@@ -620,7 +697,7 @@ module.exports = function(app, io) {
         }, function(err, friendships) {
             if (err) return res.status(500).send(err);
 
-            var friend_ids = friendships.map(function(friendship) {
+            var friend_ids = _.map(friendships, function(friendship) {
                 if (friendship.requester_id == req.params.user_id) {
                     return friendship.target_id;
                 } else if (friendship.target_id == req.params.user_id) {

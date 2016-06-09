@@ -8,6 +8,9 @@ angular.module('strandService', [])
             },
             create: function(strandData) {
                 return $http.post('/api/strands', strandData);
+            },
+            markStrandAsAddressed: function(strand_id, convo_id) {
+                return $http.post('/api/markStrandAsAddressed/' + strand_id + '/' + convo_id);
             }
         };
 

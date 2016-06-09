@@ -11,7 +11,11 @@ module.exports = function(io) {
         color_number: {type: Number, required: true},
         time_created: {type: Date, required: true},
         user_id_0: {type: ObjectId, ref: 'User', required: true},
-        user_id_1: {type: ObjectId, ref: 'User', required: true}
+        user_id_1: {type: ObjectId, ref: 'User', required: true},
+        addressed: {
+            user_id_0: {type: Boolean, default: true},
+            user_id_1: {type: Boolean, default: true},
+        }
     });
 
     // if the model already exists, use the existing model

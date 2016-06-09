@@ -4,28 +4,25 @@ angular.module('queueDirective', [])
 
         var vm = this;
 
+
         // define page control functions used in the template
 
         vm.unaddressedStrands = function() {
             if (vm.selected_user) {
-                // TODO: make this "unaddressed" instead of "unread", where to
-                // "address" a message it doesn't just have to be visible but
-                // actually has to have its strand selected since being sent
-                var unreadMessages = _.filter(vm.messages, function(message) {
-                    return message.receiver_id === vm.selected_user._id && !message.time_read;
-                });
-                var unreadStrands = [];
-                var already_handled_strands = [];
-                _.each(unreadMessages, function(message) {
+                var unaddressed_strands = [];
+                var unique_strand_ids = [];
+                _.each(vm.messages, function(message) {
                     var strand_id = message.strand_id;
-                    if (strand_id) {
-                        if (already_handled_strands.indexOf(strand_id) === -1) {
-                            unreadStrands.push(vm.strand_map[strand_id]);
-                            already_handled_strands.push(strand_id);
+                    if (strand_id && unique_strand_ids.indexOf(strand_id) === -1) {
+                        unique_strand_ids.push(strand_id);
+                        var strand = vm.strand_map[strand_id];
+                        if (strand && strandIsUnaddressed(strand)) {
+                            unaddressed_strands.push(strand);
                         };
                     };
                 });
-                return unreadStrands;
+                // TODO: order by time_sent of last message
+                return unaddressed_strands;
             };
         };
 
@@ -37,12 +34,10 @@ angular.module('queueDirective', [])
             var strand_messages = _.filter(vm.messages, function(message) {
                 return message.strand_id === strand._id;
             });
-            console.log('strand_messages', strand_messages);
             if (strand_messages.length > 0) {
                 var strands_last_message = _.max(strand_messages, function(message) {
-                    return message.time_sent;
+                    return new Date(message.time_sent);
                 });
-                console.log('strands_last_message', strands_last_message);
                 var text = strands_last_message.text;
                 var text_length = text.length;
                 var PREVIEW_LENGTH = 15;
@@ -52,6 +47,14 @@ angular.module('queueDirective', [])
                     return text.slice(0, 15) + ' ...';
                 };
             };
+        };
+
+
+        // helpers
+
+        var strandIsUnaddressed = function(strand) {
+            return ((vm.selected_user._id === strand.user_id_0 && !strand.addressed.user_id_0) ||
+                    (vm.selected_user._id === strand.user_id_1 && !strand.addressed.user_id_1));
         };
 
 
@@ -73,10 +76,6 @@ angular.module('queueDirective', [])
             '#FFC99E': '#FFE6C2',
             '#F2969F': '#F2C2AE'
         };
-
-        // initialization
-
-
 
     }])
 
