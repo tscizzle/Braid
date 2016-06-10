@@ -401,7 +401,7 @@ angular.module('messagesDirective', [])
             };
 
             // if the new message is on the current strand, mark the current strand as addressed
-            if (vm.selected_strand && vm.selected_strand._id === data.strand_id) {
+            if (vm.selected_strand && vm.selected_user && vm.selected_strand._id === data.strand_id && vm.selected_user._id === data.receiver_id) {
                 markStrandAsAddressed();
             };
         });

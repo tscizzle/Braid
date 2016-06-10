@@ -18,13 +18,30 @@ module.exports = function(io) {
     });
 
     messageSchema.post('save', function() {
-        io.to(this.receiver_id).emit('messages:receive_update', {convo_id: this.convo_id, play_message_sound: true});
-        io.to(this.sender_id).emit('messages:receive_update', {convo_id: this.convo_id});
+        io.to(this.receiver_id).emit('messages:receive_update', {
+            convo_id: this.convo_id,
+            strand_id: this.strand_id,
+            receiver_id: this.receiver_id,
+            play_message_sound: true
+        });
+        io.to(this.sender_id).emit('messages:receive_update', {
+            convo_id: this.convo_id,
+            strand_id: this.strand_id,
+            receiver_id: this.receiver_id
+        });
     });
 
     messageSchema.post('remove', function() {
-        io.to(this.receiver_id).emit('messages:receive_update', {convo_id: this.convo_id});
-        io.to(this.sender_id).emit('messages:receive_update', {convo_id: this.convo_id});
+        io.to(this.receiver_id).emit('messages:receive_update', {
+            convo_id: this.convo_id,
+            strand_id: this.strand_id,
+            receiver_id: this.receiver_id
+        });
+        io.to(this.sender_id).emit('messages:receive_update', {
+            convo_id: this.convo_id,
+            strand_id: this.strand_id,
+            receiver_id: this.receiver_id
+        });
     });
 
     // if the model already exists, use the existing model
