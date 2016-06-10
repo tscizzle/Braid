@@ -385,10 +385,8 @@ angular.module('messagesDirective', [])
         // register socket listeners
 
         socket.on('messages:receive_update', function(data) {
-            if (vm.selected_convo) {
-                if (data.convo_id == vm.selected_convo._id) {
-                    refreshMessages();
-                };
+            if (vm.selected_convo && data.convo_id == vm.selected_convo._id) {
+                refreshMessages();
             };
 
             var now = new Date();
@@ -403,11 +401,9 @@ angular.module('messagesDirective', [])
         });
 
         socket.on('other_user_typing', function(recipient, typing_color) {
-            if (vm.selected_user) {
-                if (vm.selected_user._id === recipient) {
-                    vm.other_user_typing_color = typing_color;
-                    vm.last_typed = new Date();
-                };
+            if (vm.selected_user && vm.selected_user._id === recipient) {
+                vm.other_user_typing_color = typing_color;
+                vm.last_typed = new Date();
             };
         });
 

@@ -9,7 +9,7 @@ module.exports = function(io) {
 
         socket.on('room:join', function(user_data) {
             // leave any other rooms
-            _.each(socket.rooms, function(room) {
+            _.each(socket.adapter.rooms, function(room) {
                 socket.leave(room);
             });
 
@@ -18,7 +18,7 @@ module.exports = function(io) {
         });
 
         socket.on('this_user_typing', function(recipient, typing_color) {
-            io.to(recipient).emit('other_user_typing', recipient, typing_color)
+            io.to(recipient).emit('other_user_typing', recipient, typing_color);
         });
 
     };
