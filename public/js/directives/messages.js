@@ -385,10 +385,12 @@ angular.module('messagesDirective', [])
         // register socket listeners
 
         socket.on('messages:receive_update', function(data) {
+            // refresh messages
             if (vm.selected_convo && data.convo_id == vm.selected_convo._id) {
                 refreshMessages();
             };
 
+            // play a sound
             var now = new Date();
             var SECOND = 1000;
             var just_received_message_sound = now - vm.last_message_received_sound < SECOND;
@@ -398,6 +400,10 @@ angular.module('messagesDirective', [])
                 vm.last_message_received_sound = new Date();
             };
 
+            // if the new message is on the current strand, mark the current strand as addressed
+            if (vm.selected_strand && vm.selected_strand._id === data.strand_id) {
+                markStrandAsAddressed();
+            };
         });
 
         socket.on('other_user_typing', function(recipient, typing_color) {

@@ -22,7 +22,7 @@ angular.module('queueDirective', [])
                     };
                 });
                 var sorted_unaddressed_strands = _.sortBy(unaddressed_strands, function(strand) {
-                    var strands_last_message = mostRecentMessageInStrand(strand);
+                    var strands_last_message = lastMessageInStrand(strand);
                     return strands_last_message ? new Date(strands_last_message.time_sent) : new Date(10e13);
                 });
                 return sorted_unaddressed_strands;
@@ -60,7 +60,7 @@ angular.module('queueDirective', [])
                     (vm.selected_user._id === strand.user_id_1 && !strand.addressed.user_id_1));
         };
 
-        var mostRecentMessageInStrand = function(strand) {
+        var lastMessageInStrand = function(strand) {
             var strand_messages = _.filter(vm.messages, function(message) {
                 return message.strand_id === strand._id;
             });
