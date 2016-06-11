@@ -1,13 +1,33 @@
 angular.module('queueDirective', [])
 
-    .controller('queueController', [function() {
+    .controller('queueController', ['$scope', function($scope) {
 
         var vm = this;
 
 
         // define page control functions used in the template
 
-        vm.unaddressedStrands = function() {
+        vm.strandColor = function(strand) {
+            return STRAND_COLOR_ORDER[strand.color_number];
+        };
+
+        vm.strandPreview = function(strand) {
+            var strand_messages = _.filter(vm.messages, function(message) {
+                return message.strand_id === strand._id;
+            });
+            if (strand_messages.length > 0) {
+                var strands_last_message = _.max(strand_messages, function(message) {
+                    return new Date(message.time_sent);
+                });
+                var text = strands_last_message.text;
+                return text;
+            };
+        };
+
+
+        // register listeners
+
+        var refreshUnaddressedStrands = function() {
             if (vm.selected_user) {
                 var unaddressed_strands = [];
                 var unique_strand_ids = [];
@@ -25,32 +45,13 @@ angular.module('queueDirective', [])
                     var strands_last_message = lastMessageInStrand(strand);
                     return strands_last_message ? new Date(strands_last_message.time_sent) : new Date(10e13);
                 });
-                return sorted_unaddressed_strands;
+                vm.unaddressed_strands = sorted_unaddressed_strands;
             };
         };
 
-        vm.strandColor = function(strand) {
-            return STRAND_COLOR_ORDER[strand.color_number];
-        };
-
-        vm.strandPreview = function(strand) {
-            var strand_messages = _.filter(vm.messages, function(message) {
-                return message.strand_id === strand._id;
-            });
-            if (strand_messages.length > 0) {
-                var strands_last_message = _.max(strand_messages, function(message) {
-                    return new Date(message.time_sent);
-                });
-                var text = strands_last_message.text;
-                var text_length = text.length;
-                var PREVIEW_LENGTH = 15;
-                if (text_length <= PREVIEW_LENGTH) {
-                    return text;
-                } else {
-                    return text.slice(0, 15) + ' ...';
-                };
-            };
-        };
+        var messages_watcher = function(scope) {return vm.messages;};
+        var strand_map_watcher = function(scope) {return vm.strand_map;};
+        $scope.$watchGroup([messages_watcher, strand_map_watcher], refreshUnaddressedStrands);
 
 
         // helpers
@@ -89,6 +90,13 @@ angular.module('queueDirective', [])
             '#FFC99E': '#FFE6C2',
             '#F2969F': '#F2C2AE'
         };
+
+
+        // initialization
+
+        vm.unaddressed_strands = [];
+
+        refreshUnaddressedStrands();
 
     }])
 

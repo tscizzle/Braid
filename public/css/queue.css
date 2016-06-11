@@ -8,16 +8,16 @@
 .strand-in-list {
     margin-top: 10px;
     margin-right: 10px;
-    width: 75%;
     height: 40px;
     display: table;
     text-align: right;
+    clear: both;
 }
 
 .strand-in-list span {
     display: table-cell;
-    padding-right: 10px;
-    padding-left: 10px;
+    padding-right: 15px;
+    padding-left: 15px;
     vertical-align: middle;
     cursor: pointer;
     position: relative;

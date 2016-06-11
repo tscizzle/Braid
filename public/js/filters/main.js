@@ -25,7 +25,7 @@ angular.module('braidFilters', [])
     })
 
     .filter('username', function() {
-        return function(user_id, user_map, third) {
+        return function(user_id, user_map) {
             if (user_id) {
                 if (user_map[user_id]) {
                     return user_map[user_id].username;
@@ -58,4 +58,16 @@ angular.module('braidFilters', [])
 
             return joined_formats;
         };
-    }]);
+    }])
+
+    .filter('cutoffText', function() {
+        return function(text) {
+            var text_length = text.length;
+            var PREVIEW_LENGTH = 15;
+            if (text_length <= PREVIEW_LENGTH) {
+                return text;
+            } else {
+                return text.slice(0, PREVIEW_LENGTH) + '...';
+            };
+        };
+    });

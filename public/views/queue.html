@@ -2,8 +2,8 @@
 
     <div class="row">
         <div class="col-sm-12">
-            <div class="pull-right strand-in-list" ng-click="queueCtrl.selected_strand=strand" ng-repeat="strand in queueCtrl.unaddressedStrands()">
-                <span ng-style="{'background-color': queueCtrl.strandColor(strand)}">{{ queueCtrl.strandPreview(strand) }}</span>
+            <div class="pull-right strand-in-list" ng-click="queueCtrl.selected_strand=strand" ng-repeat="strand in queueCtrl.unaddressed_strands">
+                <span ng-style="{'background-color': queueCtrl.strandColor(strand)}">{{ queueCtrl.strandPreview(strand) | cutoffText }}</span>
             </div>
         </div>
     </div>
