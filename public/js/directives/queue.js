@@ -51,7 +51,8 @@ angular.module('queueDirective', [])
 
         var messages_watcher = function(scope) {return vm.messages;};
         var strand_map_watcher = function(scope) {return vm.strand_map;};
-        $scope.$watchGroup([messages_watcher, strand_map_watcher], refreshUnaddressedStrands);
+        var selected_strand_watcher = function(scope) {return vm.selected_strand;};
+        $scope.$watchGroup([messages_watcher, strand_map_watcher, selected_strand_watcher], refreshUnaddressedStrands);
 
 
         // helpers
