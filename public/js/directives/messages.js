@@ -1,6 +1,6 @@
 angular.module('messagesDirective', [])
 
-    .controller('messageController', ['$scope', '$window', 'focus', 'socket', 'Messages', 'Strands', function($scope, $window, focus, socket, Messages, Strands) {
+    .controller('messageController', ['$scope', '$window', 'focus', 'socket', 'helpers', 'Messages', 'Strands', 'DEFAULT_NUM_MESSAGES', function($scope, $window, focus, socket, helpers, Messages, Strands, DEFAULT_NUM_MESSAGES) {
 
         var vm = this;
 
@@ -25,7 +25,7 @@ angular.module('messagesDirective', [])
                     // create a new strand
                     Strands.create(vm.newStrandFormData)
                         .success(function(strand_data) {
-                            vm.strands = strand_data.strands;
+                            vm.strands = helpers.softRefreshObjectList(vm.strands, strand_data.strands);
                             vm.newMessageFormData.strand_id = strand_data.new_strand._id;
                             var message_ids = vm.primed_messages.map(function(message) {return message._id});
 
@@ -33,14 +33,14 @@ angular.module('messagesDirective', [])
                             // update the primed messages to be part of the new strand
                             Messages.assignMessagesToStrand(message_ids, strand_data.new_strand._id, vm.selected_convo._id, vm.num_messages)
                                 .success(function(assign_messages_data) {
-                                    vm.messages = assign_messages_data;
+                                    vm.messages = helpers.softRefreshObjectList(vm.messages, assign_messages_data);
 
                                     // create the new message as part of the new strand
                                     vm.num_messages += 1;
                                     Messages.create(vm.newMessageFormData, vm.num_messages)
                                         .success(function(create_messages_data) {
                                             vm.newMessageFormData = {};
-                                            vm.messages = create_messages_data;
+                                            vm.messages = helpers.softRefreshObjectList(vm.messages, create_messages_data);
                                             vm.selected_strand = strand_data.new_strand;
                                             vm.primed_messages = [];
                                         });
@@ -58,7 +58,7 @@ angular.module('messagesDirective', [])
                     Messages.create(vm.newMessageFormData, vm.num_messages)
                         .success(function(create_messages_data) {
                             vm.newMessageFormData = {};
-                            vm.messages = create_messages_data;
+                            vm.messages = helpers.softRefreshObjectList(vm.messages, create_messages_data);
                         });
 
                 };
@@ -70,7 +70,7 @@ angular.module('messagesDirective', [])
 
                 Messages.delete(message_id, vm.selected_convo._id, vm.num_messages)
                     .success(function(data) {
-                        vm.messages = data;
+                        vm.messages = helpers.softRefreshObjectList(vm.messages, data);
                         vm.primed_messages = vm.primed_messages.filter(function(primed_message) {
                             return message_id !== primed_message._id;
                         });
@@ -127,6 +127,16 @@ angular.module('messagesDirective', [])
         };
 
         vm.toggleMessage = function(message, event) {
+            // mark the message as addressed
+            if (vm.selected_convo) {
+
+                Messages.markMessageAsAddressed(message._id, vm.selected_convo._id, vm.num_messages)
+                    .success(function(data) {
+                        vm.messages = helpers.softRefreshObjectList(vm.messages, data);
+                    });
+
+            };
+
             // if the click was on a link, don't toggle the message
             var target = event.target || event.srcElement;
             if (target.tagName === 'A') {
@@ -290,7 +300,7 @@ angular.module('messagesDirective', [])
 
                 Messages.get(vm.selected_convo._id, vm.num_messages)
                     .success(function(data) {
-                        vm.messages = data;
+                        vm.messages = helpers.softRefreshObjectList(vm.messages, data);
                     });
 
             } else {
@@ -354,12 +364,13 @@ angular.module('messagesDirective', [])
             };
         };
 
-        var markStrandAsAddressed = function() {
+        var markStrandMessagesAsAddressed = function() {
             if (vm.selected_strand && vm.selected_convo) {
+                var timestamp = new Date();
 
-                Strands.markStrandAsAddressed(vm.selected_strand._id, vm.selected_convo._id)
+                Messages.markStrandMessagesAsAddressed(vm.selected_strand._id, vm.selected_convo._id, timestamp, vm.num_messages)
                     .success(function(data) {
-                        vm.strands = data;
+                        vm.messages = helpers.softRefreshObjectList(vm.messages, data);
                     });
 
             };
@@ -379,7 +390,7 @@ angular.module('messagesDirective', [])
         $scope.$watch(selected_convo_watcher, resetNumMessages);
         $scope.$watch(messages_watcher, resetPageTitle);
         $scope.$watchGroup([messages_watcher, selected_strand_watcher], resetMostRecentTimeRead);
-        $scope.$watch(selected_strand_watcher, markStrandAsAddressed);
+        $scope.$watch(selected_strand_watcher, markStrandMessagesAsAddressed);
 
 
         // register socket listeners
@@ -402,7 +413,7 @@ angular.module('messagesDirective', [])
 
             // if the new message is on the current strand, mark the current strand as addressed
             if (vm.selected_strand && vm.selected_user && vm.selected_strand._id === data.strand_id && vm.selected_user._id === data.receiver_id) {
-                markStrandAsAddressed();
+                markStrandMessagesAsAddressed();
             };
         });
 
@@ -432,7 +443,7 @@ angular.module('messagesDirective', [])
 
                 Strands.get(vm.selected_convo._id)
                     .success(function(data) {
-                        vm.strands = data;
+                        vm.strands = helpers.softRefreshObjectList(vm.strands, data);
                     });
 
             } else {
@@ -453,7 +464,7 @@ angular.module('messagesDirective', [])
 
                 Messages.markMessagesAsRead(unread_visible_message_ids, vm.selected_convo._id, current_time, vm.num_messages)
                     .success(function(data) {
-                        vm.messages = data;
+                        vm.messages = helpers.softRefreshObjectList(vm.messages, data);
                     });
 
             };
@@ -479,14 +490,11 @@ angular.module('messagesDirective', [])
             '#F2969F': '#F2C2AE'
         };
 
-        var DEFAULT_NUM_MESSAGES = 50;
-
 
         // initialization
 
         vm.messages = [];
         vm.strands = [];
-        vm.num_messages = DEFAULT_NUM_MESSAGES;
         vm.selected_strand = undefined;
         vm.strand_map = {};
         vm.primed_messages = [];
@@ -508,6 +516,7 @@ angular.module('messagesDirective', [])
             scope: {
                 messages: '=',
                 strands: '=',
+                num_messages: '=numMessages',
                 selected_strand: '=selectedStrand',
                 selected_convo: '=selectedConvo',
                 selected_user: '=selectedUser',

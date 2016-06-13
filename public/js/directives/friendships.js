@@ -22,7 +22,8 @@ angular.module('friendshipsDirective', [])
                             last_error: Date.now()
                         };
 
-                        var delay = 5000;
+                        var SECOND = 1000;
+                        var delay = 5 * SECOND;
                         $timeout(friendshipErrorDisappear(delay), delay);
                     });
 
@@ -190,6 +191,7 @@ angular.module('friendshipsDirective', [])
         // initialization
 
         vm.convos = [];
+        vm.show_friendships = true;
         vm.hovered_friendship = undefined;
         vm.friendship_error = {
             message: '',

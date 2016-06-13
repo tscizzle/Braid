@@ -87,3 +87,19 @@
     font-size: 0.8em;
     height: 13vh;
 }
+
+.just-addressed-message {
+    animation: highlight-then-fade 4s;
+}
+
+@keyframes highlight-then-fade {
+  0% {
+    background-color: #DDDDDD;
+  }
+  30% {
+    background-color: #DDDDDD;
+  }
+  100% {
+    background-color: white;
+  }
+}

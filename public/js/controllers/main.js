@@ -1,6 +1,6 @@
 angular.module('braidController', [])
 
-    .controller('mainController', ['$scope', 'socket', 'auth', 'Users', 'Friendships', function($scope, socket, auth, Users, Friendships) {
+    .controller('mainController', ['$scope', 'socket', 'auth', 'Users', 'Friendships', 'DEFAULT_NUM_MESSAGES', function($scope, socket, auth, Users, Friendships, DEFAULT_NUM_MESSAGES) {
 
         var vm = this;
 
@@ -70,12 +70,18 @@ angular.module('braidController', [])
         });
 
 
+        // constants
+
+        var DEFAULT_NUM_MESSAGES = 50;
+
+
         // initialization
 
         vm.login_object = true;
         vm.page_title = 'Braid';
         vm.messages = [];
         vm.strands = [];
+        vm.num_messages = DEFAULT_NUM_MESSAGES;
         vm.friend_users = [];
         vm.friendships = [];
         vm.selected_strand = undefined;

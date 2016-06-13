@@ -246,14 +246,17 @@ module.exports = function(app, io) {
     app.post('/api/markMessagesAsRead/:convo_id', resourceBelongsToUser(['params', 'convo_id'], Convo),
                                                   bodyMessageIdsBelongToUser);
 
+    app.post('/api/markMessageAsAddressed/:message_id/:convo_id', resourceBelongsToUser(['params', 'message_id'], Message),
+                                                                  resourceBelongsToUser(['params', 'convo_id'], Convo));
+
+    app.post('/api/markStrandMessagesAsAddressed/:strand_id/:convo_id', resourceBelongsToUser(['params', 'strand_id'], Strand),
+                                                                        resourceBelongsToUser(['params', 'convo_id'], Convo));
+
     app.get('/api/strands/:convo_id', resourceBelongsToUser(['params', 'convo_id'], Convo));
 
     app.post('/api/strands', resourceBelongsToUser(['body', 'convo_id'], Convo),
                              bodyUserId0OrUserId1IsUser,
                              bodyOtherUserIdXIsFriend);
-
-    app.post('/api/markStrandAsAddressed/:strand_id/:convo_id', resourceBelongsToUser(['params', 'strand_id'], Strand),
-                                                                resourceBelongsToUser(['params', 'convo_id'], Convo));
 
     app.get('/api/convos/:user_id', resourceBelongsToUser(['params', 'user_id'], User));
 
@@ -538,6 +541,68 @@ module.exports = function(app, io) {
 
     });
 
+    // --- mark message as addressed and send back messages for the convo after update
+    app.post('/api/markMessageAsAddressed/:message_id/:convo_id', function(req, res) {
+
+        Message.update({
+            _id: req.params.message_id
+        }, {
+            $set: {
+                addressed: true
+            }
+        }, function(err, numAffected) {
+            if (err) return res.status(500).send(err);
+
+            Message.find({
+                'convo_id': req.params.convo_id
+            }).sort({
+                time_sent: -1
+            }).limit(
+                parseInt(req.body.num_messages)
+            ).exec(function(err, messages) {
+                if (err) return res.status(500).send(err);
+
+                messages.reverse();
+                return res.json(messages);
+            });
+
+        });
+
+    });
+
+    // --- mark messages in the strand as addressed and send back messages for the convo after update
+    app.post('/api/markStrandMessagesAsAddressed/:strand_id/:convo_id', function(req, res) {
+
+        Message.update({
+            strand_id: req.params.strand_id,
+            receiver_id: req.user._id,
+            time_sent: {$lt: new Date(req.body.timestamp)}
+        }, {
+            $set: {
+                addressed: true
+            }
+        }, {
+            multi: true
+        }, function(err, numAffected) {
+            if (err) return res.status(500).send(err);
+
+            Message.find({
+                'convo_id': req.params.convo_id
+            }).sort({
+                time_sent: -1
+            }).limit(
+                parseInt(req.body.num_messages)
+            ).exec(function(err, messages) {
+                if (err) return res.status(500).send(err);
+
+                messages.reverse();
+                return res.json(messages);
+            });
+
+        });
+
+    });
+
     // --- get strands for a convo
     app.get('/api/strands/:convo_id', function(req, res) {
 
@@ -568,45 +633,6 @@ module.exports = function(app, io) {
                 if (err) return res.status(500).send(err);
 
                 return res.json({strands: strands, new_strand: strand});
-            });
-
-        });
-
-    });
-
-    // --- mark strand as addressed and send back strands for the convo after update
-    app.post('/api/markStrandAsAddressed/:strand_id/:convo_id', function(req, res) {
-
-        Strand.findOne({
-            _id: req.params.strand_id
-        }, function(err, strand) {
-            if (err) return res.status(500).send(err);
-
-            if (strand.user_id_0.equals(req.user._id)) {
-                var addressed_doc = {'addressed.user_id_0': true};
-            } else if (strand.user_id_1.equals(req.user._id)) {
-                var addressed_doc = {'addressed.user_id_1': true};
-            } else {
-                return res.status(422).json({
-                    err: 'Neither of the strand\'s users is the logged in user.'
-                });
-            };
-
-            Strand.update({
-                _id: req.params.strand_id
-            }, {
-                $set: addressed_doc
-            }, function(err, numAffected) {
-                if (err) return res.status(500).send(err);
-
-                Strand.find({
-                    'convo_id': req.params.convo_id
-                }, function(err, strands) {
-                    if (err) return res.status(500).send(err);
-
-                    return res.json(strands);
-                });
-
             });
 
         });

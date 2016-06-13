@@ -1,11 +1,32 @@
 angular.module('queueDirective', [])
 
-    .controller('queueController', ['$scope', function($scope) {
+    .controller('queueController', ['$scope', '$timeout', 'helpers', 'Messages', function($scope, $timeout, helpers, Messages) {
 
         var vm = this;
 
 
         // define page control functions used in the template
+
+        vm.clickUnstrandedPreview = function(message) {
+            vm.selected_strand = undefined;
+
+            // scroll to the addressed message
+            var message_element = $('#message-' + message._id);
+            var wrapper_element = $('.message-list-wrapper');
+            var SECOND = 1000;
+            wrapper_element.animate({
+                scrollTop: message_element.position().top + wrapper_element.scrollTop()
+            }, 0.1 * SECOND);
+            // trigger the addressed message animation
+            message_element.addClass('just-addressed-message');
+            $timeout(function() {message_element.removeClass('just-addressed-message');}, 10 * SECOND);
+
+            Messages.markMessageAsAddressed(message._id, vm.selected_convo._id, vm.num_messages)
+                .success(function(data) {
+                    vm.messages = helpers.softRefreshObjectList(vm.messages, data);
+                });
+
+        };
 
         vm.strandColor = function(strand) {
             return STRAND_COLOR_ORDER[strand.color_number];
@@ -27,17 +48,27 @@ angular.module('queueDirective', [])
 
         // register listeners
 
+        var refreshUnaddressedUnstrandedMessages = function() {
+            if (vm.selected_user) {
+                var unaddressed_unstranded_messages = _.filter(vm.messages, function(message) {
+                    return message.receiver_id === vm.selected_user._id  && !message.addressed && !message.strand_id;
+                });
+                var sorted_unaddressed_unstranded_messages = _.sortBy(unaddressed_unstranded_messages, 'time_sent');
+                vm.unaddressed_unstranded_messages = sorted_unaddressed_unstranded_messages;
+            };
+        };
+
         var refreshUnaddressedStrands = function() {
             if (vm.selected_user) {
                 var unaddressed_strands = [];
                 var unique_strand_ids = [];
                 _.each(vm.messages, function(message) {
                     var strand_id = message.strand_id;
-                    if (strand_id && unique_strand_ids.indexOf(strand_id) === -1) {
-                        unique_strand_ids.push(strand_id);
+                    if (message.receiver_id === vm.selected_user._id  && !message.addressed && strand_id && unique_strand_ids.indexOf(strand_id) === -1) {
                         var strand = vm.strand_map[strand_id];
-                        if (strand && strandIsUnaddressed(strand)) {
+                        if (strand) {
                             unaddressed_strands.push(strand);
+                            unique_strand_ids.push(strand_id);
                         };
                     };
                 });
@@ -52,6 +83,7 @@ angular.module('queueDirective', [])
         var messages_watcher = function(scope) {return vm.messages;};
         var strand_map_watcher = function(scope) {return vm.strand_map;};
         var selected_strand_watcher = function(scope) {return vm.selected_strand;};
+        $scope.$watch(messages_watcher, refreshUnaddressedUnstrandedMessages);
         $scope.$watchGroup([messages_watcher, strand_map_watcher, selected_strand_watcher], refreshUnaddressedStrands);
 
 
@@ -95,8 +127,10 @@ angular.module('queueDirective', [])
 
         // initialization
 
+        vm.unaddressed_unstranded_messages = [];
         vm.unaddressed_strands = [];
 
+        refreshUnaddressedUnstrandedMessages();
         refreshUnaddressedStrands();
 
     }])
@@ -107,6 +141,7 @@ angular.module('queueDirective', [])
             scope: {
                 messages: '=',
                 strands: '=',
+                num_messages: '=numMessages',
                 selected_strand: '=selectedStrand',
                 selected_convo: '=selectedConvo',
                 selected_user: '=selectedUser',

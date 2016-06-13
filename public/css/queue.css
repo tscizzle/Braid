@@ -5,7 +5,7 @@
     overflow-y: scroll;
 }
 
-.strand-in-list {
+.preview-in-list {
     margin-top: 10px;
     margin-right: 10px;
     height: 40px;
@@ -14,17 +14,22 @@
     clear: both;
 }
 
-.strand-in-list span {
+.preview-in-list span {
     display: table-cell;
     padding-right: 15px;
     padding-left: 15px;
     vertical-align: middle;
     cursor: pointer;
     position: relative;
+    border-radius: 5px;
 }
 
-.strand-in-list span:hover {
+.preview-in-list span:hover {
     top: -2px;
     left: -2px;
     box-shadow: 2px 2px 2px #777;
+}
+
+.unstranded-preview {
+    background-color: #DDD;
 }

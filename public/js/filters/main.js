@@ -62,12 +62,14 @@ angular.module('braidFilters', [])
 
     .filter('cutoffText', function() {
         return function(text) {
-            var text_length = text.length;
-            var PREVIEW_LENGTH = 15;
-            if (text_length <= PREVIEW_LENGTH) {
-                return text;
-            } else {
-                return text.slice(0, PREVIEW_LENGTH) + '...';
+            if (text) {
+                var text_length = text.length;
+                var PREVIEW_LENGTH = 15;
+                if (text_length <= PREVIEW_LENGTH) {
+                    return text;
+                } else {
+                    return text.slice(0, PREVIEW_LENGTH) + '...';
+                };
             };
         };
     });

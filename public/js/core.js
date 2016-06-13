@@ -23,12 +23,17 @@ var Braid = angular.module('Braid', [
     'convoService',
     'userService',
     'friendshipService',
+    'helperService',
 
     // 3rd-party dependencies
     'btford.socket-io',
     'luegg.directives'
 
 ])
+
     .config(['$locationProvider', function($locationProvider) {
         $locationProvider.html5Mode(true);
-    }]);
+    }])
+
+    // constants
+    .constant('DEFAULT_NUM_MESSAGES', 50);

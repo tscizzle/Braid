@@ -14,7 +14,8 @@ module.exports = function(io) {
         strand_id: {type: ObjectId, ref: 'Strand'},
         time_sent: {type: Date, required: true},
         time_received: Date,
-        time_read: Date
+        time_read: Date,
+        addressed: {type: Boolean, default: false}
     });
 
     messageSchema.post('save', function() {
