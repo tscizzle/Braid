@@ -333,43 +333,6 @@ module.exports = function(app, io) {
         }, function(err, message) {
             if (err) return res.status(500).send(err);
 
-            // if the message is in a strand, mark that strand as unaddressed for the receiver of the message
-            if (req.body.strand_id) {
-
-                Strand.findOne({
-                    _id: req.body.strand_id
-                }, function(err, strand) {
-                    if (err) {
-                        console.error('Error getting the strand in message creation: ', err);
-                        return;
-                    };
-
-                    if (strand) {
-                        if (strand.user_id_0 == req.body.receiver_id) {
-                            var addressed_doc = {'addressed.user_id_0': false};
-                        } else if (strand.user_id_1 == req.body.receiver_id) {
-                            var addressed_doc = {'addressed.user_id_1': false};
-                        } else {
-                            console.error('Neither of the strand\'s users is the receiver of the message.');
-                            return;
-                        };
-
-                        Strand.update({
-                            _id: req.body.strand_id
-                        }, {
-                            $set: addressed_doc
-                        }, function(err, numAffected) {
-                            if (err) {
-                                console.error('Error marking the strand as unaddressed in message creation: ', err);
-                                return;
-                            };
-                        });
-
-                    };
-                });
-
-            };
-
             Message.find({
                 'convo_id': req.body.convo_id
             }).sort({
