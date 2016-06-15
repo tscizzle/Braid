@@ -3,6 +3,7 @@ var Braid = angular.module('Braid', [
     // standard dependencies
     'ngRoute',
     'ngSanitize',
+    'ngAnimate',
 
     // custom dependencies
     'braidController',
