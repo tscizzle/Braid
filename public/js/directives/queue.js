@@ -1,6 +1,6 @@
 angular.module('queueDirective', [])
 
-    .controller('queueController', ['$scope', '$timeout', 'helpers', 'Messages', function($scope, $timeout, helpers, Messages) {
+    .controller('queueController', ['$scope', '$timeout', 'Messages', function($scope, $timeout, Messages) {
 
         var vm = this;
 
@@ -19,11 +19,13 @@ angular.module('queueDirective', [])
             }, 0.1 * SECOND);
             // trigger the addressed message animation
             message_element.addClass('just-addressed-message');
-            $timeout(function() {message_element.removeClass('just-addressed-message');}, 10 * SECOND);
+            // this delay for removing the class should match the animation length,
+            // which isn't great since the animation length is defined in css
+            $timeout(function() {message_element.removeClass('just-addressed-message');}, 2 * SECOND);
 
             Messages.markMessageAsAddressed(message._id, vm.selected_convo._id, vm.num_messages)
                 .success(function(data) {
-                    vm.messages = helpers.softRefreshObjectList(vm.messages, data);
+                    vm.messages = data;
                 });
 
         };

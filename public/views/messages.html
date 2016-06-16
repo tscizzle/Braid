@@ -12,7 +12,7 @@
         <div class="col-sm-12">
             <div class="message-list-wrapper" ng-class="{'clickable': messageCtrl.selected_strand}" ng-click="messageCtrl.clickMessageListWrapper()" scroll-glue>
                 <a class="clickable" ng-show="messageCtrl.showLoadMoreMessagesLink()" ng-click="messageCtrl.increaseNumMessages(); $event.stopPropagation();">Load earlier messages</a>
-                <div id="message-{{message._id}}" class="message-wrapper clickable" ng-class="[messageCtrl.messageUserClass(message), {'hovered-messages': messageCtrl.isOneOfHoveredMessages(message)}]" ng-hide="messageCtrl.messageIsHidden(message)" ng-mouseover="messageCtrl.hoverMessage(message)" ng-mouseleave="messageCtrl.unhoverMessage(message)" ng-click="messageCtrl.toggleMessage(message, $event); $event.stopPropagation();" ng-repeat="message in messageCtrl.messages">
+                <div id="message-{{message._id}}" class="message-wrapper clickable" ng-class="[messageCtrl.messageUserClass(message), {'hovered-messages': messageCtrl.isOneOfHoveredMessages(message)}]" ng-hide="messageCtrl.messageIsHidden(message)" ng-mouseover="messageCtrl.hoverMessage(message)" ng-mouseleave="messageCtrl.unhoverMessage(message)" ng-click="messageCtrl.toggleMessage(message, $event); $event.stopPropagation();" ng-repeat="message in messageCtrl.messages track by message._id">
                     <div class="bubble" ng-style="{'background-color': messageCtrl.paintStrand(message)}">
                         <span class="message-text" ng-bind-html="message.text | linky:'_blank'"></span>
                     </div>

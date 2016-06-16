@@ -88,18 +88,20 @@
     height: 13vh;
 }
 
-.just-addressed-message {
-    animation: highlight-then-fade 4s;
+/* ANIMATIONS */
+
+.just-addressed-message:not(.ng-hide):not(.ng-leave) {
+    animation: highlight-then-fade 2s;
 }
 
 @keyframes highlight-then-fade {
-  0% {
-    background-color: #DDDDDD;
-  }
-  30% {
-    background-color: #DDDDDD;
-  }
-  100% {
-    background-color: white;
-  }
+    0% {
+        background-color: #DDDDDD;
+    }
+    50% {
+        background-color: #DDDDDD;
+    }
+    100% {
+        background-color: white;
+    }
 }

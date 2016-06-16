@@ -12,6 +12,7 @@
     display: table;
     text-align: right;
     clear: both;
+    position: relative;
 }
 
 .preview-in-list span {
@@ -32,4 +33,42 @@
 
 .unstranded-preview {
     background-color: #DDD;
+}
+
+/* ANIMATIONS */
+
+.preview-in-list.ng-leave {
+    animation: fly-out-left 0.5s ease-in;
+}
+
+.preview-in-list.ng-enter {
+    animation: slide-in-down 0.5s ease-out;
+}
+
+@keyframes fly-out-left {
+    0% {
+        opacity: 1;
+        left: 0;
+    }
+    33% {
+        opacity: 1;
+        left: 20px;
+    }
+    67% {
+        opacity: 0;
+    }
+    100% {
+        left: -400px;
+    }
+}
+
+@keyframes slide-in-down {
+    from {
+        opacity: 0;
+        top: -50px;
+    }
+    to {
+        opacity: 1;
+        top: 0;
+    }
 }
