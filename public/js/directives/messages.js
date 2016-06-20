@@ -493,10 +493,6 @@ angular.module('messagesDirective', [])
 
         // initialization
 
-        vm.messages = [];
-        vm.strands = [];
-        vm.selected_strand = undefined;
-        vm.strand_map = {};
         vm.primed_messages = [];
         vm.hovered_message = undefined;
         vm.hovered_strand = undefined;

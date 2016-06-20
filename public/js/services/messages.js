@@ -6,11 +6,11 @@ angular.module('messageService', [])
             get: function(convo_id, num_messages_to_get) {
                 return $http.get('/api/messages/' + convo_id + '/' + num_messages_to_get);
             },
+            getUnreadMessageCounts: function(user_id) {
+                return $http.get('/api/getUnreadMessageCounts/' + user_id);
+            },
             create: function(messageData, num_messages_to_get) {
                 return $http.post('/api/messages/' + num_messages_to_get, messageData);
-            },
-            delete: function(message_id, convo_id, num_messages_to_get) {
-                return $http.delete('/api/messages/' + message_id + '/' + convo_id, {num_messages: num_messages_to_get});
             },
             assignMessagesToStrand: function(message_ids, strand_id, convo_id, num_messages_to_get) {
                 return $http.post('/api/assignMessagesToStrand/' + strand_id + '/' + convo_id, {message_ids: message_ids, num_messages: num_messages_to_get});
@@ -26,6 +26,9 @@ angular.module('messageService', [])
             },
             markStrandMessagesAsAddressed: function(strand_id, convo_id, timestamp, num_messages_to_get) {
                 return $http.post('/api/markStrandMessagesAsAddressed/' + strand_id + '/' + convo_id, {timestamp: timestamp, num_messages: num_messages_to_get});
+            },
+            delete: function(message_id, convo_id, num_messages_to_get) {
+                return $http.delete('/api/messages/' + message_id + '/' + convo_id, {num_messages: num_messages_to_get});
             }
         };
 

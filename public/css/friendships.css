@@ -4,14 +4,11 @@
     border-right: solid 1px #999;
     border-bottom: solid 1px #999;
     border-left: solid 1px #999;
+    position: relative;
 }
 
 .friendship-list-pane .btn {
     font-size: 0.85em;
-}
-
-.friendship-list-pane .selected {
-    background-color: #bbb;
 }
 
 .show-friendships-button-col {
@@ -50,12 +47,55 @@
 
 .friendship-in-list {
     border-bottom: solid 1px #bbb;
-    padding: 5px 5px 5px 10px;
+    padding: 5px 5px 5px 25px;
     margin-right: 20px;
+    position: relative;
+}
+
+.friendship-in-list.accepted {
+    cursor: pointer;
+}
+
+.friendship-in-list.accepted:not(.selected):hover {
+    background-color: #EEE;
+}
+
+.friendship-in-list.selected {
+    background-color: #BBB;
 }
 
 .friendship-needs-answer {
     color: #FF3333;
+}
+
+.convo-unread-notification-bubble {
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    width: 15px;
+    height: 15px;
+    border-radius: 7px;
+    background-color: #5555FF;
+    color: white;
+    display: table;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 0.85em;
+    opacity: 1;
+}
+
+.convo-unread-notification-bubble.ng-hide-add, .convo-unread-notification-bubble.ng-hide-remove {
+    -webkit-transition: opacity 0.5s, bottom 0.5s;
+    -moz-transition: opacity 0.5s, bottom 0.5s;
+    -o-transition: opacity 0.5s, bottom 0.5s;
+    -ms-transition: opacity 0.5s, bottom 0.5s;
+    transition: opacity 0.5s, bottom 0.5s;
+    color: transparent;
+}
+
+.convo-unread-notification-bubble.ng-hide {
+    opacity: 0;
+    bottom: 25px;
 }
 
 .friendship-form-row {
@@ -73,12 +113,27 @@
 
 .friendship-notification-bubble {
     position: absolute;
-    top: 50px;
-    left: 6px;
+    top: 52px;
+    right: -10px;
     width: 18px;
     height: 18px;
     border-radius: 10px;
     background-color: #FF4444;
+    opacity: 1;
+}
+
+.friendship-notification-bubble.ng-hide-add, .friendship-notification-bubble.ng-hide-remove {
+    -webkit-transition: opacity 0.5s, right 0.5s;
+    -moz-transition: opacity 0.5s, right 0.5s;
+    -o-transition: opacity 0.5s, right 0.5s;
+    -ms-transition: opacity 0.5s, right 0.5s;
+    transition: opacity 0.5s, right 0.5s;
+    color: transparent;
+}
+
+.friendship-notification-bubble.ng-hide {
+    opacity: 0;
+    right: 25px;
 }
 
 .friendship-notification-inner-bubble {
@@ -91,20 +146,46 @@
     background-color: white;
 }
 
-.friendship-error-row {
-    position: relative;
+.total-unread-notification-bubble {
+    position: absolute;
+    top: 52px;
+    left: -10px;
+    width: 18px;
+    height: 18px;
+    border-radius: 9px;
+    background-color: #5555FF;
+    color: white;
+    display: table;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 0.9em;
+    opacity: 1;
+}
+
+.total-unread-notification-bubble.ng-hide-add, .total-unread-notification-bubble.ng-hide-remove {
+    -webkit-transition: opacity 0.5s, left 0.5s;
+    -moz-transition: opacity 0.5s, left 0.5s;
+    -o-transition: opacity 0.5s, left 0.5s;
+    -ms-transition: opacity 0.5s, left 0.5s;
+    transition: opacity 0.5s, left 0.5s;
+    color: transparent;
+}
+
+.total-unread-notification-bubble.ng-hide {
+    opacity: 0;
+    left: 25px;
 }
 
 .friendship-error {
+    position: absolute;
+    bottom: -35px;
+    left: -10px;
+    max-width: 100%;
     font-size: 0.85em;
     color: white;
     background-color: #FF5C5C;
     padding: 5px;
     pointer-events: none;
-    position: absolute;
-    top: -5px;
-    left: -10px;
-    max-width: 100%;
     opacity: 0;
     -webkit-transition: opacity 1s;
     -moz-transition: opacity 1s;

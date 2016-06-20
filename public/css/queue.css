@@ -42,7 +42,8 @@
 }
 
 .preview-in-list.ng-enter {
-    animation: slide-in-down 0.5s ease-out;
+    animation: fly-out-left 0.5s ease-in;
+    animation-direction: reverse;
 }
 
 @keyframes fly-out-left {
@@ -59,16 +60,5 @@
     }
     100% {
         left: -400px;
-    }
-}
-
-@keyframes slide-in-down {
-    from {
-        opacity: 0;
-        top: -50px;
-    }
-    to {
-        opacity: 1;
-        top: 0;
     }
 }

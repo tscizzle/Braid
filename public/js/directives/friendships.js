@@ -1,6 +1,6 @@
 angular.module('friendshipsDirective', [])
 
-    .controller('friendshipController', ['$scope', '$timeout', 'socket', 'Friendships', 'Convos', function($scope, $timeout, socket, Friendships, Convos) {
+    .controller('friendshipController', ['$scope', '$timeout', 'socket', 'Messages', 'Friendships', 'Convos', function($scope, $timeout, socket, Messages, Friendships, Convos) {
 
         var vm = this;
 
@@ -86,8 +86,8 @@ angular.module('friendshipsDirective', [])
             return (vm.hovered_friendship === friendship._id || vm.showAcceptButton(friendship)) ? 1 : 0;
         };
 
-        vm.friendshipsNeedingAnswer = function() {
-            return _.filter(vm.friendships, vm.friendshipNeedsAnswer).length > 0;
+        vm.showFriendshipNotificationBubble = function() {
+            return _.filter(vm.friendships, vm.friendshipNeedsAnswer).length > 0 && !vm.show_friendships;
         };
 
         vm.friendshipConvoIsSelected = function(friendship) {
@@ -104,6 +104,23 @@ angular.module('friendshipsDirective', [])
             } else if (friendship_convo) {
                 vm.selected_convo = friendship_convo;
             };
+        };
+
+        vm.showConvoUnreadNotificationBubble = function(friendship) {
+            if (friendship) {
+                return vm.convo_unread_message_counts[friendship._id];
+            };
+        };
+
+        vm.showTotalUnreadNotificationBubble = function() {
+            return vm.totalUnreadMessages() && !vm.show_friendships;
+        };
+
+        vm.totalUnreadMessages = function() {
+            // sum the unread messages from all convos
+            return _.reduce(vm.convo_unread_message_counts, function(memo, num) {
+                return memo + num;
+            }, 0);
         };
 
 
@@ -153,6 +170,22 @@ angular.module('friendshipsDirective', [])
             };
         };
 
+        var refreshUnreadMessageCounts = function() {
+            if (vm.selected_user) {
+
+                Messages.getUnreadMessageCounts(vm.selected_user._id)
+                    .success(function(unread_messages_data) {
+                        _.each(vm.friendships, function(friendship) {
+                            var convo = convoFromFriendship(friendship);
+                            if (convo) {
+                                vm.convo_unread_message_counts[friendship._id] = parseInt(unread_messages_data[convo._id]) || 0;
+                            };
+                        });
+                    });
+
+            };
+        };
+
 
         // register listeners
 
@@ -183,6 +216,10 @@ angular.module('friendshipsDirective', [])
 
         // register socket listeners
 
+        socket.on('messages:receive_update', function() {
+            refreshUnreadMessageCounts();
+        });
+
         socket.on('convos:receive_update', function() {
             refreshConvos();
         });
@@ -193,6 +230,7 @@ angular.module('friendshipsDirective', [])
         vm.convos = [];
         vm.show_friendships = true;
         vm.hovered_friendship = undefined;
+        vm.convo_unread_message_counts = {};
         vm.friendship_error = {
             message: '',
             opacity: 0,
@@ -204,6 +242,7 @@ angular.module('friendshipsDirective', [])
         Friendships.get(vm.selected_user._id)
             .success(function(data) {
                 vm.friendships = data;
+                refreshUnreadMessageCounts();
             });
 
     }])

@@ -228,13 +228,12 @@ module.exports = function(app, io) {
 
     app.get('/api/messages/:convo_id/:num_messages', resourceBelongsToUser(['params', 'convo_id'], Convo));
 
+    app.get('/api/getUnreadMessageCounts/:user_id', resourceBelongsToUser(['params', 'user_id'], User));
+
     app.post('/api/messages/:num_messages', resourceBelongsToUser(['body', 'sender_id'], User),
                                             resourceBelongsToUser(['body', 'strand_id'], Strand),
                                             resourceBelongsToUser(['body', 'convo_id'], Convo),
                                             bodyReceiverIdIsFriend);
-
-    app.delete('/api/messages/:message_id/:convo_id', resourceBelongsToUser(['params', 'message_id'], Message),
-                                                      resourceBelongsToUser(['params', 'convo_id'], Convo));
 
     app.post('/api/assignMessagesToStrand/:strand_id/:convo_id', resourceBelongsToUser(['params', 'strand_id'], Strand),
                                                                  resourceBelongsToUser(['params', 'convo_id'], Convo),
@@ -251,6 +250,9 @@ module.exports = function(app, io) {
 
     app.post('/api/markStrandMessagesAsAddressed/:strand_id/:convo_id', resourceBelongsToUser(['params', 'strand_id'], Strand),
                                                                         resourceBelongsToUser(['params', 'convo_id'], Convo));
+
+    app.delete('/api/messages/:message_id/:convo_id', resourceBelongsToUser(['params', 'message_id'], Message),
+                                                      resourceBelongsToUser(['params', 'convo_id'], Convo));
 
     app.get('/api/strands/:convo_id', resourceBelongsToUser(['params', 'convo_id'], Convo));
 
@@ -320,6 +322,34 @@ module.exports = function(app, io) {
 
     });
 
+    app.get('/api/getUnreadMessageCounts/:user_id', function(req, res) {
+
+        Message.aggregate([{
+            $match: {
+                receiver_id: ObjectId(req.user._id),
+                time_read: {
+                    $exists: false
+                }
+            }
+        }, {
+            $group: {
+                _id: '$convo_id',
+                num_unread_messages: {
+                    $sum: 1
+                }
+            }
+        }]).exec(function(err, message_counts) {
+            if (err) return res.status(500).send(err);
+
+            var convo_unread_message_counts = {};
+            _.each(message_counts, function(message_count) {
+                convo_unread_message_counts[message_count._id] = message_count.num_unread_messages;
+            });
+            return res.json(convo_unread_message_counts);
+        });
+
+    });
+
     // --- create a message and send back the new message_id as well as messages for the convo after creation
     app.post('/api/messages/:num_messages', function(req, res) {
 
@@ -346,35 +376,6 @@ module.exports = function(app, io) {
                 return res.json(messages);
             });
 
-        });
-
-    });
-
-    // --- delete a message and send back messages for the convo after deletion
-    app.delete('/api/messages/:message_id/:convo_id', function(req, res) {
-
-        Message.findOneAndRemove({
-            '_id': req.params.message_id
-        }, function(err, message) {
-            if (err) return res.status(500).send(err);
-
-            // to trigger the middleware
-            if (message) {
-                message.remove();
-            };
-
-            Message.find({
-                'convo_id': req.params.convo_id
-            }).sort({
-                time_sent: -1
-            }).limit(
-                parseInt(req.body.num_messages)
-            ).exec(function(err, messages) {
-                if (err) return res.status(500).send(err);
-
-                messages.reverse();
-                return res.json(messages);
-            });
         });
 
     });
@@ -562,6 +563,35 @@ module.exports = function(app, io) {
                 return res.json(messages);
             });
 
+        });
+
+    });
+
+    // --- delete a message and send back messages for the convo after deletion
+    app.delete('/api/messages/:message_id/:convo_id', function(req, res) {
+
+        Message.findOneAndRemove({
+            '_id': req.params.message_id
+        }, function(err, message) {
+            if (err) return res.status(500).send(err);
+
+            // to trigger the middleware
+            if (message) {
+                message.remove();
+            };
+
+            Message.find({
+                'convo_id': req.params.convo_id
+            }).sort({
+                time_sent: -1
+            }).limit(
+                parseInt(req.body.num_messages)
+            ).exec(function(err, messages) {
+                if (err) return res.status(500).send(err);
+
+                messages.reverse();
+                return res.json(messages);
+            });
         });
 
     });
