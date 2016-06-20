@@ -1,5 +1,11 @@
 angular.module('braidFilters', [])
 
+    .filter('pageTitle', function() {
+        return function(num_notifications) {
+            return num_notifications > 0 ? '(' + num_notifications + ') Braid' : 'Braid';
+        };
+    })
+
     .filter('partner', function() {
         return function(convo, selected_user) {
             if (convo && selected_user) {

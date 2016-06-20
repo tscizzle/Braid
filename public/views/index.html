@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <base href="/">
 
-    <title ng-bind="mainCtrl.page_title">Braid</title>
+    <title ng-bind="mainCtrl.title_notifications | pageTitle">Braid</title>
 
     <link rel="shortcut icon" href="/img/poop_logo.ico">
 
@@ -63,7 +63,7 @@
 
     <braid-navbar login_object="mainCtrl.login_object"
                   selected_user="mainCtrl.selected_user"
-                  page_title="mainCtrl.page_title"
+                  title_notifications="mainCtrl.title_notifications"
                   sound_on="mainCtrl.sound_on">
     </braid-navbar>
 
@@ -93,7 +93,7 @@
                                     selected_user="mainCtrl.selected_user"
                                     strand_map="mainCtrl.strand_map"
                                     friend_user_map="mainCtrl.friend_user_map"
-                                    page_title="mainCtrl.page_title"
+                                    title_notifications="mainCtrl.title_notifications"
                                     sound_on="mainCtrl.sound_on">
                     </braid-messages>
                 </div>
@@ -103,7 +103,8 @@
                                        friendships="mainCtrl.friendships"
                                        selected_convo="mainCtrl.selected_convo"
                                        selected_user="mainCtrl.selected_user"
-                                       friend_user_map="mainCtrl.friend_user_map">
+                                       friend_user_map="mainCtrl.friend_user_map"
+                                       title_notifications="mainCtrl.title_notifications">
                     </braid-friendships>
                 </div>
             </div>

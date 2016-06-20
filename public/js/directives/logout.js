@@ -12,7 +12,7 @@ angular.module('logoutDirective', [])
                 .then(function() {
                     vm.login_object = true;
                     vm.selected_user = undefined;
-                    vm.page_title = 'Braid';
+                    vm.title_notifications = 0;
 
                     $location.path('/');
                     $route.reload();
@@ -27,7 +27,7 @@ angular.module('logoutDirective', [])
             scope: {
                 login_object: '=loginObject',
                 selected_user: '=selectedUser',
-                page_title: '=pageTitle'
+                title_notifications: '=titleNotifications'
             },
             templateUrl: 'views/logout.html',
             controller: 'logoutController',

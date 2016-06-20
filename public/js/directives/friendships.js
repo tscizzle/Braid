@@ -209,9 +209,15 @@ angular.module('friendshipsDirective', [])
             };
         };
 
-        var friend_users_watcher = function(scope) {return vm.friend_users;};
-        var selected_user_watcher = function(scope) {return vm.selected_user;};
+        var resetTitleNotifications = function() {
+            vm.title_notifications = vm.totalUnreadMessages();
+        };
+
+        var friend_users_watcher = function() {return vm.friend_users;};
+        var selected_user_watcher = function() {return vm.selected_user;};
+        var unread_messages_watcher = function() {return vm.totalUnreadMessages()};
         $scope.$watchGroup([friend_users_watcher, selected_user_watcher], refreshConvos);
+        $scope.$watch(unread_messages_watcher, resetTitleNotifications);
 
 
         // register socket listeners
@@ -255,7 +261,8 @@ angular.module('friendshipsDirective', [])
                 friendships: "=",
                 selected_convo: '=selectedConvo',
                 selected_user: '=selectedUser',
-                friend_user_map: '=friendUserMap'
+                friend_user_map: '=friendUserMap',
+                title_notifications: '=titleNotifications'
             },
             templateUrl: 'views/friendships.html',
             controller: 'friendshipController',

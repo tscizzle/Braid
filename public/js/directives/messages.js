@@ -330,29 +330,6 @@ angular.module('messagesDirective', [])
             vm.num_messages = DEFAULT_NUM_MESSAGES;
         };
 
-        var resetPageTitle = function() {
-            if (vm.selected_user) {
-                var received_messages = _.filter(vm.messages, function(message) {
-                    return message.receiver_id === vm.selected_user._id;
-                });
-                var num_received_messages = received_messages.length;
-                var unread_received_messages = _.filter(received_messages, function(message) {
-                    return !message.time_read;
-                });
-                var num_unread_received_messages = unread_received_messages.length;
-
-                if (num_unread_received_messages > 0) {
-                    var num_notifications = num_unread_received_messages;
-                    if (num_received_messages === num_unread_received_messages) {
-                        num_notifications += '+';
-                    };
-                    vm.page_title = '(' + num_notifications + ') Braid';
-                } else {
-                    vm.page_title = 'Braid';
-                };
-            };
-        };
-
         var resetMostRecentTimeRead = function() {
             var visible_messages = _.filter(vm.messages, function(message) {
                 return !vm.messageIsHidden(message) && message.sender_id === vm.selected_user._id;
@@ -376,19 +353,18 @@ angular.module('messagesDirective', [])
             };
         };
 
-        var num_messages_watcher = function(scope) {return vm.num_messages;};
-        var messages_watcher = function(scope) {return vm.messages;};
-        var strands_watcher = function(scope) {return vm.strands;};
-        var selected_strand_watcher = function(scope) {return vm.selected_strand;};
-        var selected_convo_watcher = function(scope) {return vm.selected_convo;};
-        var selected_user_watcher = function(scope) {return vm.selected_user;};
+        var num_messages_watcher = function() {return vm.num_messages;};
+        var messages_watcher = function() {return vm.messages;};
+        var strands_watcher = function() {return vm.strands;};
+        var selected_strand_watcher = function() {return vm.selected_strand;};
+        var selected_convo_watcher = function() {return vm.selected_convo;};
+        var selected_user_watcher = function() {return vm.selected_user;};
         $scope.$watch(selected_strand_watcher, focusSendableTextarea);
         $scope.$watchGroup([num_messages_watcher, selected_strand_watcher, selected_convo_watcher], refreshMessages);
         $scope.$watchGroup([selected_strand_watcher, selected_convo_watcher, selected_user_watcher], clearPrimedMessages);
         $scope.$watchGroup([selected_convo_watcher, selected_user_watcher], deselectStrand);
         $scope.$watch(strands_watcher, refreshStrandMap);
         $scope.$watch(selected_convo_watcher, resetNumMessages);
-        $scope.$watch(messages_watcher, resetPageTitle);
         $scope.$watchGroup([messages_watcher, selected_strand_watcher], resetMostRecentTimeRead);
         $scope.$watch(selected_strand_watcher, markStrandMessagesAsAddressed);
 
@@ -518,7 +494,6 @@ angular.module('messagesDirective', [])
                 selected_user: '=selectedUser',
                 strand_map: '=strandMap',
                 friend_user_map: '=friendUserMap',
-                page_title: '=pageTitle',
                 sound_on: '=soundOn'
             },
             templateUrl: 'views/messages.html',

@@ -82,9 +82,9 @@ angular.module('queueDirective', [])
             };
         };
 
-        var messages_watcher = function(scope) {return vm.messages;};
-        var strand_map_watcher = function(scope) {return vm.strand_map;};
-        var selected_strand_watcher = function(scope) {return vm.selected_strand;};
+        var messages_watcher = function() {return vm.messages;};
+        var strand_map_watcher = function() {return vm.strand_map;};
+        var selected_strand_watcher = function() {return vm.selected_strand;};
         $scope.$watch(messages_watcher, refreshUnaddressedUnstrandedMessages);
         $scope.$watchGroup([messages_watcher, strand_map_watcher, selected_strand_watcher], refreshUnaddressedStrands);
 

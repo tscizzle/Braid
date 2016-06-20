@@ -50,9 +50,9 @@ angular.module('braidController', [])
             };
         };
 
-        var friend_users_watcher = function(scope) {return vm.friend_users;};
-        var friendships_watcher = function(scope) {return vm.friendships;};
-        var selected_user_watcher = function(scope) {return vm.selected_user;};
+        var friend_users_watcher = function() {return vm.friend_users;};
+        var friendships_watcher = function() {return vm.friendships;};
+        var selected_user_watcher = function() {return vm.selected_user;};
         $scope.$watch(friendships_watcher, refreshFriendUsers);
         $scope.$watch(selected_user_watcher, refreshFriendships);
         $scope.$watch(friend_users_watcher, refreshFriendUserMap);
@@ -78,7 +78,7 @@ angular.module('braidController', [])
         // initialization
 
         vm.login_object = true;
-        vm.page_title = 'Braid';
+        vm.title_notifications = 0;
         vm.messages = [];
         vm.strands = [];
         vm.num_messages = DEFAULT_NUM_MESSAGES;
