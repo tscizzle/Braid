@@ -8,8 +8,9 @@ angular.module('messagesDirective', [])
         // define CRUD functions used in the template
 
         vm.createMessage = function() {
+            disableSendButton();
+
             if (vm.newMessageFormData.text && vm.selected_convo && vm.selected_user) {
-                disableSendButton();
 
                 vm.newMessageFormData.convo_id = vm.selected_convo._id;
                 vm.newMessageFormData.sender_id = vm.selected_user._id;
@@ -31,11 +32,11 @@ angular.module('messagesDirective', [])
                             vm.newMessageFormData.strand_id = strand_data.new_strand._id;
                             var message_ids = vm.primed_messages.map(function(message) {return message._id});
 
-
                             // update the primed messages to be part of the new strand
                             Messages.assignMessagesToStrand(message_ids, strand_data.new_strand._id, vm.selected_convo._id, vm.num_messages)
                                 .success(function(assign_messages_data) {
                                     vm.messages = assign_messages_data;
+                                    vm.selected_strand = strand_data.new_strand;
 
                                     // create the new message as part of the new strand
                                     vm.num_messages += 1;
@@ -43,7 +44,6 @@ angular.module('messagesDirective', [])
                                         .success(function(create_messages_data) {
                                             vm.newMessageFormData = {};
                                             vm.messages = create_messages_data;
-                                            vm.selected_strand = strand_data.new_strand;
                                             vm.primed_messages = [];
                                         })
                                         .finally(reenableSendButton);
@@ -68,6 +68,8 @@ angular.module('messagesDirective', [])
                         .finally(reenableSendButton);
 
                 };
+            } else {
+                reenableSendButton();
             };
         };
 
