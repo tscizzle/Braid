@@ -93,7 +93,6 @@ angular.module('braidController', [])
         auth.getLoggedInUser()
             .success(function(data) {
                 vm.selected_user = data.user;
-
                 joinUserSocketRoom();
             });
 

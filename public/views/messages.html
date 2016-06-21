@@ -35,7 +35,7 @@
                         </div>
                     </div>
                     <div class="col-sm-2">
-                        <a type="submit" class="btn btn-primary btn-lg" ng-mousedown="messageCtrl.createMessage()">Send</a>
+                        <a type="submit" class="btn btn-primary btn-lg" ng-mousedown="messageCtrl.createMessage()" ng-disabled="messageCtrl.send_button_disabled">Send</a>
                     </div>
                 </div>
             </form>

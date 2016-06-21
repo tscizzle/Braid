@@ -9,6 +9,8 @@ angular.module('messagesDirective', [])
 
         vm.createMessage = function() {
             if (vm.newMessageFormData.text && vm.selected_convo && vm.selected_user) {
+                disableSendButton();
+
                 vm.newMessageFormData.convo_id = vm.selected_convo._id;
                 vm.newMessageFormData.sender_id = vm.selected_user._id;
                 vm.newMessageFormData.receiver_id = partnerIdFromSelectedConvo();
@@ -43,11 +45,14 @@ angular.module('messagesDirective', [])
                                             vm.messages = create_messages_data;
                                             vm.selected_strand = strand_data.new_strand;
                                             vm.primed_messages = [];
-                                        });
+                                        })
+                                        .finally(reenableSendButton);
 
-                                });
+                                })
+                                .catch(reenableSendButton);
 
-                        });
+                        })
+                        .catch(reenableSendButton);
 
                 // if not responding to a new strand
                 } else {
@@ -59,7 +64,8 @@ angular.module('messagesDirective', [])
                         .success(function(create_messages_data) {
                             vm.newMessageFormData = {};
                             vm.messages = create_messages_data;
-                        });
+                        })
+                        .finally(reenableSendButton);
 
                 };
             };
@@ -404,6 +410,14 @@ angular.module('messagesDirective', [])
 
         // helpers
 
+        var disableSendButton = function() {
+            vm.send_button_disabled = true;
+        };
+
+        var reenableSendButton = function() {
+            vm.send_button_disabled = false;
+        };
+
         var partnerIdFromSelectedConvo = function() {
             if (vm.selected_convo && vm.selected_user) {
                 if (vm.selected_convo.user_id_0 == vm.selected_user._id) {
@@ -472,6 +486,7 @@ angular.module('messagesDirective', [])
         vm.primed_messages = [];
         vm.hovered_message = undefined;
         vm.hovered_strand = undefined;
+        vm.send_button_disabled = false;
         vm.sendable_text_focus = false;
         vm.last_typed = undefined;
         vm.other_user_typing_color = undefined;

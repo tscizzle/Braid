@@ -15,7 +15,8 @@ angular.module('friendshipsDirective', [])
                     .success(function(data) {
                         vm.newFriendshipFormData = {};
                         vm.friendships = data;
-                    }).catch(function(err) {
+                    })
+                    .catch(function(err) {
                         vm.friendship_error = {
                             message: err.data.err,
                             opacity: 1,
