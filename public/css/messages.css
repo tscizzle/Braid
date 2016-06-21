@@ -88,6 +88,10 @@
     height: 13vh;
 }
 
+.no-disabled-cursor:disabled {
+    cursor: auto;
+}
+
 /* ANIMATIONS */
 
 .just-addressed-message:not(.ng-hide):not(.ng-leave) {
