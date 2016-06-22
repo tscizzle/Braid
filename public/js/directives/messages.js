@@ -8,6 +8,10 @@ angular.module('messagesDirective', [])
         // define CRUD functions used in the template
 
         vm.createMessage = function() {
+            if (vm.send_button_disabled) {
+                return;
+            };
+
             disableSendButton();
 
             if (vm.newMessageFormData.text && vm.selected_convo && vm.selected_user) {
