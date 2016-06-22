@@ -10,7 +10,7 @@
 .typing-indicator-dot-0 {
     position: absolute;
     top: 9px;
-    left: 11px;
+    left: 10px;
     width: 8px;
     height: 8px;
     border-radius: 5px;
@@ -20,7 +20,7 @@
 .typing-indicator-dot-1 {
     position: absolute;
     top: 9px;
-    left: 22px;
+    left: 21px;
     width: 8px;
     height: 8px;
     border-radius: 5px;
@@ -30,7 +30,7 @@
 .typing-indicator-dot-2 {
     position: absolute;
     top: 9px;
-    left: 33px;
+    left: 32px;
     width: 8px;
     height: 8px;
     border-radius: 5px;
