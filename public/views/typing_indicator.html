@@ -1,0 +1,8 @@
+<div class="typing-indicator-container">
+    <div class="typing-indicator" ng-show="typIndCtrl.otherUserIsTyping()" ng-style="{'background-color': typIndCtrl.other_user_typing_color}">
+        <div class="typing-indicator-dot-0"></div>
+        <div class="typing-indicator-dot-1"></div>
+        <div class="typing-indicator-dot-2"></div>
+    </div>
+    <div class="typing-indicator-triangle" ng-show="typIndCtrl.otherUserIsTyping()" ng-style="{'border-color': typIndCtrl.other_user_typing_color + ' transparent'}"></div>
+</div>

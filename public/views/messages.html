@@ -19,8 +19,9 @@
                     <span class="message-time-sent" ng-show="messageCtrl.isOneOfHoveredMessages(message)">{{ message.time_sent | dateStretchy }}</span>
                 </div>
                 <div class="read-receipt pull-right" ng-show="messageCtrl.last_time_read">Read at {{messageCtrl.last_time_read | dateStretchy}}</div>
-                <div class="typing-indicator" ng-show="messageCtrl.otherUserIsTyping()" ng-style="{'background-color': messageCtrl.other_user_typing_color}"></div>
-                <div class="typing-indicator-triangle" ng-show="messageCtrl.otherUserIsTyping()" ng-style="{'border-color': messageCtrl.other_user_typing_color + ' transparent'}"></div>
+                <braid-typing-indicator messages="messageCtrl.messages"
+                                        selected_user="messageCtrl.selected_user">
+                </braid-typing-indicator>
             </div>
         </div>
     </div>

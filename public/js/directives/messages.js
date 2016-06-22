@@ -287,20 +287,6 @@ angular.module('messagesDirective', [])
         };
 
 
-        vm.otherUserIsTyping = function() {
-            var now = new Date();
-            var SECOND = 1000;
-            var just_typed = now - vm.last_typed < SECOND;
-            var just_sent;
-            if (vm.messages && vm.messages.length > 0) {
-                just_sent = now - vm.messages[vm.messages.length - 1].time_sent < 0.1 * SECOND;
-            } else {
-                just_sent = false;
-            };
-            return just_typed && !just_sent;
-        };
-
-
         // register listeners
 
         var focusSendableTextarea = function() {
@@ -405,14 +391,6 @@ angular.module('messagesDirective', [])
             };
         });
 
-        socket.on('other_user_typing', function(recipient, typing_color) {
-            if (vm.selected_user && vm.selected_user._id === recipient) {
-                vm.other_user_typing_color = typing_color;
-                vm.last_typed = new Date();
-            };
-        });
-
-
 
         // helpers
 
@@ -494,8 +472,6 @@ angular.module('messagesDirective', [])
         vm.hovered_strand = undefined;
         vm.send_button_disabled = false;
         vm.sendable_text_focus = false;
-        vm.last_typed = undefined;
-        vm.other_user_typing_color = undefined;
         vm.last_time_read = undefined;
         vm.last_message_received_sound = undefined;
         vm.newMessageFormData = {};
