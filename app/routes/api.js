@@ -59,7 +59,6 @@ module.exports = function(app, io) {
 
             // if the request does not include the resource id, there is no ownership to check
             if (!resource_id) {
-                req.auth_checked = true;
                 return next();
             };
 
@@ -83,7 +82,6 @@ module.exports = function(app, io) {
                     });
 
                     if (it_checks_out) {
-                        req.auth_checked = true;
                         return next();
                     } else {
                         return res.status(401).json({
@@ -123,7 +121,6 @@ module.exports = function(app, io) {
                     err: 'Logged in user does not have access to one of the involved resources.'
                 });
             } else {
-                req.auth_checked = true;
                 return next();
             };
         });
@@ -141,7 +138,6 @@ module.exports = function(app, io) {
                     });
                 };
             });
-            req.auth_checked = true;
             return next();
         });
 
@@ -154,7 +150,6 @@ module.exports = function(app, io) {
                 err: 'Logged in user does not have access to one of the involved resources.'
             });
         } else {
-            req.auth_checked = true;
             return next();
         };
     };
@@ -187,7 +182,6 @@ module.exports = function(app, io) {
                     err: 'Logged in user does not have access to one of the involved resources.'
                 });
             } else {
-                req.auth_checked = true;
                 return next();
             };
         });
@@ -201,7 +195,6 @@ module.exports = function(app, io) {
                 err: 'Logged in user does not have access to one of the involved resources.'
             });
         } else {
-            req.auth_checked = true;
             return next();
         };
     };
@@ -216,7 +209,6 @@ module.exports = function(app, io) {
                     err: 'Logged in user does not have access to one of the involved resources.'
                 });
             } else {
-                req.auth_checked = true;
                 return next();
             };
         });
@@ -224,87 +216,11 @@ module.exports = function(app, io) {
     };
 
 
-    // apply the dynamic middleware-generating function to each route (there should be one for every api route)
-
-    app.get('/api/messages/:convo_id/:num_messages', resourceBelongsToUser(['params', 'convo_id'], Convo));
-
-    app.get('/api/getUnreadMessageCounts/:user_id', resourceBelongsToUser(['params', 'user_id'], User));
-
-    app.post('/api/messages/:num_messages', resourceBelongsToUser(['body', 'sender_id'], User),
-                                            resourceBelongsToUser(['body', 'strand_id'], Strand),
-                                            resourceBelongsToUser(['body', 'convo_id'], Convo),
-                                            bodyReceiverIdIsFriend);
-
-    app.post('/api/assignMessagesToStrand/:strand_id/:convo_id', resourceBelongsToUser(['params', 'strand_id'], Strand),
-                                                                 resourceBelongsToUser(['params', 'convo_id'], Convo),
-                                                                 bodyMessageIdsBelongToUser);
-
-    app.post('/api/unassignMessageFromStrand/:convo_id', resourceBelongsToUser(['body', 'message_id'], Message),
-                                                         resourceBelongsToUser(['params', 'convo_id'], Convo));
-
-    app.post('/api/markMessagesAsRead/:convo_id', resourceBelongsToUser(['params', 'convo_id'], Convo),
-                                                  bodyMessageIdsBelongToUser);
-
-    app.post('/api/markMessageAsAddressed/:message_id/:convo_id', resourceBelongsToUser(['params', 'message_id'], Message),
-                                                                  resourceBelongsToUser(['params', 'convo_id'], Convo));
-
-    app.post('/api/markStrandMessagesAsAddressed/:strand_id/:convo_id', resourceBelongsToUser(['params', 'strand_id'], Strand),
-                                                                        resourceBelongsToUser(['params', 'convo_id'], Convo));
-
-    app.delete('/api/messages/:message_id/:convo_id', resourceBelongsToUser(['params', 'message_id'], Message),
-                                                      resourceBelongsToUser(['params', 'convo_id'], Convo));
-
-    app.get('/api/strands/:convo_id', resourceBelongsToUser(['params', 'convo_id'], Convo));
-
-    app.post('/api/strands', resourceBelongsToUser(['body', 'convo_id'], Convo),
-                             bodyUserId0OrUserId1IsUser,
-                             bodyOtherUserIdXIsFriend);
-
-    app.get('/api/convos/:user_id', resourceBelongsToUser(['params', 'user_id'], User));
-
-    app.post('/api/convos', bodyUserId0OrUserId1IsUser,
-                            bodyOtherUserIdXIsFriend);
-
-    app.delete('/api/convos/:convo_id/:user_id', resourceBelongsToUser(['params', 'convo_id'], Convo),
-                                                 resourceBelongsToUser(['params', 'user_id'], User));
-
-    // TODO: this is saying that anyone can see the list of users
-    app.get('/api/users', function(req, res, next) {req.auth_checked = true; return next();});
-
-    app.get('/api/friendUsers/:user_id', resourceBelongsToUser(['params', 'user_id'], User));
-
-    app.delete('/api/users/:user_id', resourceBelongsToUser(['params', 'user_id'], User));
-
-    app.get('/api/friendships/:user_id', resourceBelongsToUser(['params', 'user_id'], User));
-
-    app.post('/api/friendships', bodyRequesterIdOrTargetIdIsUser);
-
-    app.post('/api/friendships/accept/:friendship_id/:user_id', resourceBelongsToUser(['params', 'friendship_id'], Friendship),
-                                                                resourceBelongsToUser(['params', 'user_id'], User),
-                                                                friendshipTargetIsUser);
-
-    app.delete('/api/friendships/:friendship_id/:user_id', resourceBelongsToUser(['params', 'friendship_id'], Friendship),
-                                                           resourceBelongsToUser(['params', 'user_id'], User));
-
-
-    // make sure that every request is approved by one of our auth-checking functions
-
-    // TODO: this makes calls that should give 404's give 500's instead
-    var authChecked = function(req, res, next) {
-        if (req.auth_checked) {
-            return next();
-        } else {
-            return res.status(500).json({
-                err: 'Aah! Internal server error.'
-            });
-        };
-    };
-    app.all("/api/*", authChecked);
-
-
     // define the api route handlers
+    // every route should have authentication middleware preceding it
 
     // --- get messages for a convo
+    app.get('/api/messages/:convo_id/:num_messages', resourceBelongsToUser(['params', 'convo_id'], Convo));
     app.get('/api/messages/:convo_id/:num_messages', function(req, res) {
 
         Message.find({
@@ -322,6 +238,8 @@ module.exports = function(app, io) {
 
     });
 
+    // --- get counts of unread messages by convo
+    app.get('/api/getUnreadMessageCounts/:user_id', resourceBelongsToUser(['params', 'user_id'], User));
     app.get('/api/getUnreadMessageCounts/:user_id', function(req, res) {
 
         Message.aggregate([{
@@ -351,6 +269,10 @@ module.exports = function(app, io) {
     });
 
     // --- create a message and send back the new message_id as well as messages for the convo after creation
+    app.post('/api/messages/:num_messages', resourceBelongsToUser(['body', 'sender_id'], User),
+                                            resourceBelongsToUser(['body', 'strand_id'], Strand),
+                                            resourceBelongsToUser(['body', 'convo_id'], Convo),
+                                            bodyReceiverIdIsFriend);
     app.post('/api/messages/:num_messages', function(req, res) {
 
         Message.create({
@@ -381,6 +303,9 @@ module.exports = function(app, io) {
     });
 
     // --- assign messages to a strand and send back messages for the convo after update
+    app.post('/api/assignMessagesToStrand/:strand_id/:convo_id', resourceBelongsToUser(['params', 'strand_id'], Strand),
+                                                                 resourceBelongsToUser(['params', 'convo_id'], Convo),
+                                                                 bodyMessageIdsBelongToUser);
     app.post('/api/assignMessagesToStrand/:strand_id/:convo_id', function(req, res) {
 
         Message.update({
@@ -423,6 +348,8 @@ module.exports = function(app, io) {
     });
 
     // --- unassign a message from a strand and send back messages for the convo after update
+    app.post('/api/unassignMessageFromStrand/:convo_id', resourceBelongsToUser(['body', 'message_id'], Message),
+                                                         resourceBelongsToUser(['params', 'convo_id'], Convo));
     app.post('/api/unassignMessageFromStrand/:convo_id', function(req, res) {
 
         Message.update({
@@ -463,6 +390,8 @@ module.exports = function(app, io) {
     });
 
     // --- mark messages as read and send back messages for the convo after update
+    app.post('/api/markMessagesAsRead/:convo_id', resourceBelongsToUser(['params', 'convo_id'], Convo),
+                                                  bodyMessageIdsBelongToUser);
     app.post('/api/markMessagesAsRead/:convo_id', function(req, res) {
 
         Message.update({
@@ -506,6 +435,8 @@ module.exports = function(app, io) {
     });
 
     // --- mark message as addressed and send back messages for the convo after update
+    app.post('/api/markMessageAsAddressed/:message_id/:convo_id', resourceBelongsToUser(['params', 'message_id'], Message),
+                                                                  resourceBelongsToUser(['params', 'convo_id'], Convo));
     app.post('/api/markMessageAsAddressed/:message_id/:convo_id', function(req, res) {
 
         Message.update({
@@ -535,6 +466,8 @@ module.exports = function(app, io) {
     });
 
     // --- mark messages in the strand as addressed and send back messages for the convo after update
+    app.post('/api/markStrandMessagesAsAddressed/:strand_id/:convo_id', resourceBelongsToUser(['params', 'strand_id'], Strand),
+                                                                        resourceBelongsToUser(['params', 'convo_id'], Convo));
     app.post('/api/markStrandMessagesAsAddressed/:strand_id/:convo_id', function(req, res) {
 
         Message.update({
@@ -568,6 +501,8 @@ module.exports = function(app, io) {
     });
 
     // --- delete a message and send back messages for the convo after deletion
+    app.delete('/api/messages/:message_id/:convo_id', resourceBelongsToUser(['params', 'message_id'], Message),
+                                                      resourceBelongsToUser(['params', 'convo_id'], Convo));
     app.delete('/api/messages/:message_id/:convo_id', function(req, res) {
 
         Message.findOneAndRemove({
@@ -597,6 +532,7 @@ module.exports = function(app, io) {
     });
 
     // --- get strands for a convo
+    app.get('/api/strands/:convo_id', resourceBelongsToUser(['params', 'convo_id'], Convo));
     app.get('/api/strands/:convo_id', function(req, res) {
 
         Strand.find({
@@ -610,6 +546,9 @@ module.exports = function(app, io) {
     });
 
     // --- create a strand and send back the new strand_id as well as strands for the convo after creation
+    app.post('/api/strands', resourceBelongsToUser(['body', 'convo_id'], Convo),
+                             bodyUserId0OrUserId1IsUser,
+                             bodyOtherUserIdXIsFriend);
     app.post('/api/strands', function(req, res) {
         Strand.create({
             'convo_id': req.body.convo_id,
@@ -633,6 +572,7 @@ module.exports = function(app, io) {
     });
 
     // --- get convos for a user
+    app.get('/api/convos/:user_id', resourceBelongsToUser(['params', 'user_id'], User));
     app.get('/api/convos/:user_id', function(req, res) {
 
         Convo.find({
@@ -646,6 +586,8 @@ module.exports = function(app, io) {
     });
 
     // --- create a convo and send back the new convo_id as well as convos for the user after creation
+    app.post('/api/convos', bodyUserId0OrUserId1IsUser,
+                            bodyOtherUserIdXIsFriend);
     app.post('/api/convos', function(req, res) {
 
         Convo.create({
@@ -674,6 +616,8 @@ module.exports = function(app, io) {
     });
 
     // --- delete a convo and send back convos for the user after deletion
+    app.delete('/api/convos/:convo_id/:user_id', resourceBelongsToUser(['params', 'convo_id'], Convo),
+                                                 resourceBelongsToUser(['params', 'user_id'], User));
     app.delete('/api/convos/:convo_id/:user_id', function(req, res) {
 
         Convo.findOneAndRemove({
@@ -698,6 +642,7 @@ module.exports = function(app, io) {
     });
 
     // --- get all users
+    // TODO: anyone can see the list of users right now
     app.get('/api/users', function(req, res) {
 
         User.find(function(err, users) {
@@ -709,6 +654,7 @@ module.exports = function(app, io) {
     });
 
     // --- get all users who are friends of the user
+    app.get('/api/friendUsers/:user_id', resourceBelongsToUser(['params', 'user_id'], User));
     app.get('/api/friendUsers/:user_id', function(req, res) {
 
         Friendship.find({
@@ -737,6 +683,7 @@ module.exports = function(app, io) {
     });
 
     // --- delete user and send back all users after deletion
+    app.delete('/api/users/:user_id', resourceBelongsToUser(['params', 'user_id'], User));
     app.delete('/api/users/:user_id', function(req, res) {
 
         User.findOneAndRemove({
@@ -759,6 +706,7 @@ module.exports = function(app, io) {
     });
 
     // --- get friendships for a user
+    app.get('/api/friendships/:user_id', resourceBelongsToUser(['params', 'user_id'], User));
     app.get('/api/friendships/:user_id', function(req, res) {
 
         Friendship.find({
@@ -772,6 +720,7 @@ module.exports = function(app, io) {
     });
 
     // --- create a friendship and send back the new friendship_id as well as friendships for the user after creation
+    app.post('/api/friendships', bodyRequesterIdOrTargetIdIsUser);
     app.post('/api/friendships', function(req, res) {
 
         User.findOne({
@@ -820,6 +769,9 @@ module.exports = function(app, io) {
     });
 
     // --- update a friendship to be accepted and send back friendships for the user after update
+    app.post('/api/friendships/accept/:friendship_id/:user_id', resourceBelongsToUser(['params', 'friendship_id'], Friendship),
+                                                                resourceBelongsToUser(['params', 'user_id'], User),
+                                                                friendshipTargetIsUser);
     app.post('/api/friendships/accept/:friendship_id/:user_id', function(req, res) {
 
         Friendship.update({
@@ -861,6 +813,8 @@ module.exports = function(app, io) {
     });
 
     // --- delete a friendship and send back friendships for the user after deletion
+    app.delete('/api/friendships/:friendship_id/:user_id', resourceBelongsToUser(['params', 'friendship_id'], Friendship),
+                                                           resourceBelongsToUser(['params', 'user_id'], User));
     app.delete('/api/friendships/:friendship_id/:user_id', function(req, res) {
 
         Friendship.findOneAndRemove({
