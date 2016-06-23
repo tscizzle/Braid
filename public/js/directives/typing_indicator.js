@@ -1,6 +1,6 @@
 angular.module('typingIndicatorDirective', [])
 
-    .controller('typingIndicatorController', ['socket', function(socket) {
+    .controller('typingIndicatorController', ['socket', 'helpers', function(socket, helpers) {
 
         var vm = this;
 
@@ -23,8 +23,11 @@ angular.module('typingIndicatorDirective', [])
 
         // register socket listeners
 
-        socket.on('other_user_typing', function(recipient, typing_color) {
-            if (vm.selected_user && vm.selected_user._id === recipient) {
+        socket.on('other_user_typing', function(typing_data) {
+            var typist = typing_data.typist;
+            var recipient = typing_data.recipient;
+            var typing_color = typing_data.typing_color;
+            if (vm.selected_user && vm.selected_user._id === recipient && helpers.partnerIdFromSelectedConvo(vm) === typist) {
                 vm.other_user_typing_color = typing_color;
                 vm.last_typed = new Date();
             };
@@ -43,6 +46,7 @@ angular.module('typingIndicatorDirective', [])
             restrict: 'E',
             scope: {
                 messages: '=',
+                selected_convo: '=selectedConvo',
                 selected_user: '=selectedUser'
             },
             templateUrl: 'views/typing_indicator.html',

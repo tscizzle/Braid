@@ -17,8 +17,8 @@ module.exports = function(io) {
             socket.join(user_data._id);
         });
 
-        socket.on('this_user_typing', function(recipient, typing_color) {
-            io.to(recipient).emit('other_user_typing', recipient, typing_color);
+        socket.on('this_user_typing', function(typing_data) {
+            io.to(typing_data.recipient).emit('other_user_typing', typing_data);
         });
 
     };

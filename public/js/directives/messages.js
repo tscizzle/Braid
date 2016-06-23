@@ -1,6 +1,6 @@
 angular.module('messagesDirective', [])
 
-    .controller('messageController', ['$scope', '$window', 'focus', 'socket', 'Messages', 'Strands', 'DEFAULT_NUM_MESSAGES', function($scope, $window, focus, socket, Messages, Strands, DEFAULT_NUM_MESSAGES) {
+    .controller('messageController', ['$scope', '$window', 'focus', 'socket', 'helpers', 'Messages', 'Strands', 'DEFAULT_NUM_MESSAGES', function($scope, $window, focus, socket, helpers, Messages, Strands, DEFAULT_NUM_MESSAGES) {
 
         var vm = this;
 
@@ -18,7 +18,7 @@ angular.module('messagesDirective', [])
 
                 vm.newMessageFormData.convo_id = vm.selected_convo._id;
                 vm.newMessageFormData.sender_id = vm.selected_user._id;
-                vm.newMessageFormData.receiver_id = partnerIdFromSelectedConvo();
+                vm.newMessageFormData.receiver_id = helpers.partnerIdFromSelectedConvo(vm);
                 vm.newMessageFormData.time_sent = new Date();
 
                 // if responding to a new strand
@@ -235,10 +235,18 @@ angular.module('messagesDirective', [])
         };
 
         vm.userIsTyping = function() {
-            var recipient = partnerIdFromSelectedConvo();
-            var color_number = vm.selected_strand ? vm.selected_strand.color_number : -1;
-            var typing_color = STRAND_COLOR_ORDER[color_number];
-            socket.emit('this_user_typing', recipient, typing_color);
+            if (vm.selected_user) {
+                var typist = vm.selected_user._id;
+                var recipient = helpers.partnerIdFromSelectedConvo(vm);
+                var color_number = vm.selected_strand ? vm.selected_strand.color_number : -1;
+                var typing_color = STRAND_COLOR_ORDER[color_number];
+                var typing_data = {
+                    typist: typist,
+                    recipient: recipient,
+                    typing_color: typing_color
+                };
+                socket.emit('this_user_typing', typing_data);
+            };
         };
 
         vm.paintStrand = function(message) {
@@ -400,16 +408,6 @@ angular.module('messagesDirective', [])
 
         var reenableSendButton = function() {
             vm.send_button_disabled = false;
-        };
-
-        var partnerIdFromSelectedConvo = function() {
-            if (vm.selected_convo && vm.selected_user) {
-                if (vm.selected_convo.user_id_0 == vm.selected_user._id) {
-                    return vm.selected_convo.user_id_1;
-                } else if (vm.selected_convo.user_id_1 == vm.selected_user._id) {
-                    return vm.selected_convo.user_id_0;
-                };
-            };
         };
 
         var refreshStrands = function() {
