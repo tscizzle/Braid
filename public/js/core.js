@@ -44,7 +44,7 @@ var Braid = angular.module('Braid', [
             });
     }])
 
-    // whenever not logged in, route to login page
+    // route to auth page when no used is logged in
     .run(['$rootScope', '$location', 'auth', function($rootScope, $location, auth) {
         auth.getLoggedInUser()
             .success(function(data) {
