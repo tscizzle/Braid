@@ -1,0 +1,37 @@
+<div class="row">
+    <div class="col-sm-2 col-sm-offset-2">
+        <braid-queue messages="mainCtrl.messages"
+                        strands="mainCtrl.strands"
+                        num_messages="mainCtrl.num_messages"
+                        selected_strand="mainCtrl.selected_strand"
+                        selected_convo="mainCtrl.selected_convo"
+                        selected_user="mainCtrl.selected_user"
+                        strand_map="mainCtrl.strand_map"
+                        friend_user_map="mainCtrl.friend_user_map">
+        </braid-queue>
+    </div>
+
+    <div id="message-view-col" class="col-sm-6">
+        <braid-messages messages="mainCtrl.messages"
+                        strands="mainCtrl.strands"
+                        num_messages="mainCtrl.num_messages"
+                        selected_strand="mainCtrl.selected_strand"
+                        selected_convo="mainCtrl.selected_convo"
+                        selected_user="mainCtrl.selected_user"
+                        strand_map="mainCtrl.strand_map"
+                        friend_user_map="mainCtrl.friend_user_map"
+                        title_notifications="mainCtrl.title_notifications"
+                                    sound_on="mainCtrl.sound_on">
+        </braid-messages>
+    </div>
+
+    <div class="col-sm-2">
+        <braid-friendships friend_users="mainCtrl.friend_users"
+                            friendships="mainCtrl.friendships"
+                            selected_convo="mainCtrl.selected_convo"
+                            selected_user="mainCtrl.selected_user"
+                            friend_user_map="mainCtrl.friend_user_map"
+                            title_notifications="mainCtrl.title_notifications">
+        </braid-friendships>
+    </div>
+</div>

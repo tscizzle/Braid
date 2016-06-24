@@ -33,6 +33,27 @@ var Braid = angular.module('Braid', [
 
 ])
 
+    // routes
+    .config(['$routeProvider', function($routeProvider) {
+        $routeProvider
+            .when('/', {
+                templateUrl: 'views/chat.html'
+            })
+            .when('/auth', {
+                templateUrl: 'views/auth.html'
+            });
+    }])
+
+    // whenever not logged in, route to login page
+    .run(['$rootScope', '$location', 'auth', function($rootScope, $location, auth) {
+        auth.getLoggedInUser()
+            .success(function(data) {
+                if (!data.user) {
+                    $location.path('/auth');
+                };
+            });
+    }])
+
     .config(['$locationProvider', function($locationProvider) {
         $locationProvider.html5Mode(true);
     }])

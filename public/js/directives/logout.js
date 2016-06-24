@@ -14,8 +14,7 @@ angular.module('logoutDirective', [])
                     vm.selected_user = undefined;
                     vm.title_notifications = 0;
 
-                    $location.path('/');
-                    $route.reload();
+                    $location.path('/auth');
                 });
         };
 

@@ -1,6 +1,6 @@
 angular.module('loginDirective', [])
 
-    .controller('loginController', ['$location', '$route', 'auth', function($location, $route, auth) {
+    .controller('loginController', ['$location', 'auth', function($location, auth) {
 
         var vm = this;
 
@@ -12,7 +12,6 @@ angular.module('loginDirective', [])
                 .success(function(data) {
                     vm.selected_user = data.user;
                     $location.path('/');
-                    $route.reload();
                     vm.loginForm = {};
                 })
                 .catch(function(err) {

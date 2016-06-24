@@ -1,6 +1,6 @@
 angular.module('registerDirective', [])
 
-    .controller('registerController', ['$location', '$route', 'auth', function($location, $route, auth) {
+    .controller('registerController', ['$location', 'auth', function($location, auth) {
 
         var vm = this;
 
@@ -20,7 +20,6 @@ angular.module('registerDirective', [])
                         .success(function(data) {
                             vm.selected_user = data.user;
                             $location.path('/');
-                            $route.reload();
                             vm.registerForm = {};
                         })
                         .catch(function() {
