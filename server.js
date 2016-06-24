@@ -56,11 +56,9 @@ passport.deserializeUser(User.deserializeUser());
 require('./app/routes/api')(app, io);
 
 
-// application routes
+// page routes
 
-app.get('/', function(req, res) {
-    return res.sendfile('./public/views/index.html');
-});
+require('./app/routes/pages')(app);
 
 
 // authentication routes
