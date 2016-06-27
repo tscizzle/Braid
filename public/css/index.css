@@ -17,12 +17,7 @@ html, body {
     padding: 0 15px;
 }
 
-#message-view-col {
-    background-color: white;
-    border-bottom: solid 1px #999;
-    border-right: solid 1px #999;
-    border-left: solid 1px #999;
-}
+/* STYLES TO USED ANYWHERE */
 
 textarea {
     resize: none;

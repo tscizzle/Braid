@@ -1,6 +1,8 @@
 .navbar {
     height: 8vh;
     min-height: 40px;
+    background-color: #777;
+    border-bottom: solid 3px #555;
 }
 
 .navbar-container {
@@ -11,9 +13,16 @@
     height: 100%;
 }
 
-.navbar-words {
-    height: 100%;
+.navbar-default .username-link:hover {
+    color: #CCC;
 }
+
+.navbar .dropdown-menu li {
+    text-align: center;
+}
+
+/* ".navbar .dropdown-menu > li > a" selects the Profile link but not the Logout link because the "braid-logout" element is between them hierarchially.
+   ".navbar .dropdown-menu li a" selects both the Proile link and the Logout link. */
 
 #sound-checkbox-label {
     margin-top: 10px;

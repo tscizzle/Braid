@@ -12,6 +12,7 @@ var Braid = angular.module('Braid', [
     'registerDirective',
     'loginDirective',
     'logoutDirective',
+    'profileDirective',
     'typingIndicatorDirective',
     'friendshipsDirective',
     'messagesDirective',
@@ -41,6 +42,9 @@ var Braid = angular.module('Braid', [
             })
             .when('/auth', {
                 templateUrl: 'views/auth.html'
+            })
+            .when('/profile', {
+                templateUrl: 'views/profile.html'
             });
     }])
 

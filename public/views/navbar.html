@@ -3,12 +3,23 @@
 
         <img class="navbar-logo" src="/img/poop_logo.jpeg?" alt="">
 
-        <a class="navbar-brand navbar-right">{{ selected_user.username }}</a>
         <div class="navbar-right" ng-show="selected_user">
-            <braid-logout login_object="login_object"
-                          selected_user="selected_user"
-                          title_notifications="title_notifications">
-            </braid-logout>
+            <a class="navbar-brand dropdown-toggle clickable username-link" data-toggle="dropdown">
+                {{ selected_user.username }} <i class="fa fa-caret-down"></i>
+            </a>
+            <ul class="dropdown-menu">
+                <li>
+                    <a class="btn" href="/profile">Profile</a>
+                </li>
+                <li>
+                    <a class="btn">
+                        <braid-logout login_object="login_object"
+                                      selected_user="selected_user"
+                                      title_notifications="title_notifications">
+                        </braid-logout>
+                    </a>
+                </li>
+            </ul>
         </div>
         <label id="sound-checkbox-label" class="btn btn-default navbar-right">
             <input id="sound-checkbox" type="checkbox" ng-model="sound_on" hidden>
