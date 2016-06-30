@@ -6,7 +6,8 @@ var Braid = angular.module('Braid', [
     'ngAnimate',
 
     // custom dependencies
-    'braidController',
+    'braidMain',
+    'braidChat',
     'enterSubmitDirective',
     'navbarDirective',
     'registerDirective',
@@ -21,6 +22,7 @@ var Braid = angular.module('Braid', [
     'focusService',
     'socketService',
     'authService',
+    'chatService',
     'messageService',
     'strandService',
     'convoService',

@@ -1,7 +1,18 @@
-<div class="row">
-    <div class="col-sm-6 col-sm-offset-3">
-        <div class="profile-container" ng-controller="profileController as profileCtrl">
-            <h1>{{ profileCtrl.butt }}</h1>
-        </div>
+<div class="row" ng-controller="profileController as profileCtrl">
+    <div class="col-sm-6 col-sm-offset-3 profile-container">
+        <h1>Settings</h1>
+
+        <table class="settings-table">
+            <tr>
+                <td>Sound On/Off</td>
+                <td>
+                    <label class="btn btn-default">
+                        <input type="checkbox" ng-model="profileCtrl.sound_on" hidden>
+                        <i class="fa fa-volume-up" ng-show="profileCtrl.sound_on"></i>
+                        <i class="fa fa-volume-off" ng-hide="profileCtrl.sound_on"></i>
+                    </label>
+                </td>
+            </tr>
+        </table>
     </div>
 </div>

@@ -1,31 +1,32 @@
 <nav class="navbar navbar-default">
     <div class="container-fluid navbar-container">
 
-        <img class="navbar-logo" src="/img/poop_logo.jpeg?" alt="">
+        <a href="/"><img class="navbar-logo" src="/img/poop_logo.jpeg?" alt=""></a>
 
-        <div class="navbar-right" ng-show="selected_user">
-            <a class="navbar-brand dropdown-toggle clickable username-link" data-toggle="dropdown">
-                {{ selected_user.username }} <i class="fa fa-caret-down"></i>
+        <div class="navbar-right right-navbar-container" ng-show="navbarCtrl.selected_user">
+            <a class="navbar-brand dropdown-toggle clickable username-link btn" data-toggle="dropdown">
+                {{ navbarCtrl.selected_user.username }} <i class="fa fa-caret-down"></i>
             </a>
             <ul class="dropdown-menu">
                 <li>
-                    <a class="btn" href="/profile">Profile</a>
+                    <a class="btn" href="/"><i class="fa fa-lg fa-comments"></i>Chat</a>
                 </li>
                 <li>
-                    <a class="btn">
-                        <braid-logout login_object="login_object"
-                                      selected_user="selected_user"
-                                      title_notifications="title_notifications">
-                        </braid-logout>
+                    <a class="btn" href="/profile"><i class="fa fa-lg fa-user"></i>Profile</a>
+                </li>
+                <li>
+                    <a class="btn" href="" braid-logout login_object="navbarCtrl.login_object"
+                                                        selected_user="navbarCtrl.selected_user"
+                                                        title_notifications="navbarCtrl.title_notifications">
+                        <i class="fa fa-lg fa-sign-out"></i>Logout
                     </a>
                 </li>
             </ul>
         </div>
-        <label id="sound-checkbox-label" class="btn btn-default navbar-right">
-            <input id="sound-checkbox" type="checkbox" ng-model="sound_on" hidden>
-            <i class="fa fa-volume-up" ng-show="sound_on"></i>
-            <i class="fa fa-volume-off" ng-hide="sound_on"></i>
-        </label>
+        <a id="chat-view-link" class="btn btn-primary navbar-right" href="/" ng-hide="navbarCtrl.showChatLink()">
+            <i class="fa fa-arrow-left"></i>
+            <i class="fa fa-lg fa-comments"></i>
+        </a>
 
     </div>
 </nav>

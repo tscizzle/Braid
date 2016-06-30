@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row" ng-controller="chatController as chatCtrl">
     <div class="col-sm-2 col-sm-offset-2">
         <braid-queue messages="mainCtrl.messages"
                      strands="mainCtrl.strands"
@@ -21,7 +21,7 @@
                         strand_map="mainCtrl.strand_map"
                         friend_user_map="mainCtrl.friend_user_map"
                         title_notifications="mainCtrl.title_notifications"
-                                    sound_on="mainCtrl.sound_on">
+                        sound_on="mainCtrl.sound_on">
         </braid-messages>
     </div>
 

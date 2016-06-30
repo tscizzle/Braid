@@ -1,4 +1,4 @@
-angular.module('braidController', [])
+angular.module('braidMain', [])
 
     .controller('mainController', ['$scope', 'socket', 'auth', 'Users', 'Friendships', 'DEFAULT_NUM_MESSAGES', function($scope, socket, auth, Users, Friendships, DEFAULT_NUM_MESSAGES) {
 

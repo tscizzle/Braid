@@ -1,6 +1,7 @@
 .navbar {
     height: 8vh;
     min-height: 40px;
+    margin-bottom: 0;
     background-color: #777;
     border-bottom: solid 3px #555;
 }
@@ -13,18 +14,45 @@
     height: 100%;
 }
 
+.right-navbar-container {
+    margin-top: 10px;
+    margin-right: 0;
+    padding: 0 10px;
+}
+
+.right-navbar-container.open .username-link {
+    background-color: #333;
+}
+
 .navbar-default .username-link:hover {
     color: #CCC;
+}
+
+.navbar .dropdown-menu .btn:active:focus {
+    outline: #777 dotted thin;
+    color: #999;
 }
 
 .navbar .dropdown-menu li {
     text-align: center;
 }
 
-/* ".navbar .dropdown-menu > li > a" selects the Profile link but not the Logout link because the "braid-logout" element is between them hierarchially.
-   ".navbar .dropdown-menu li a" selects both the Proile link and the Logout link. */
+.navbar .dropdown-menu li:not(:first-child) {
+    border-top: solid 1px #AAA;
+}
 
-#sound-checkbox-label {
+.dropdown-menu a {
+    position: relative;
+}
+
+.dropdown-menu i {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+
+#chat-view-link {
     margin-top: 10px;
-    margin-right: 10px;
+    margin-right: 20px;
+    outline: 0;
 }
