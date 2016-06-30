@@ -8,17 +8,13 @@
                 {{ navbarCtrl.selected_user.username }} <i class="fa fa-caret-down"></i>
             </a>
             <ul class="dropdown-menu">
-                <li>
-                    <a class="btn" href="/"><i class="fa fa-lg fa-comments"></i>Chat</a>
-                </li>
-                <li>
-                    <a class="btn" href="/profile"><i class="fa fa-lg fa-user"></i>Profile</a>
-                </li>
+                <li><a class="btn" href="/"><i class="fa fa-lg fa-comments"></i>Chat</a></li>
+                <li><a class="btn" href="/profile"><i class="fa fa-lg fa-user"></i>Profile</a></li>
                 <li>
                     <a class="btn" href="" braid-logout login_object="navbarCtrl.login_object"
                                                         selected_user="navbarCtrl.selected_user"
                                                         title_notifications="navbarCtrl.title_notifications">
-                        <i class="fa fa-lg fa-sign-out"></i>Logout
+                    <i class="fa fa-lg fa-sign-out"></i>Logout
                     </a>
                 </li>
             </ul>
