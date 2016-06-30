@@ -10,7 +10,6 @@ angular.module('logoutDirective', [])
             },
             link: function(scope, element) {
                 element.on('click', function() {
-
                     vm = scope;
 
                     auth.logout()
