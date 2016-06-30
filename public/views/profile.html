@@ -1,16 +1,30 @@
 <div class="row" ng-controller="profileController as profileCtrl">
     <div class="col-sm-6 col-sm-offset-3 profile-container">
         <h1>Settings</h1>
+        <hr>
 
         <table class="settings-table">
             <tr>
-                <td>Sound On/Off</td>
+                <td>Profile Picture:</td>
+                <td flow-init>
+                    <span class="btn btn-success" flow-btn flow-attrs="{accept: 'image/*'}">Upload Pic</span>
+                    <img class="profile-pic-upload-preview" flow-img="$flow.files[0]" />
+                </td>
+            </tr>
+            <tr>
+                <td>Sound On/Off:</td>
                 <td>
                     <label class="btn btn-default">
                         <input type="checkbox" ng-model="profileCtrl.sound_on" hidden>
                         <i class="fa fa-volume-up" ng-show="profileCtrl.sound_on"></i>
                         <i class="fa fa-volume-off" ng-hide="profileCtrl.sound_on"></i>
                     </label>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <a class="btn btn-danger">Delete Account</a>
                 </td>
             </tr>
         </table>
