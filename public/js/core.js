@@ -21,6 +21,7 @@ var Braid = angular.module('Braid', [
     'braidFilters',
     'focusService',
     'socketService',
+    'helperService',
     'authService',
     'chatService',
     'messageService',
@@ -28,7 +29,7 @@ var Braid = angular.module('Braid', [
     'convoService',
     'userService',
     'friendshipService',
-    'helperService',
+    'userSettingsService',
 
     // 3rd-party dependencies
     'btford.socket-io',

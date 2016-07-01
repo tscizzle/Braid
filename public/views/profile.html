@@ -1,4 +1,4 @@
-<div class="row" ng-controller="profileController as profileCtrl">
+<div class="row" braid-profile selected_user="mainCtrl.selected_user">
     <div class="col-sm-6 col-sm-offset-3 profile-container">
         <h1>Settings</h1>
         <hr>
@@ -15,7 +15,7 @@
                 <td>Sound On/Off:</td>
                 <td>
                     <label class="btn btn-default">
-                        <input type="checkbox" ng-model="profileCtrl.sound_on" hidden>
+                        <input type="checkbox" ng-model="profileCtrl.sound_on" ng-change="profileCtrl.updateUserSettings('sound_on')" hidden>
                         <i class="fa fa-volume-up" ng-show="profileCtrl.sound_on"></i>
                         <i class="fa fa-volume-off" ng-hide="profileCtrl.sound_on"></i>
                     </label>
@@ -24,7 +24,12 @@
             <tr>
                 <td></td>
                 <td>
-                    <a class="btn btn-danger">Delete Account</a>
+                    <div class="btn-group">
+                        <a class="btn btn-danger dropdown-toggle" data-toggle="dropdown">Delete Account</a>
+                        <ul class="dropdown-menu">
+                            <li ng-click="profileCtrl.deleteUser()"><a class="btn btn-danger">Definitely Delete Account</a></li>
+                        </ul>
+                    </div>
                 </td>
             </tr>
         </table>

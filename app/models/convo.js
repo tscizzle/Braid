@@ -27,7 +27,7 @@ module.exports = function(io) {
             }]
         }, function(err, convo) {
             if (convo) {
-                return next(Error('DuplicateConvo'));
+                return next(new Error('DuplicateConvo'));
             } else {
                 return next();
             };

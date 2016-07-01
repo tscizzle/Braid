@@ -27,7 +27,11 @@ angular.module('registerDirective', [])
                         });
                 })
                 .catch(function(err) {
-                    vm.register_error = err.data.err.message;
+                    if (err.data) {
+                        vm.register_error = err.data.err.message;
+                    } else {
+                        vm.register_error = 'An error occurred.';
+                    };
                     vm.registerForm = {};
                 });
 

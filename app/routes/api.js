@@ -9,6 +9,7 @@ module.exports = function(app, io) {
     var Convo = require('../models/convo')(io);
     var User = require('../models/user')(io);
     var Friendship = require('../models/friendship')(io);
+    var UserSettings = require('../models/user_settings')(io);
 
     var ObjectId = mongoose.Types.ObjectId;
 
@@ -47,6 +48,7 @@ module.exports = function(app, io) {
                     case Convo: return [['user_id_0'], ['user_id_1']];
                     case User: return [['_id']];
                     case Friendship: return [['requester_id'], ['target_id']];
+                    case UserSettings: return [['_id']];
                 };
             };
             var resourcePathsToUserIds = modelToUserIdPathsMap(resourceModel);
@@ -550,6 +552,7 @@ module.exports = function(app, io) {
                              bodyUserId0OrUserId1IsUser,
                              bodyOtherUserIdXIsFriend);
     app.post('/api/strands', function(req, res) {
+
         Strand.create({
             'convo_id': req.body.convo_id,
             'color_number': req.body.color_number,
@@ -834,6 +837,40 @@ module.exports = function(app, io) {
 
                 return res.json(friendships);
             });
+        });
+
+    });
+
+    // --- get user settings object for a user
+    app.get('/api/user_settings/:user_id', resourceBelongsToUser(['params', 'user_id'], UserSettings));
+    app.get('/api/user_settings/:user_id', function(req, res) {
+
+        UserSettings.findOne({
+            _id: req.params.user_id
+        }, function(err, user_settings) {
+            if (err) return res.status(500).send(err);
+
+            return res.json(user_settings);
+        });
+
+    });
+
+    // --- update a user settings and send it back after update
+    app.post('/api/user_settings/:user_id', resourceBelongsToUser(['params', 'user_id'], UserSettings));
+    app.post('/api/user_settings/:user_id', function(req, res) {
+        var updateDoc = {};
+        updateDoc[req.body.field] = req.body.value;
+
+        UserSettings.update({
+            _id: req.params.user_id
+        }, {
+            $set: updateDoc
+        }, {
+            runValidators: true
+        }, function(err, user_settings) {
+            if (err) return res.status(500).send(err);
+
+            return res.json(user_settings);
         });
 
     });

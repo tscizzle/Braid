@@ -7,11 +7,20 @@ module.exports = function(io) {
 
     var Convo = require('./convo')(io);
     var Friendship = require('./friendship')(io);
+    var UserSettings = require('./user_settings')(io);
 
     var Schema = mongoose.Schema;
 
     var userSchema = new Schema({
         username: {type: String, required: true, unique: true}
+    });
+
+    userSchema.pre('save', function(next) {
+        UserSettings.create({
+            _id: this._id
+        }, function(err, user_settings) {
+            if (err) return next(new Error(err.msg));
+        });
     });
 
     userSchema.post('remove', function() {
@@ -27,6 +36,7 @@ module.exports = function(io) {
                 friendship.remove();
             });
         });
+        UserSettings.remove({_id: this._id});
     });
 
     userSchema.plugin(passportLocalMongoose);
