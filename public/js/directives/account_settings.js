@@ -1,19 +1,20 @@
-angular.module('profileDirective', [])
+angular.module('accountSettingsDirective', [])
 
-    .controller('profileController', ['$scope', 'Users', 'UserSettings', function($scope, Users, UserSettings) {
+    .controller('accountSettingsController', ['$scope', 'Users', 'AccountSettings', function($scope, Users, AccountSettings) {
 
         var vm = this;
+        window.VM = vm;
 
 
         // define CRUD functions used in the template
 
-        vm.updateUserSettings = function(field) {
+        vm.updateAccountSettings = function(field) {
             if (vm.selected_user) {
                 var value = vm[field];
                 console.log('field', field);
                 console.log('value', value);
 
-                UserSettings.set(vm.selected_user._id, field, value)
+                AccountSettings.set(vm.selected_user._id, field, value)
                     .success(function(data) {
                         _.extend(vm, data);
                     });
@@ -36,10 +37,10 @@ angular.module('profileDirective', [])
 
         // register listeners
 
-        var refreshUserSettings = function() {
+        var refreshAccountSettings = function() {
             if (vm.selected_user) {
 
-                UserSettings.get(vm.selected_user._id)
+                AccountSettings.get(vm.selected_user._id)
                     .success(function(data) {
                         _.extend(vm, data);
                     });
@@ -48,23 +49,24 @@ angular.module('profileDirective', [])
         };
 
         var selected_user_watcher = function() {return vm.selected_user;};
-        $scope.$watch(selected_user_watcher, refreshUserSettings);
+        $scope.$watch(selected_user_watcher, refreshAccountSettings);
 
 
         // initialization
 
-        refreshUserSettings();
+        refreshAccountSettings();
 
     }])
 
-    .directive('braidProfile', function() {
+    .directive('braidAccountSettings', function() {
         return {
             restrict: 'EA',
             scope: {
                 selected_user: '=selectedUser',
             },
-            controller: 'profileController',
-            controllerAs: 'profileCtrl',
+            templateUrl: 'views/account_settings.html',
+            controller: 'accountSettingsController',
+            controllerAs: 'actSetCtrl',
             bindToController: true
         };
     });

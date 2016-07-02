@@ -1,37 +1,5 @@
-<div class="row" braid-profile selected_user="mainCtrl.selected_user">
-    <div class="col-sm-6 col-sm-offset-3 profile-container">
-        <h1>Settings</h1>
-        <hr>
-
-        <table class="settings-table">
-            <tr>
-                <td>Profile Picture:</td>
-                <td flow-init>
-                    <span class="btn btn-success" flow-btn flow-attrs="{accept: 'image/*'}">Upload Pic</span>
-                    <img class="profile-pic-upload-preview" flow-img="$flow.files[0]" />
-                </td>
-            </tr>
-            <tr>
-                <td>Sound On/Off:</td>
-                <td>
-                    <label class="btn btn-default">
-                        <input type="checkbox" ng-model="profileCtrl.sound_on" ng-change="profileCtrl.updateUserSettings('sound_on')" hidden>
-                        <i class="fa fa-volume-up" ng-show="profileCtrl.sound_on"></i>
-                        <i class="fa fa-volume-off" ng-hide="profileCtrl.sound_on"></i>
-                    </label>
-                </td>
-            </tr>
-            <tr>
-                <td></td>
-                <td>
-                    <div class="btn-group">
-                        <a class="btn btn-danger dropdown-toggle" data-toggle="dropdown">Delete Account</a>
-                        <ul class="dropdown-menu">
-                            <li ng-click="profileCtrl.deleteUser()"><a class="btn btn-danger">Definitely Delete Account</a></li>
-                        </ul>
-                    </div>
-                </td>
-            </tr>
-        </table>
+<div class="row">
+    <div class="col-sm-6 col-sm-offset-3">
+        <braid-account-settings selected_user="mainCtrl.selected_user"></braid-account-settings>
     </div>
 </div>

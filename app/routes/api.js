@@ -9,7 +9,7 @@ module.exports = function(app, io) {
     var Convo = require('../models/convo')(io);
     var User = require('../models/user')(io);
     var Friendship = require('../models/friendship')(io);
-    var UserSettings = require('../models/user_settings')(io);
+    var AccountSettings = require('../models/account_settings')(io);
 
     var ObjectId = mongoose.Types.ObjectId;
 
@@ -48,7 +48,7 @@ module.exports = function(app, io) {
                     case Convo: return [['user_id_0'], ['user_id_1']];
                     case User: return [['_id']];
                     case Friendship: return [['requester_id'], ['target_id']];
-                    case UserSettings: return [['_id']];
+                    case AccountSettings: return [['_id']];
                 };
             };
             var resourcePathsToUserIds = modelToUserIdPathsMap(resourceModel);
@@ -842,35 +842,35 @@ module.exports = function(app, io) {
     });
 
     // --- get user settings object for a user
-    app.get('/api/user_settings/:user_id', resourceBelongsToUser(['params', 'user_id'], UserSettings));
-    app.get('/api/user_settings/:user_id', function(req, res) {
+    app.get('/api/account_settings/:user_id', resourceBelongsToUser(['params', 'user_id'], AccountSettings));
+    app.get('/api/account_settings/:user_id', function(req, res) {
 
-        UserSettings.findOne({
+        AccountSettings.findOne({
             _id: req.params.user_id
-        }, function(err, user_settings) {
+        }, function(err, account_settings) {
             if (err) return res.status(500).send(err);
 
-            return res.json(user_settings);
+            return res.json(account_settings);
         });
 
     });
 
     // --- update a user settings and send it back after update
-    app.post('/api/user_settings/:user_id', resourceBelongsToUser(['params', 'user_id'], UserSettings));
-    app.post('/api/user_settings/:user_id', function(req, res) {
+    app.post('/api/account_settings/:user_id', resourceBelongsToUser(['params', 'user_id'], AccountSettings));
+    app.post('/api/account_settings/:user_id', function(req, res) {
         var updateDoc = {};
         updateDoc[req.body.field] = req.body.value;
 
-        UserSettings.update({
+        AccountSettings.update({
             _id: req.params.user_id
         }, {
             $set: updateDoc
         }, {
             runValidators: true
-        }, function(err, user_settings) {
+        }, function(err, account_settings) {
             if (err) return res.status(500).send(err);
 
-            return res.json(user_settings);
+            return res.json(account_settings);
         });
 
     });

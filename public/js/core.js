@@ -13,7 +13,7 @@ var Braid = angular.module('Braid', [
     'registerDirective',
     'loginDirective',
     'logoutDirective',
-    'profileDirective',
+    'accountSettingsDirective',
     'typingIndicatorDirective',
     'friendshipsDirective',
     'messagesDirective',
@@ -29,7 +29,7 @@ var Braid = angular.module('Braid', [
     'convoService',
     'userService',
     'friendshipService',
-    'userSettingsService',
+    'accountSettingsService',
 
     // 3rd-party dependencies
     'btford.socket-io',
@@ -52,7 +52,7 @@ var Braid = angular.module('Braid', [
             });
     }])
 
-    // route to auth page when no used is logged in
+    // route to auth page when no user is logged in
     .run(['$rootScope', '$location', 'auth', function($rootScope, $location, auth) {
         auth.getLoggedInUser()
             .success(function(data) {

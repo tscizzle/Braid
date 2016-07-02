@@ -1,0 +1,35 @@
+<div class="account-settings-pane">
+    <h1>Settings</h1>
+    <hr>
+
+    <table class="settings-table">
+        <tr>
+            <td>Profile Picture:</td>
+            <td flow-init>
+                <span class="btn btn-success" flow-btn flow-attrs="{accept: 'image/*'}">Upload Pic</span>
+                <img class="profile-pic-upload-preview" flow-img="$flow.files[0]" />
+            </td>
+        </tr>
+        <tr>
+            <td>Sound On/Off:</td>
+            <td>
+                <label class="btn btn-default">
+                    <input type="checkbox" ng-model="actSetCtrl.sound_on" ng-change="actSetCtrl.updateAccountSettings('sound_on')" hidden>
+                    <i class="fa fa-volume-up" ng-show="actSetCtrl.sound_on"></i>
+                    <i class="fa fa-volume-off" ng-hide="actSetCtrl.sound_on"></i>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <div class="btn-group">
+                    <a class="btn btn-danger dropdown-toggle" data-toggle="dropdown">Delete Account</a>
+                    <ul class="dropdown-menu">
+                        <li ng-click="actSetCtrl.deleteUser()"><a class="btn btn-danger">Definitely Delete Account</a></li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>

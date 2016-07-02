@@ -10,8 +10,6 @@ module.exports = function(io) {
     var User = require('./models/user')(io);
     var Friendship = require('./models/friendship')(io);
 
-    var ObjectId = mongoose.Types.ObjectId;
-
 
     var createBob = function() {
 

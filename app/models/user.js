@@ -7,7 +7,7 @@ module.exports = function(io) {
 
     var Convo = require('./convo')(io);
     var Friendship = require('./friendship')(io);
-    var UserSettings = require('./user_settings')(io);
+    var AccountSettings = require('./account_settings')(io);
 
     var Schema = mongoose.Schema;
 
@@ -16,10 +16,12 @@ module.exports = function(io) {
     });
 
     userSchema.pre('save', function(next) {
-        UserSettings.create({
+        AccountSettings.create({
             _id: this._id
-        }, function(err, user_settings) {
+        }, function(err, account_settings) {
             if (err) return next(new Error(err.msg));
+
+            next();
         });
     });
 
@@ -36,7 +38,7 @@ module.exports = function(io) {
                 friendship.remove();
             });
         });
-        UserSettings.remove({_id: this._id});
+        AccountSettings.remove({_id: this._id});
     });
 
     userSchema.plugin(passportLocalMongoose);
