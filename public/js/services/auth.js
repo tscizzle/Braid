@@ -4,7 +4,6 @@ angular.module('authService', [])
 
         return {
             register: function(username, password) {
-                console.log('about to post');
                 return $http.post('/register', {username: username, password: password});
             },
             login: function(username, password) {

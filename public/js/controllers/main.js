@@ -82,7 +82,6 @@ angular.module('braidMain', [])
         vm.messages = [];
         vm.strands = [];
         vm.num_messages = DEFAULT_NUM_MESSAGES;
-        vm.background_color = 'red';
         vm.friend_users = [];
         vm.friendships = [];
         vm.selected_strand = undefined;
