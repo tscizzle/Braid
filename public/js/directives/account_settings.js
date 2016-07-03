@@ -1,22 +1,19 @@
 angular.module('accountSettingsDirective', [])
 
-    .controller('accountSettingsController', ['$scope', 'Users', 'AccountSettings', function($scope, Users, AccountSettings) {
+    .controller('accountSettingsController', ['Users', 'AccountSettings', function(Users, AccountSettings) {
 
         var vm = this;
-        window.VM = vm;
 
 
         // define CRUD functions used in the template
 
         vm.updateAccountSettings = function(field) {
             if (vm.selected_user) {
-                var value = vm[field];
-                console.log('field', field);
-                console.log('value', value);
+                var value = vm.account_settings[field];
 
                 AccountSettings.set(vm.selected_user._id, field, value)
                     .success(function(data) {
-                        _.extend(vm, data);
+                        AccountSettings.refresh(vm.selected_user._id);
                     });
 
             };
@@ -35,26 +32,9 @@ angular.module('accountSettingsDirective', [])
         };
 
 
-        // register listeners
-
-        var refreshAccountSettings = function() {
-            if (vm.selected_user) {
-
-                AccountSettings.get(vm.selected_user._id)
-                    .success(function(data) {
-                        _.extend(vm, data);
-                    });
-
-            };
-        };
-
-        var selected_user_watcher = function() {return vm.selected_user;};
-        $scope.$watch(selected_user_watcher, refreshAccountSettings);
-
-
         // initialization
 
-        refreshAccountSettings();
+        vm.account_settings = AccountSettings.account_settings;
 
     }])
 

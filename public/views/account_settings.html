@@ -6,17 +6,17 @@
         <tr>
             <td>Profile Picture:</td>
             <td flow-init>
-                <span class="btn btn-success" flow-btn flow-attrs="{accept: 'image/*'}">Upload Pic</span>
                 <img class="profile-pic-upload-preview" flow-img="$flow.files[0]" />
+                <span class="btn btn-success" flow-btn flow-attrs="{accept: 'image/*'}">Upload Pic</span>
             </td>
         </tr>
         <tr>
             <td>Sound On/Off:</td>
             <td>
                 <label class="btn btn-default">
-                    <input type="checkbox" ng-model="actSetCtrl.sound_on" ng-change="actSetCtrl.updateAccountSettings('sound_on')" hidden>
-                    <i class="fa fa-volume-up" ng-show="actSetCtrl.sound_on"></i>
-                    <i class="fa fa-volume-off" ng-hide="actSetCtrl.sound_on"></i>
+                    <input type="checkbox" ng-model="actSetCtrl.account_settings.sound_on" ng-change="actSetCtrl.updateAccountSettings('sound_on')" hidden>
+                    <i class="fa fa-volume-up" ng-show="actSetCtrl.account_settings.sound_on"></i>
+                    <i class="fa fa-volume-off" ng-hide="actSetCtrl.account_settings.sound_on"></i>
                 </label>
             </td>
         </tr>

@@ -19,8 +19,7 @@ angular.module('navbarDirective', [])
             scope: {
                 login_object: '=loginObject',
                 selected_user: '=selectedUser',
-                title_notifications: '=titleNotifications',
-                sound_on: '=soundOn'
+                title_notifications: '=titleNotifications'
             },
             templateUrl: 'views/navbar.html',
             controller: 'navbarController',

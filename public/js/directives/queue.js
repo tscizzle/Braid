@@ -1,6 +1,8 @@
 angular.module('queueDirective', [])
 
-    .controller('queueController', ['$scope', '$timeout', 'Messages', function($scope, $timeout, Messages) {
+    .controller('queueController',
+                ['$scope', '$timeout', 'Messages',
+                 function($scope, $timeout, Messages) {
 
         var vm = this;
 

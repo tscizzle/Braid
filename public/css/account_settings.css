@@ -8,13 +8,18 @@
 
 .settings-table {
     margin-top: 30px;
-    width: 100%;
+    width: 70%;
     text-align: center;
+}
+
+.settings-table tr:not(:first-child):not(:last-child) {
+    border: 1px solid #CCC;
+    border-width: 1px 0;
 }
 
 .settings-table td {
     width: 50%;
-    padding: 20px;
+    padding: 10px;
 }
 
 .profile-pic-upload-preview {

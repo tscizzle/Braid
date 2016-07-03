@@ -1,6 +1,8 @@
 angular.module('friendshipsDirective', [])
 
-    .controller('friendshipController', ['$scope', '$timeout', 'socket', 'Messages', 'Friendships', 'Convos', function($scope, $timeout, socket, Messages, Friendships, Convos) {
+    .controller('friendshipController',
+                ['$scope', '$timeout', 'socket', 'Messages', 'Friendships', 'Convos',
+                 function($scope, $timeout, socket, Messages, Friendships, Convos) {
 
         var vm = this;
 

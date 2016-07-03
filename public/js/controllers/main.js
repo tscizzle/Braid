@@ -1,6 +1,8 @@
 angular.module('braidMain', [])
 
-    .controller('mainController', ['$scope', 'socket', 'auth', 'Users', 'Friendships', 'DEFAULT_NUM_MESSAGES', function($scope, socket, auth, Users, Friendships, DEFAULT_NUM_MESSAGES) {
+    .controller('mainController',
+                ['$scope', 'socket', 'auth', 'Users', 'Friendships', 'AccountSettings', 'DEFAULT_NUM_MESSAGES',
+                 function($scope, socket, auth, Users, Friendships, AccountSettings, DEFAULT_NUM_MESSAGES) {
 
         var vm = this;
 
@@ -50,6 +52,12 @@ angular.module('braidMain', [])
             };
         };
 
+        var refreshAccountSettings = function() {
+            if (vm.selected_user) {
+                AccountSettings.refresh(vm.selected_user._id);
+            };
+        };
+
         var friend_users_watcher = function() {return vm.friend_users;};
         var friendships_watcher = function() {return vm.friendships;};
         var selected_user_watcher = function() {return vm.selected_user;};
@@ -57,6 +65,7 @@ angular.module('braidMain', [])
         $scope.$watch(selected_user_watcher, refreshFriendships);
         $scope.$watch(friend_users_watcher, refreshFriendUserMap);
         $scope.$watch(selected_user_watcher, joinUserSocketRoom);
+        $scope.$watch(selected_user_watcher, refreshAccountSettings);
 
 
         // register socket listeners
@@ -65,14 +74,32 @@ angular.module('braidMain', [])
             joinUserSocketRoom();
         });
 
+        socket.on('messages:receive_update', function(data) {
+            // play a sound
+            var sound_on = AccountSettings.account_settings.sound_on;
+            var now = new Date();
+            var SECOND = 1000;
+            var just_received_message_sound = now - vm.last_message_received_sound < SECOND;
+            if (sound_on && data.play_message_sound && !just_received_message_sound) {
+                ooooh.play();
+                vm.last_message_received_sound = new Date();
+            };
+        });
+
         socket.on('friendships:receive_update', function() {
             refreshFriendships();
+        });
+
+        socket.on('account_settings:receive_update', function() {
+            refreshAccountSettings();
         });
 
 
         // constants
 
         var DEFAULT_NUM_MESSAGES = 50;
+
+        var ooooh = new Audio('audio/ooooh.wav');
 
 
         // initialization
@@ -89,11 +116,14 @@ angular.module('braidMain', [])
         vm.selected_user = undefined;
         vm.strand_map = {};
         vm.friend_user_map = {};
+        vm.last_message_received_sound = undefined;
 
         auth.getLoggedInUser()
             .success(function(data) {
                 vm.selected_user = data.user;
                 joinUserSocketRoom();
             });
+
+        refreshAccountSettings();
 
     }]);

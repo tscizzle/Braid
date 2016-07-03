@@ -325,8 +325,6 @@ module.exports = function(app, io) {
             Convo.findOne({
                 _id: req.params.convo_id
             }, function(err, convo) {
-                if (err) return res.status(500).send(err);
-
                 var user_ids = [convo.user_id_0, convo.user_id_1];
 
                 _.each(user_ids, function(user_id) {
@@ -367,8 +365,6 @@ module.exports = function(app, io) {
             Convo.findOne({
                 _id: req.params.convo_id
             }, function(err, convo) {
-                if (err) return res.status(500).send(err);
-
                 var user_ids = [convo.user_id_0, convo.user_id_1];
 
                 _.each(user_ids, function(user_id) {
@@ -411,8 +407,6 @@ module.exports = function(app, io) {
             Convo.findOne({
                 _id: req.params.convo_id
             }, function(err, convo) {
-                if (err) return res.status(500).send(err);
-
                 var user_ids = [convo.user_id_0, convo.user_id_1];
 
                 _.each(user_ids, function(user_id) {
@@ -861,14 +855,17 @@ module.exports = function(app, io) {
         var updateDoc = {};
         updateDoc[req.body.field] = req.body.value;
 
-        AccountSettings.update({
+        AccountSettings.findOneAndUpdate({
             _id: req.params.user_id
         }, {
             $set: updateDoc
         }, {
-            runValidators: true
+            runValidators: true,
+            new: true
         }, function(err, account_settings) {
             if (err) return res.status(500).send(err);
+
+            io.to(account_settings._id).emit('account_settings:receive_update');
 
             return res.json(account_settings);
         });

@@ -1,6 +1,10 @@
 angular.module('messagesDirective', [])
 
-    .controller('messageController', ['$scope', '$window', 'focus', 'socket', 'helpers', 'Messages', 'Strands', 'DEFAULT_NUM_MESSAGES', function($scope, $window, focus, socket, helpers, Messages, Strands, DEFAULT_NUM_MESSAGES) {
+    .controller('messageController',
+                ['$scope', '$window', 'focus', 'socket', 'helpers', 'Messages',
+                 'Strands', 'AccountSettings', 'DEFAULT_NUM_MESSAGES',
+                 function($scope, $window, focus, socket, helpers, Messages,
+                          Strands, AccountSettings, DEFAULT_NUM_MESSAGES) {
 
         var vm = this;
 
@@ -383,16 +387,6 @@ angular.module('messagesDirective', [])
                 refreshMessages();
             };
 
-            // play a sound
-            var now = new Date();
-            var SECOND = 1000;
-            var just_received_message_sound = now - vm.last_message_received_sound < SECOND;
-            if (vm.sound_on && data.play_message_sound && !just_received_message_sound) {
-                var ooooh = new Audio('audio/ooooh.wav');
-                ooooh.play();
-                vm.last_message_received_sound = new Date();
-            };
-
             // if the new message is on the current strand, mark the current strand as addressed
             if (vm.selected_strand && vm.selected_user && vm.selected_strand._id === data.strand_id && vm.selected_user._id === data.receiver_id) {
                 markStrandMessagesAsAddressed();
@@ -471,7 +465,6 @@ angular.module('messagesDirective', [])
         vm.send_button_disabled = false;
         vm.sendable_text_focus = false;
         vm.last_time_read = undefined;
-        vm.last_message_received_sound = undefined;
         vm.newMessageFormData = {};
         vm.newStrandFormData = {};
 
@@ -489,7 +482,6 @@ angular.module('messagesDirective', [])
                 selected_user: '=selectedUser',
                 strand_map: '=strandMap',
                 friend_user_map: '=friendUserMap',
-                sound_on: '=soundOn'
             },
             templateUrl: 'views/messages.html',
             controller: 'messageController',
