@@ -1,17 +1,29 @@
 angular.module('accountSettingsDirective', [])
 
-    .controller('accountSettingsController', ['Users', 'AccountSettings', function(Users, AccountSettings) {
+    .controller('accountSettingsController',
+                ['$scope', '$location', 'Users', 'AccountSettings', 'DEFAULT_PROFILE_PIC',
+                 function($scope, $location, Users, AccountSettings, DEFAULT_PROFILE_PIC) {
 
         var vm = this;
 
 
         // define CRUD functions used in the template
 
-        vm.updateAccountSettings = function(field) {
+        vm.updateProfilePic = function() {
             if (vm.selected_user) {
-                var value = vm.account_settings[field];
 
-                AccountSettings.set(vm.selected_user._id, field, value)
+                AccountSettings.set(vm.selected_user._id, 'profile_pic_url', vm.candidate_pic_url)
+                    .success(function(data) {
+                        AccountSettings.refresh(vm.selected_user._id);
+                    });
+
+            };
+        };
+
+        vm.updateSoundOn = function() {
+            if (vm.selected_user) {
+
+                AccountSettings.set(vm.selected_user._id, 'sound_on', vm.account_settings.sound_on)
                     .success(function(data) {
                         AccountSettings.refresh(vm.selected_user._id);
                     });
@@ -24,17 +36,37 @@ angular.module('accountSettingsDirective', [])
 
                 Users.delete(vm.selected_user._id)
                     .success(function(data) {
-                        // TODO: handle successful deletion of the user
-                        console.log('user deleted?');
+                        vm.selected_user = undefined;
+
+                        $location.path('/auth');
                     });
 
             };
         };
 
 
+        // define page control functions used in the template
+
+        vm.unsavedProfilePic = function() {
+            return vm.candidate_pic_url !== vm.account_settings.profile_pic_url;
+        };
+
+
+        // register listeners
+
+        var refreshCandidatePicURL = function() {
+            vm.candidate_pic_url = vm.account_settings.profile_pic_url;
+        };
+
+        var profile_pic_url_watcher = function() {return vm.profile_pic_url;};
+        $scope.$watch(profile_pic_url_watcher, refreshCandidatePicURL);
+
+
         // initialization
 
         vm.account_settings = AccountSettings.account_settings;
+        vm.candidate_pic_url = vm.account_settings.profile_pic_url;
+        vm.default_pic = DEFAULT_PROFILE_PIC;
 
     }])
 
@@ -43,6 +75,7 @@ angular.module('accountSettingsDirective', [])
             restrict: 'EA',
             scope: {
                 selected_user: '=selectedUser',
+                title_notifications: '=titleNotifications'
             },
             templateUrl: 'views/account_settings.html',
             controller: 'accountSettingsController',

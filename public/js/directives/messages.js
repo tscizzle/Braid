@@ -2,9 +2,9 @@ angular.module('messagesDirective', [])
 
     .controller('messageController',
                 ['$scope', '$window', 'focus', 'socket', 'helpers', 'Messages',
-                 'Strands', 'AccountSettings', 'DEFAULT_NUM_MESSAGES',
+                 'Strands', 'DEFAULT_NUM_MESSAGES',
                  function($scope, $window, focus, socket, helpers, Messages,
-                          Strands, AccountSettings, DEFAULT_NUM_MESSAGES) {
+                          Strands, DEFAULT_NUM_MESSAGES) {
 
         var vm = this;
 

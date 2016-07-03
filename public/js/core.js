@@ -9,6 +9,7 @@ var Braid = angular.module('Braid', [
     'braidMain',
     'braidChat',
     'enterSubmitDirective',
+    'errSrcDirective',
     'navbarDirective',
     'registerDirective',
     'loginDirective',
@@ -33,8 +34,7 @@ var Braid = angular.module('Braid', [
 
     // 3rd-party dependencies
     'btford.socket-io',
-    'luegg.directives',
-    'flow'
+    'luegg.directives'
 
 ])
 
@@ -67,4 +67,6 @@ var Braid = angular.module('Braid', [
     }])
 
     // constants
-    .constant('DEFAULT_NUM_MESSAGES', 50);
+    .constant('DEFAULT_NUM_MESSAGES', 50)
+
+    .constant('DEFAULT_PROFILE_PIC', '/img/dummy_prof_pic.jpg?');

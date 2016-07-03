@@ -1,6 +1,8 @@
 angular.module('navbarDirective', [])
 
-    .controller('navbarController', ['chat', function(chat) {
+    .controller('navbarController',
+                ['chat', 'AccountSettings', 'DEFAULT_PROFILE_PIC',
+                 function(chat, AccountSettings, DEFAULT_PROFILE_PIC) {
 
         var vm = this;
 
@@ -10,6 +12,12 @@ angular.module('navbarDirective', [])
         vm.showChatLink = function() {
             return chat.showing || !vm.selected_user;
         };
+
+
+        // initialization
+
+        vm.account_settings = AccountSettings.account_settings;
+        vm.default_pic = DEFAULT_PROFILE_PIC;
 
     }])
 

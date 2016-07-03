@@ -7,8 +7,8 @@
 }
 
 .settings-table {
+    width: 100%;
     margin-top: 30px;
-    width: 70%;
     text-align: center;
 }
 
@@ -18,11 +18,38 @@
 }
 
 .settings-table td {
-    width: 50%;
-    padding: 10px;
+    height: 70px;
+    padding: 15px;
 }
 
-.profile-pic-upload-preview {
-    height: 50px;
-    width: 50px;
+.settings-table td:first-child {
+    width: 40%;
+    color: #555;
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+.settings-table td:not(:first-child) {
+    width: 60%;
+}
+
+.profile-pic-save {
+    margin-left: 15px;
+}
+
+.profile-pic-preview-container {
+    height: 200px;
+    width: 100%;
+    margin-top: 30px;
+    text-align: center;
+}
+
+.profile-pic-preview {
+    height: 200px;
+    width: 200px;
+    border-radius: 50%;
+}
+
+.needs-save {
+    opacity: 0.5;
 }

@@ -1,10 +1,10 @@
 <nav class="navbar navbar-default">
     <div class="container-fluid navbar-container">
 
-        <a href="/"><img class="navbar-logo" src="/img/poop_logo.jpeg?" alt=""></a>
+        <a href="{{ navbarCtrl.selected_user ? '/' : '/auth' }}"><img class="navbar-logo" src="/img/poop_logo.jpeg?"></a>
 
-        <div class="navbar-right right-navbar-container" ng-show="navbarCtrl.selected_user">
-            <a class="navbar-brand dropdown-toggle clickable username-link btn" data-toggle="dropdown">
+        <div class="navbar-right navbar-dropdown-container" ng-show="navbarCtrl.selected_user">
+            <a class="btn navbar-brand dropdown-toggle clickable username-link" data-toggle="dropdown">
                 {{ navbarCtrl.selected_user.username }} <i class="fa fa-caret-down"></i>
             </a>
             <ul class="dropdown-menu">
@@ -14,11 +14,13 @@
                     <a class="btn" href="" braid-logout login_object="navbarCtrl.login_object"
                                                         selected_user="navbarCtrl.selected_user"
                                                         title_notifications="navbarCtrl.title_notifications">
-                    <i class="fa fa-lg fa-sign-out"></i>Logout
+                        <i class="fa fa-lg fa-sign-out"></i>
+                        Logout
                     </a>
                 </li>
             </ul>
         </div>
+        <a href="/profile"><img class="navbar-right navbar-profile-pic" ng-src="{{ navbarCtrl.account_settings.profile_pic_url || navbarCtrl.default_pic }}" err-src="{{ navbarCtrl.default_pic }}" ng-show="navbarCtrl.selected_user"></a>
         <a id="chat-view-link" class="btn btn-primary navbar-right" href="/" ng-hide="navbarCtrl.showChatLink()">
             <i class="fa fa-arrow-left"></i>
             <i class="fa fa-lg fa-comments"></i>
