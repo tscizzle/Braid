@@ -1,8 +1,10 @@
 angular.module('accountSettingsDirective', [])
 
     .controller('accountSettingsController',
-                ['$scope', '$location', 'Users', 'AccountSettings', 'DEFAULT_PROFILE_PIC',
-                 function($scope, $location, Users, AccountSettings, DEFAULT_PROFILE_PIC) {
+                ['$scope', '$window', '$location', 'Users', 'AccountSettings',
+                 'DEFAULT_PROFILE_PIC',
+                 function($scope, $window, $location, Users, AccountSettings,
+                          DEFAULT_PROFILE_PIC) {
 
         var vm = this;
 
@@ -10,7 +12,7 @@ angular.module('accountSettingsDirective', [])
         // define CRUD functions used in the template
 
         vm.updateProfilePic = function() {
-            if (vm.selected_user) {
+            if (vm.selected_user && vm.unsavedProfilePic()) {
 
                 AccountSettings.set(vm.selected_user._id, 'profile_pic_url', vm.candidate_pic_url)
                     .success(function(data) {
@@ -49,6 +51,13 @@ angular.module('accountSettingsDirective', [])
 
         vm.unsavedProfilePic = function() {
             return vm.candidate_pic_url !== vm.account_settings.profile_pic_url;
+        };
+
+        vm.clickProfilePic = function() {
+            var profile_pic_location = $('.profile-pic-preview').attr('src');
+            if (profile_pic_location !== DEFAULT_PROFILE_PIC) {
+                $window.open(profile_pic_location, '_blank');
+            };
         };
 
 

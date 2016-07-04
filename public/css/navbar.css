@@ -59,39 +59,10 @@
     border-radius: 50%;
 }
 
-#chat-view-link {
-    margin-top: 10px;
-    margin-right: 20px;
-    outline: 0;
-    position: relative;
+.navbar-profile-pic:hover {
+    border: solid 2px #DDD;
 }
 
-.chat-view-link-notification-bubble {
-    position: absolute;
-    bottom: -9px;
-    left: -9px;
-    width: 18px;
-    height: 18px;
-    border-radius: 9px;
-    background-color: #5555FF;
-    color: white;
-    display: table;
-    text-align: center;
-    vertical-align: middle;
-    font-size: 0.9em;
-    opacity: 1;
-}
-
-.chat-view-link-notification-bubble.ng-hide-add, .chat-view-link-notification-bubble.ng-hide-remove {
-    -webkit-transition: opacity 0.5s, left 0.5s;
-    -moz-transition: opacity 0.5s, left 0.5s;
-    -o-transition: opacity 0.5s, left 0.5s;
-    -ms-transition: opacity 0.5s, left 0.5s;
-    transition: opacity 0.5s, left 0.5s;
-    color: transparent;
-}
-
-.chat-view-link-notification-bubble.ng-hide {
-    opacity: 0;
-    left: 25px;
+.navbar-profile-pic:active {
+    border: solid 3px #DDD;
 }

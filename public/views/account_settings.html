@@ -46,7 +46,7 @@
 
         <div class="col-sm-5">
             <div class="profile-pic-preview-container">
-                <img class="profile-pic-preview" ng-class="{'needs-save': actSetCtrl.unsavedProfilePic()}" ng-src="{{ actSetCtrl.candidate_pic_url || actSetCtrl.default_pic }}" err-src="{{ actSetCtrl.default_pic }}" />
+                <img class="clickable profile-pic-preview" ng-class="{'needs-save': actSetCtrl.unsavedProfilePic()}" ng-src="{{ actSetCtrl.candidate_pic_url || actSetCtrl.default_pic }}" err-src="{{ actSetCtrl.default_pic }}" ng-click="actSetCtrl.clickProfilePic()" />
             </div>
         </div>
     </div>

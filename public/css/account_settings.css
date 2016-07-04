@@ -46,6 +46,14 @@
     border-radius: 50%;
 }
 
+.profile-pic-preview:hover {
+    border: solid 2px #DDD;
+}
+
+.profile-pic-preview:active {
+    border: solid 3px #DDD;
+}
+
 .needs-save {
     opacity: 0.5;
 }
