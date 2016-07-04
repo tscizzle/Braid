@@ -101,12 +101,12 @@ angular.module('friendshipsDirective', [])
         };
 
         vm.selectConvo = function(friendship) {
-            $location.path('/');
-
             var friendship_convo = convoFromFriendship(friendship);
             if (friendship && friendship.status === 'accepted' && !friendship_convo) {
+                $location.path('/');
                 createConvo(friendship);
             } else if (friendship_convo) {
+                $location.path('/');
                 vm.selected_convo = friendship_convo;
             };
         };
