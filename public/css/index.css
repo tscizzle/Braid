@@ -9,12 +9,16 @@ html, body {
     background: linear-gradient(#FFF, #DDD); /* Standard syntax */
 }
 
-#main-content {
+.main-content {
     position: relative;
 }
 
-#margin-fixer-grid-wrapper {
+.margin-fixer-grid-wrapper {
     padding: 0 15px;
+}
+
+.main-view-container.ng-enter {
+    animation: fadeIn 0.3s ease-out;
 }
 
 /* STYLES TO USED ANYWHERE */
@@ -25,4 +29,15 @@ textarea {
 
 .clickable {
     cursor: pointer;
+}
+
+/* ANIMATIONS */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
