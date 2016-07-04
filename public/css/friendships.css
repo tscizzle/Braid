@@ -15,6 +15,10 @@
     margin-top: 20px;
 }
 
+.friendship-header-hr {
+    margin-top: 10px;
+}
+
 .friendships-content {
     overflow-y: hidden;
     height: 74vh;
@@ -113,7 +117,7 @@
 
 .friendship-notification-bubble {
     position: absolute;
-    top: 52px;
+    top: 84px;
     right: -10px;
     width: 18px;
     height: 18px;
@@ -148,7 +152,7 @@
 
 .total-unread-notification-bubble {
     position: absolute;
-    top: 52px;
+    top: 84px;
     left: -10px;
     width: 18px;
     height: 18px;

@@ -1,7 +1,14 @@
 <div class="container-fluid queue-pane">
 
-    <div class="row">
+    <div class="row queue-header-row">
         <div class="col-sm-12">
+            <h3>Queue</h3>
+            <hr class="queue-header-hr">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12 queue-list-col">
             <div class="pull-right preview-in-list" ng-click="queueCtrl.clickUnstrandedPreview(message)" ng-repeat="message in queueCtrl.unaddressed_unstranded_messages track by message._id">
                 <span class="unstranded-preview">{{ message.text | cutoffText }}</span>
             </div>
