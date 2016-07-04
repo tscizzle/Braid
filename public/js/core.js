@@ -8,6 +8,7 @@ var Braid = angular.module('Braid', [
     // custom dependencies
     'braidMain',
     'braidChat',
+    'braidAuth',
     'enterSubmitDirective',
     'errSrcDirective',
     'navbarDirective',

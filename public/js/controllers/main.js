@@ -104,7 +104,6 @@ angular.module('braidMain', [])
 
         // initialization
 
-        vm.login_object = true;
         vm.title_notifications = 0;
         vm.messages = [];
         vm.strands = [];

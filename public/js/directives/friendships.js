@@ -1,8 +1,8 @@
 angular.module('friendshipsDirective', [])
 
     .controller('friendshipController',
-                ['$scope', '$timeout', 'socket', 'Messages', 'Friendships', 'Convos',
-                 function($scope, $timeout, socket, Messages, Friendships, Convos) {
+                ['$scope', '$timeout', '$location', 'socket', 'Messages', 'Friendships', 'Convos',
+                 function($scope, $timeout, $location, socket, Messages, Friendships, Convos) {
 
         var vm = this;
 
@@ -96,11 +96,13 @@ angular.module('friendshipsDirective', [])
         vm.friendshipConvoIsSelected = function(friendship) {
             var friendship_convo = convoFromFriendship(friendship);
             if (vm.selected_convo && friendship_convo) {
-                return friendship_convo._id === vm.selected_convo._id;
+                return friendship_convo._id === vm.selected_convo._id && $location.path() === '/';
             };
         };
 
         vm.selectConvo = function(friendship) {
+            $location.path('/');
+
             var friendship_convo = convoFromFriendship(friendship);
             if (friendship && friendship.status === 'accepted' && !friendship_convo) {
                 createConvo(friendship);
@@ -248,11 +250,15 @@ angular.module('friendshipsDirective', [])
         vm.newFriendshipFormData = {};
         vm.newConvoFormData = {};
 
-        Friendships.get(vm.selected_user._id)
-            .success(function(data) {
-                vm.friendships = data;
-                refreshUnreadMessageCounts();
-            });
+        if (vm.selected_user) {
+
+            Friendships.get(vm.selected_user._id)
+                .success(function(data) {
+                    vm.friendships = data;
+                    refreshUnreadMessageCounts();
+                });
+
+        };
 
     }])
 

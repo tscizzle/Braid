@@ -25,6 +25,7 @@
     <script src="/bower_components/angular-animate/angular-animate.min.js"></script>
     <script src="/js/controllers/main.js"></script>
     <script src="/js/controllers/chat.js"></script>
+    <script src="/js/controllers/auth.js"></script>
     <script src="/js/directives/enter_submit.js"></script>
     <script src="/js/directives/err_src.js"></script>
     <script src="/js/directives/navbar.js"></script>
@@ -58,6 +59,7 @@
     <link rel="stylesheet" href="/css/queue.css">
     <link rel="stylesheet" href="/css/chat.css">
     <link rel="stylesheet" href="/css/auth.css">
+    <link rel="stylesheet" href="/css/profile.css">
     <link rel="stylesheet" href="/css/account_settings.css">
     <link rel="stylesheet" href="/css/navbar.css">
     <link rel="stylesheet" href="/css/typing_indicator.css">
@@ -67,16 +69,29 @@
 
 <body ng-style="{'background-color': mainCtrl.background_color}">
 
-    <braid-navbar login_object="mainCtrl.login_object"
-                  selected_user="mainCtrl.selected_user"
+    <braid-navbar selected_user="mainCtrl.selected_user"
                   title_notifications="mainCtrl.title_notifications">
     </braid-navbar>
 
     <div id="main-content" class="container-fluid">
     <div id="margin-fixer-grid-wrapper">
+        <div class="row">
+            <div class="col-sm-10">
 
-        <div ng-view></div>
+                <div ng-view></div>
 
+            </div>
+            <div class="col-sm-2">
+                <braid-friendships ng-show="mainCtrl.selected_user"
+                                   friend_users="mainCtrl.friend_users"
+                                   friendships="mainCtrl.friendships"
+                                   selected_convo="mainCtrl.selected_convo"
+                                   selected_user="mainCtrl.selected_user"
+                                   friend_user_map="mainCtrl.friend_user_map"
+                                   title_notifications="mainCtrl.title_notifications">
+                </braid-friendships>
+            </div>
+        </div>
     </div>
     </div>
 

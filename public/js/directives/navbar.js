@@ -9,8 +9,8 @@ angular.module('navbarDirective', [])
 
         // define page control functions used in the template
 
-        vm.showChatLink = function() {
-            return chat.showing || !vm.selected_user;
+        vm.logoDestination = function() {
+            return vm.selected_user ? '/' : '/auth';
         };
 
 
@@ -25,7 +25,6 @@ angular.module('navbarDirective', [])
         return {
             restrict: 'E',
             scope: {
-                login_object: '=loginObject',
                 selected_user: '=selectedUser',
                 title_notifications: '=titleNotifications'
             },

@@ -4,7 +4,6 @@ angular.module('logoutDirective', [])
         return {
             restrict: 'A',
             scope: {
-                login_object: '=loginObject',
                 selected_user: '=selectedUser',
                 title_notifications: '=titleNotifications'
             },
@@ -14,7 +13,6 @@ angular.module('logoutDirective', [])
 
                     auth.logout()
                         .then(function() {
-                            vm.login_object = true;
                             vm.selected_user = undefined;
                             vm.title_notifications = 0;
 

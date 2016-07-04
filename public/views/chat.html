@@ -1,5 +1,5 @@
 <div class="row" ng-controller="chatController as chatCtrl">
-    <div class="col-sm-2 col-sm-offset-2">
+    <div class="col-sm-3 col-sm-offset-2">
         <braid-queue messages="mainCtrl.messages"
                      strands="mainCtrl.strands"
                      num_messages="mainCtrl.num_messages"
@@ -11,7 +11,7 @@
         </braid-queue>
     </div>
 
-    <div id="message-view-col" class="col-sm-6">
+    <div class="col-sm-7 message-view-col">
         <braid-messages messages="mainCtrl.messages"
                         strands="mainCtrl.strands"
                         num_messages="mainCtrl.num_messages"
@@ -22,15 +22,5 @@
                         friend_user_map="mainCtrl.friend_user_map"
                         title_notifications="mainCtrl.title_notifications">
         </braid-messages>
-    </div>
-
-    <div class="col-sm-2">
-        <braid-friendships friend_users="mainCtrl.friend_users"
-                           friendships="mainCtrl.friendships"
-                           selected_convo="mainCtrl.selected_convo"
-                           selected_user="mainCtrl.selected_user"
-                           friend_user_map="mainCtrl.friend_user_map"
-                           title_notifications="mainCtrl.title_notifications">
-        </braid-friendships>
     </div>
 </div>

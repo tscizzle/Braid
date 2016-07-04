@@ -1,13 +1,13 @@
-<div class="row" ng-init="mainCtrl.login_object = true">
+<div class="row" ng-controller="authController as authCtrl">
     <div class="col-sm-4">
-        <braid-login ng-show="mainCtrl.login_object"
+        <braid-login ng-show="authCtrl.login_object"
                      selected_user="mainCtrl.selected_user"
-                     login_object="mainCtrl.login_object">
+                     login_object="authCtrl.login_object">
         </braid-login>
 
-        <braid-register ng-hide="mainCtrl.login_object"
+        <braid-register ng-hide="authCtrl.login_object"
                         selected_user="mainCtrl.selected_user"
-                        login_object="mainCtrl.login_object">
+                        login_object="authCtrl.login_object">
         </braid-register>
     </div>
 </div>
