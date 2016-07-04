@@ -52,7 +52,7 @@ angular.module('messagesDirective', [])
                                         .success(function(create_messages_data) {
                                             vm.newMessageFormData = {};
                                             vm.messages = create_messages_data;
-                                            vm.primed_messages = [];
+                                            clearPrimedMessages();
                                         })
                                         .finally(reenableSendButton);
 
@@ -153,13 +153,43 @@ angular.module('messagesDirective', [])
 
             };
 
-            // if the click was on a link, don't toggle the message
+            // if the click was on a link, don't continue
             var target = event.target || event.srcElement;
             if (target.tagName === 'A') {
                 return;
             };
-            // if there is highlighted text, don't toggle the message
+            // if there is highlighted text, don't continue
             if ($window.getSelection().toString()) {
+                return;
+            };
+
+            // if the alt button was held down during the click
+            if (event.altKey) {
+                // if the clicked message is in a strand
+                if (message.strand_id) {
+                    // if there are any primed messages, add them to the clicked strand
+                    if (vm.primed_messages.length > 0) {
+                        var primed_message_ids = vm.primed_messages.map(function(primed_message) {
+                            return primed_message._id;
+                        });
+
+                        Messages.assignMessagesToStrand(primed_message_ids, message.strand_id, vm.selected_convo._id, vm.num_messages)
+                            .success(function(assign_messages_data) {
+                                vm.messages = assign_messages_data;
+                                clearPrimedMessages();
+                            });
+
+                    // if there are no primed messages, remove the clicked message from its strand
+                    } else {
+
+                        Messages.unassignMessageFromStrand(message._id, vm.selected_convo._id, vm.num_messages)
+                            .success(function(unassign_messages_data) {
+                                vm.messages = unassign_messages_data;
+                            });
+
+                    };
+                };
+                // don't continue
                 return;
             };
 

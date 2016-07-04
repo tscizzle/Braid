@@ -53,8 +53,8 @@ angular.module('accountSettingsDirective', [])
             return vm.candidate_pic_url !== vm.account_settings.profile_pic_url;
         };
 
-        vm.clickProfilePic = function() {
-            var profile_pic_location = $('.profile-pic-preview').attr('src');
+        vm.clickProfilePic = function(event) {
+            var profile_pic_location = event.target.attributes.src.value;
             if (profile_pic_location !== DEFAULT_PROFILE_PIC) {
                 $window.open(profile_pic_location, '_blank');
             };
