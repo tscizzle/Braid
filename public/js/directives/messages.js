@@ -97,7 +97,7 @@ angular.module('messagesDirective', [])
                             });
 
                             if (strand_messages.length === 0) {
-                                vm.selected_strand = undefined;
+                                deselectStrand();
                             };
                         };
                     });
@@ -116,7 +116,7 @@ angular.module('messagesDirective', [])
 
         vm.clickMessageListWrapper = function() {
             if (vm.selected_strand) {
-                vm.selected_strand = undefined;
+                deselectStrand();
             }
         }
 
@@ -220,7 +220,7 @@ angular.module('messagesDirective', [])
             // if a strand is selected
             } else {
                 // deselect the strand
-                vm.selected_strand = undefined;
+                deselectStrand();
             };
         };
 
