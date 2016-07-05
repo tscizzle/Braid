@@ -108,6 +108,12 @@ angular.module('messagesDirective', [])
 
         // define page control functions used in the template
 
+        vm.pressKeyInChat = function(event) {
+            if (event.keyCode === 27) {
+                deselectStrand();
+            };
+        };
+
         vm.clickMessageListWrapper = function() {
             if (vm.selected_strand) {
                 deselectStrand();
