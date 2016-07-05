@@ -4,7 +4,6 @@
         <div class="col-sm-12">
             <div class="message-header-div">
                 <h1>{{ messageCtrl.selected_convo | partner:messageCtrl.selected_user | username:messageCtrl.friend_user_map }}</h1>
-                <div class="pull-right strand-diamond" ng-style="{'background-color': messageCtrl.paintStrandDiamond()}" ng-show="messageCtrl.selected_strand"></div>
             </div>
         </div>
     </div>

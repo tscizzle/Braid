@@ -108,12 +108,6 @@ angular.module('messagesDirective', [])
 
         // define page control functions used in the template
 
-        vm.paintStrandDiamond = function() {
-            if (vm.selected_strand) {
-                return STRAND_COLOR_ORDER[vm.selected_strand.color_number];
-            };
-        };
-
         vm.clickMessageListWrapper = function() {
             if (vm.selected_strand) {
                 deselectStrand();
