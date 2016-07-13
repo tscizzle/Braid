@@ -218,9 +218,11 @@ angular.module('friendshipsDirective', [])
             vm.title_notifications = vm.totalUnreadMessages();
         };
 
+        var friendships_watcher = function() {return vm.friendships;};
         var friend_users_watcher = function() {return vm.friend_users;};
         var selected_user_watcher = function() {return vm.selected_user;};
         var unread_messages_watcher = function() {return vm.totalUnreadMessages()};
+        $scope.$watchGroup([friendships_watcher, selected_user_watcher], refreshUnreadMessageCounts)
         $scope.$watchGroup([friend_users_watcher, selected_user_watcher], refreshConvos);
         $scope.$watch(unread_messages_watcher, resetTitleNotifications);
 

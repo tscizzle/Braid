@@ -54,13 +54,13 @@ angular.module('messagesDirective', [])
                                             vm.messages = create_messages_data;
                                             clearPrimedMessages();
                                         })
-                                        .finally(reenableSendButton);
+                                        .finally(afterMessageCreation);
 
                                 })
-                                .catch(reenableSendButton);
+                                .catch(afterMessageCreation);
 
                         })
-                        .catch(reenableSendButton);
+                        .catch(afterMessageCreation);
 
                 // if not responding to a new strand
                 } else {
@@ -73,11 +73,11 @@ angular.module('messagesDirective', [])
                             vm.newMessageFormData = {};
                             vm.messages = create_messages_data;
                         })
-                        .finally(reenableSendButton);
+                        .finally(afterMessageCreation);
 
                 };
             } else {
-                reenableSendButton();
+                afterMessageCreation();
             };
         };
 
@@ -329,7 +329,7 @@ angular.module('messagesDirective', [])
             return textarea_color;
         };
 
-        vm.focusTextarea = function() {
+        vm.handleFocusTextarea = function() {
             vm.sendable_text_focus = true;
             markMessagesAsRead();
         };
@@ -436,8 +436,9 @@ angular.module('messagesDirective', [])
             vm.send_button_disabled = true;
         };
 
-        var reenableSendButton = function() {
+        var afterMessageCreation = function() {
             vm.send_button_disabled = false;
+            focusSendableTextarea();
         };
 
         var refreshStrands = function() {

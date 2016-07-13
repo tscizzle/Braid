@@ -33,7 +33,7 @@
                 <div class="row">
                     <div class="col-sm-10">
                         <div class="form-group">
-                            <textarea id="sendable-textarea" class="form-control no-disabled-cursor" placeholder="Type a message..." ng-style="{'background-color': messageCtrl.paintTextarea()}" ng-model="messageCtrl.newMessageFormData.text" ng-focus="messageCtrl.focusTextarea()" ng-blur="messageCtrl.sendable_text_focus=false" enter-submit="messageCtrl.createMessage()" ng-change="messageCtrl.userIsTyping()" ng-disabled="messageCtrl.send_button_disabled"></textarea>
+                            <textarea id="sendable-textarea" class="form-control no-disabled-cursor" placeholder="Type a message..." ng-style="{'background-color': messageCtrl.paintTextarea()}" ng-model="messageCtrl.newMessageFormData.text" ng-focus="messageCtrl.handleFocusTextarea()" ng-blur="messageCtrl.sendable_text_focus=false" enter-submit="messageCtrl.createMessage()" ng-change="messageCtrl.userIsTyping()" ng-disabled="messageCtrl.send_button_disabled"></textarea>
                         </div>
                     </div>
                     <div class="col-sm-2">
