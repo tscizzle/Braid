@@ -2,9 +2,9 @@ angular.module('messagesDirective', [])
 
     .controller('messageController',
                 ['$scope', '$window', 'focus', 'socket', 'helpers', 'Messages',
-                 'Strands', 'DEFAULT_NUM_MESSAGES',
+                 'Strands', 'AccountSettings', 'DEFAULT_NUM_MESSAGES', 'DEFAULT_PROFILE_PIC',
                  function($scope, $window, focus, socket, helpers, Messages,
-                          Strands, DEFAULT_NUM_MESSAGES) {
+                          Strands, AccountSettings, DEFAULT_NUM_MESSAGES, DEFAULT_PROFILE_PIC) {
 
         var vm = this;
 
@@ -337,6 +337,18 @@ angular.module('messagesDirective', [])
 
         // register listeners
 
+        var refreshPartnerProfilePic = function() {
+            var partnerId = helpers.partnerIdFromSelectedConvo(vm);
+            if (partnerId) {
+
+                AccountSettings.friendProfilePic(partnerId)
+                    .success(function(friend_account_settings) {
+                        vm.partner_profile_pic = friend_account_settings.profile_pic_url;
+                    });
+
+            };
+        };
+
         var focusSendableTextarea = function() {
             focus.focus('sendable-textarea');
         };
@@ -405,6 +417,7 @@ angular.module('messagesDirective', [])
         var selected_strand_watcher = function() {return vm.selected_strand;};
         var selected_convo_watcher = function() {return vm.selected_convo;};
         var selected_user_watcher = function() {return vm.selected_user;};
+        $scope.$watchGroup([selected_convo_watcher, selected_user_watcher], refreshPartnerProfilePic);
         $scope.$watch(selected_strand_watcher, focusSendableTextarea);
         $scope.$watchGroup([num_messages_watcher, selected_strand_watcher, selected_convo_watcher], refreshMessages);
         $scope.$watchGroup([selected_strand_watcher, selected_convo_watcher, selected_user_watcher], clearPrimedMessages);
@@ -502,6 +515,8 @@ angular.module('messagesDirective', [])
         vm.send_button_disabled = false;
         vm.sendable_text_focus = false;
         vm.last_time_read = undefined;
+        vm.partner_profile_pic = undefined;
+        vm.default_pic = DEFAULT_PROFILE_PIC;
         vm.newMessageFormData = {};
         vm.newStrandFormData = {};
 

@@ -12,7 +12,7 @@ angular.module('accountSettingsDirective', [])
         // define CRUD functions used in the template
 
         vm.updateProfilePic = function() {
-            if (vm.selected_user && vm.unsavedProfilePic()) {
+            if (vm.selected_user && vm.unsavedProfilePic() && !vm.showProfilePicErrorMsg()) {
 
                 AccountSettings.set(vm.selected_user._id, 'profile_pic_url', vm.candidate_pic_url)
                     .success(function(data) {
@@ -48,6 +48,10 @@ angular.module('accountSettingsDirective', [])
 
 
         // define page control functions used in the template
+
+        vm.showProfilePicExample = function() {
+            return !vm.account_settings.profile_pic_url && !vm.candidate_pic_url;
+        };
 
         vm.unsavedProfilePic = function() {
             return vm.candidate_pic_url !== vm.account_settings.profile_pic_url;

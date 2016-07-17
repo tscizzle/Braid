@@ -217,6 +217,34 @@ module.exports = function(app, io) {
 
     };
 
+    var paramsUserIdIsFriend = function(req, res, next) {
+
+        Friendship.find({
+            $or: [{requester_id: req.user._id}, {target_id: req.user._id}],
+            status: 'accepted'
+        }, function(err, friendships) {
+            var friend_ids = _.map(friendships, function(friendship) {
+                if (friendship.requester_id.equals(req.user._id)) {
+                    return friendship.target_id;
+                } else if (friendship.target_id.equals(req.user._id)) {
+                    return friendship.requester_id;
+                };
+            });
+
+            var isUsersFriend = function(other_user_id) {
+                return friend_ids.filter(function(friend_id) {return friend_id == other_user_id}).length > 0;
+            };
+
+            if (!isUsersFriend(req.params.user_id)) {
+                return res.status(401).json({
+                    err: 'Logged in user does not have access to one of the involved resources.'
+                });
+            } else {
+                return next();
+            };
+        });
+    };
+
 
     // define the api route handlers
     // every route should have authentication middleware preceding it
@@ -835,7 +863,7 @@ module.exports = function(app, io) {
 
     });
 
-    // --- get user settings object for a user
+    // --- get an account settings for a user
     app.get('/api/account_settings/:user_id', resourceBelongsToUser(['params', 'user_id'], AccountSettings));
     app.get('/api/account_settings/:user_id', function(req, res) {
 
@@ -849,7 +877,23 @@ module.exports = function(app, io) {
 
     });
 
-    // --- update a user settings and send it back after update
+    // --- get a profile pics for friends
+    app.get('/api/account_settings/friendProfilePic/:user_id', paramsUserIdIsFriend);
+    app.get('/api/account_settings/friendProfilePic/:user_id', function(req, res) {
+
+        AccountSettings.findOne({
+            _id: req.params.user_id
+        }, {
+            profile_pic_url: 1
+        }, function(err, account_settings) {
+            if (err) return res.status(500).send(err);
+
+            return res.json(account_settings);
+        });
+
+    });
+
+    // --- update an account settings and send it back after update
     app.post('/api/account_settings/:user_id', resourceBelongsToUser(['params', 'user_id'], AccountSettings));
     app.post('/api/account_settings/:user_id', function(req, res) {
         var updateDoc = {};

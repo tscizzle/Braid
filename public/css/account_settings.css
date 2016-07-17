@@ -29,6 +29,16 @@
     width: 70%;
 }
 
+.profile-pic-form-cell {
+    position: relative;
+}
+
+.profile-pic-example {
+    position: absolute;
+    top: 0;
+    color: #AAA;
+}
+
 .profile-pic-save {
     margin-left: 15px;
 }

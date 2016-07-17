@@ -12,7 +12,8 @@
 
                 <tr>
                     <td>Profile Picture</td>
-                    <td>
+                    <td class="profile-pic-form-cell">
+                        <span class="profile-pic-example" ng-show="actSetCtrl.showProfilePicExample()">Ex. http://i.imgur.com/Bc4s4kn.jpg</span>
                         <input type="url" placeholder="URL of image" ng-model="actSetCtrl.candidate_pic_url" enter-submit="actSetCtrl.updateProfilePic()" />
                         <a class="btn btn-success profile-pic-save" ng-show="actSetCtrl.unsavedProfilePic()" ng-click="actSetCtrl.updateProfilePic()">Save</a>
                     </td>
