@@ -33,6 +33,14 @@
     margin-left: 15px;
 }
 
+.profile-pic-error-msg {
+    position: absolute;
+    right: 0;
+    left: 0;
+    text-align: center;
+    color: #FF5C5C;
+}
+
 .profile-pic-preview-container {
     height: 200px;
     width: 100%;

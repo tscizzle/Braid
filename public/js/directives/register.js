@@ -8,9 +8,16 @@ angular.module('registerDirective', [])
         // define functions used in the template
 
         vm.register = function() {
-            var verification = verifyPasswordStrength(vm.registerForm.password);
+            var verification = {
+                failed: false,
+                failure_messages: []
+            };
+
+            verifyUsernameLength(verification, vm.registerForm.username);
+            verifyPasswordStrength(verification, vm.registerForm.password);
+
             if (verification.failed) {
-                vm.register_error = verification.failure_message;
+                vm.register_error = verification.failure_messages[0];
                 return;
             };
 
@@ -48,18 +55,20 @@ angular.module('registerDirective', [])
 
         // helpers
 
-        var verifyPasswordStrength = function(pw) {
-            var verification = {
-                failed: false
-            };
-
-            var required_length = 10;
-            if (pw.length < required_length) {
+        var verifyUsernameLength = function(verification, username) {
+            var maximum_length = 20;
+            if (username.length > maximum_length) {
                 verification.failed = true;
-                verification.failure_message = 'Password must be at least ' + required_length + ' characters.';
+                verification.failure_messages.push('Username cannot be more than ' + maximum_length + ' characters');
             };
+        };
 
-            return verification;
+        var verifyPasswordStrength = function(verification, password) {
+            var minimum_length = 10;
+            if (password.length < minimum_length) {
+                verification.failed = true;
+                verification.failure_messages.push('Password must be at least ' + minimum_length + ' characters');
+            };
         };
 
 

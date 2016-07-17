@@ -60,6 +60,11 @@ angular.module('accountSettingsDirective', [])
             };
         };
 
+        vm.showProfilePicErrorMsg = function() {
+            var prof_src = $('.profile-pic-preview').attr('src');
+            return vm.candidate_pic_url && prof_src === DEFAULT_PROFILE_PIC;
+        };
+
 
         // register listeners
 
@@ -67,7 +72,7 @@ angular.module('accountSettingsDirective', [])
             vm.candidate_pic_url = vm.account_settings.profile_pic_url;
         };
 
-        var profile_pic_url_watcher = function() {return vm.profile_pic_url;};
+        var profile_pic_url_watcher = function() {return vm.account_settings.profile_pic_url;};
         $scope.$watch(profile_pic_url_watcher, refreshCandidatePicURL);
 
 

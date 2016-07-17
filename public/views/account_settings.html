@@ -45,6 +45,7 @@
         </div>
 
         <div class="col-sm-5">
+            <div class="profile-pic-error-msg" ng-show="actSetCtrl.showProfilePicErrorMsg()">No image found at that URL</div>
             <div class="profile-pic-preview-container">
                 <img class="clickable profile-pic-preview" ng-class="{'needs-save': actSetCtrl.unsavedProfilePic()}" ng-src="{{ actSetCtrl.candidate_pic_url || actSetCtrl.default_pic }}" err-src="{{ actSetCtrl.default_pic }}" ng-click="actSetCtrl.clickProfilePic($event)" />
             </div>
