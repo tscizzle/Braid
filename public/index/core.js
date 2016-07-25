@@ -43,13 +43,13 @@ var Braid = angular.module('Braid', [
     .config(['$routeProvider', function($routeProvider) {
         $routeProvider
             .when('/', {
-                templateUrl: 'views/chat.html'
+                templateUrl: 'views/chat/chat.html'
             })
             .when('/auth', {
-                templateUrl: 'views/auth.html'
+                templateUrl: 'views/auth/auth.html'
             })
             .when('/profile', {
-                templateUrl: 'views/profile.html'
+                templateUrl: 'views/profile/profile.html'
             });
     }])
 
@@ -70,4 +70,4 @@ var Braid = angular.module('Braid', [
     // constants
     .constant('DEFAULT_NUM_MESSAGES', 50)
 
-    .constant('DEFAULT_PROFILE_PIC', '/img/dummy_prof_pic.jpg?');
+    .constant('DEFAULT_PROFILE_PIC', '/assets/img/dummy_prof_pic.jpg?');

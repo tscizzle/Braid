@@ -275,7 +275,7 @@ angular.module('friendshipsDirective', [])
                 friend_user_map: '=friendUserMap',
                 title_notifications: '=titleNotifications'
             },
-            templateUrl: 'views/friendships.html',
+            templateUrl: 'components/friendships/friendships.html',
             controller: 'friendshipController',
             controllerAs: 'friendshipCtrl',
             bindToController: true

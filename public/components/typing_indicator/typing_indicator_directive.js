@@ -49,7 +49,7 @@ angular.module('typingIndicatorDirective', [])
                 selected_convo: '=selectedConvo',
                 selected_user: '=selectedUser'
             },
-            templateUrl: 'views/typing_indicator.html',
+            templateUrl: 'components/typing_indicator/typing_indicator.html',
             controller: 'typingIndicatorController',
             controllerAs: 'typIndCtrl',
             bindToController: true

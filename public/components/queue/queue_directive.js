@@ -152,7 +152,7 @@ angular.module('queueDirective', [])
                 strand_map: '=strandMap',
                 friend_user_map: '=friendUserMap'
             },
-            templateUrl: 'views/queue.html',
+            templateUrl: 'components/queue/queue.html',
             controller: 'queueController',
             controllerAs: 'queueCtrl',
             bindToController: true

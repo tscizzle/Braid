@@ -86,7 +86,7 @@ angular.module('registerDirective', [])
                 selected_user: '=selectedUser',
                 login_object: '=loginObject'
             },
-            templateUrl: 'views/register.html',
+            templateUrl: 'components/register/register.html',
             controller: 'registerController',
             controllerAs: 'registerCtrl',
             bindToController: true

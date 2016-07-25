@@ -1,0 +1,110 @@
+<!doctype html>
+
+<html ng-app="Braid" ng-controller="mainController as mainCtrl">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <base href="/">
+
+    <title ng-bind="mainCtrl.title_notifications | pageTitle">Braid</title>
+
+    <link rel="shortcut icon" href="/assets/img/poop_logo.ico">
+
+    <script src="/bower_components/angular/angular.js"></script>
+    <script src="/bower_components/angular-route/angular-route.min.js"></script>
+    <script src="/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="/bower_components/underscore/underscore-min.js"></script>
+    <script src="/bower_components/objectid.js/src/main/javascript/Objectid.js"></script>
+    <script src="/bower_components/socket.io-client/socket.io.js"></script>
+    <script src="/bower_components/angular-socket-io/socket.min.js"></script>
+    <script src="/bower_components/angular-scroll-glue/src/scrollglue.js"></script>
+    <script src="/bower_components/angular-sanitize/angular-sanitize.min.js"></script>
+    <script src="/bower_components/angular-animate/angular-animate.min.js"></script>
+
+    <script src="/index/core.js"></script>
+    <script src="/index/main_controller.js"></script>
+
+    <script src="/views/chat/chat_controller.js"></script>
+    <script src="/views/auth/auth_controller.js"></script>
+
+    <script src="/components/account_settings/account_settings_directive.js"></script>
+    <script src="/components/navbar/navbar_directive.js"></script>
+    <script src="/components/typing_indicator/typing_indicator_directive.js"></script>
+    <script src="/components/messages/messages_directive.js"></script>
+    <script src="/components/queue/queue_directive.js"></script>
+    <script src="/components/friendships/friendships_directive.js"></script>
+    <script src="/components/login/login_directive.js"></script>
+    <script src="/components/register/register_directive.js"></script>
+
+    <script src="/directives/enter_submit.js"></script>
+    <script src="/directives/err_src.js"></script>
+    <script src="/directives/logout.js"></script>
+    <script src="/services/focus_service.js"></script>
+
+    <script src="/services/socket_service.js"></script>
+    <script src="/services/helpers_service.js"></script>
+    <script src="/services/auth_service.js"></script>
+    <script src="/services/chat_service.js"></script>
+    <script src="/services/messages_service.js"></script>
+    <script src="/services/strands_service.js"></script>
+    <script src="/services/convos_service.js"></script>
+    <script src="/services/users_service.js"></script>
+    <script src="/services/friendships_service.js"></script>
+    <script src="/services/account_settings_service.js"></script>
+
+    <script src="/filters/main_filters.js"></script>
+
+
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css"> <!-- Bootswatch Yeti -->
+    <link rel="stylesheet" href="/assets/css/font-awesome-4.6.3/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/index/index.css">
+
+    <link rel="stylesheet" href="/views/auth/auth.css">
+    <link rel="stylesheet" href="/views/chat/chat.css">
+    <link rel="stylesheet" href="/views/profile/profile.css">
+
+    <link rel="stylesheet" href="/components/account_settings/account_settings.css">
+    <link rel="stylesheet" href="/components/navbar/navbar.css">
+    <link rel="stylesheet" href="/components/typing_indicator/typing_indicator.css">
+    <link rel="stylesheet" href="/components/messages/messages.css">
+    <link rel="stylesheet" href="/components/queue/queue.css">
+    <link rel="stylesheet" href="/components/friendships/friendships.css">
+
+</head>
+
+
+<body ng-style="{'background-color': mainCtrl.background_color}">
+
+    <braid-navbar selected_user="mainCtrl.selected_user"
+                  title_notifications="mainCtrl.title_notifications">
+    </braid-navbar>
+
+    <div class="main-content" class="container-fluid">
+    <div class="margin-fixer-grid-wrapper">
+        <div class="row">
+            <div class="col-sm-10">
+
+                <div class="main-view-container" ng-view></div>
+
+            </div>
+
+            <div class="col-sm-2">
+                <braid-friendships ng-show="mainCtrl.selected_user"
+                                   friend_users="mainCtrl.friend_users"
+                                   friendships="mainCtrl.friendships"
+                                   selected_convo="mainCtrl.selected_convo"
+                                   selected_user="mainCtrl.selected_user"
+                                   friend_user_map="mainCtrl.friend_user_map"
+                                   title_notifications="mainCtrl.title_notifications">
+                </braid-friendships>
+            </div>
+        </div>
+    </div>
+    </div>
+
+</body>
+
+</html>

@@ -95,7 +95,7 @@ angular.module('accountSettingsDirective', [])
                 selected_user: '=selectedUser',
                 title_notifications: '=titleNotifications'
             },
-            templateUrl: 'views/account_settings.html',
+            templateUrl: 'components/account_settings/account_settings.html',
             controller: 'accountSettingsController',
             controllerAs: 'actSetCtrl',
             bindToController: true

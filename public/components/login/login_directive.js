@@ -42,7 +42,7 @@ angular.module('loginDirective', [])
                 selected_user: '=selectedUser',
                 login_object: '=loginObject'
             },
-            templateUrl: 'views/login.html',
+            templateUrl: 'components/login/login.html',
             controller: 'loginController',
             controllerAs: 'loginCtrl',
             bindToController: true

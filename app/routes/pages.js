@@ -4,15 +4,15 @@ module.exports = function(app) {
     // The frontend does the actual rendering of different views.
 
     app.get('/', function(req, res) {
-        return res.sendfile('./public/views/index.html');
+        return res.sendfile('./public/index/index.html');
     });
 
     app.get('/auth', function(req, res) {
-        return res.sendfile('./public/views/index.html');
+        return res.sendfile('./public/index/index.html');
     });
 
     app.get('/profile', function(req, res) {
-        return res.sendfile('./public/views/index.html');
+        return res.sendfile('./public/index/index.html');
     });
 
 };

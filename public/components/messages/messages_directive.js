@@ -535,7 +535,7 @@ angular.module('messagesDirective', [])
                 strand_map: '=strandMap',
                 friend_user_map: '=friendUserMap',
             },
-            templateUrl: 'views/messages.html',
+            templateUrl: 'components/messages/messages.html',
             controller: 'messageController',
             controllerAs: 'messageCtrl',
             bindToController: true

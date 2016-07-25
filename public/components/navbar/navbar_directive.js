@@ -28,7 +28,7 @@ angular.module('navbarDirective', [])
                 selected_user: '=selectedUser',
                 title_notifications: '=titleNotifications'
             },
-            templateUrl: 'views/navbar.html',
+            templateUrl: 'components/navbar/navbar.html',
             controller: 'navbarController',
             controllerAs: 'navbarCtrl',
             bindToController: true
