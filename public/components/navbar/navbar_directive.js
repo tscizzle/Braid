@@ -7,6 +7,20 @@ angular.module('navbarDirective', [])
         var vm = this;
 
 
+        // define CRUD functions used in the template
+
+        vm.updateSoundOn = function() {
+            if (vm.selected_user) {
+
+                AccountSettings.set(vm.selected_user._id, 'sound_on', vm.account_settings.sound_on)
+                    .success(function(data) {
+                        AccountSettings.refresh(vm.selected_user._id);
+                    });
+
+            };
+        };
+
+
         // define page control functions used in the template
 
         vm.logoDestination = function() {

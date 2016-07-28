@@ -20,6 +20,11 @@
             </ul>
         </div>
         <a href="/profile"><img class="navbar-right navbar-profile-pic" ng-src="{{ navbarCtrl.account_settings.profile_pic_url || navbarCtrl.default_pic }}" err-src="{{ navbarCtrl.default_pic }}" ng-show="navbarCtrl.selected_user"></a>
+        <label class="btn btn-default navbar-right navbar-sound-button" ng-show="navbarCtrl.selected_user">
+            <input type="checkbox" ng-model="navbarCtrl.account_settings.sound_on" ng-change="navbarCtrl.updateSoundOn()" hidden>
+            <i class="fa fa-volume-up" ng-show="navbarCtrl.account_settings.sound_on"></i>
+            <i class="fa fa-volume-off" ng-hide="navbarCtrl.account_settings.sound_on"></i>
+        </label>
 
     </div>
 </nav>
