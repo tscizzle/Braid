@@ -118,6 +118,7 @@ module.exports = function(io) {
                             var time_sent = now.setMinutes(now.getMinutes() - intro_messages.length + index);
                             message.convo_id = convo_id;
                             message.time_sent = time_sent;
+                            message.time_saved = time_sent;
                         });
 
                         Message.create(intro_messages, function(err, messages) {

@@ -13,7 +13,7 @@ angular.module('typingIndicatorDirective', [])
             var just_typed = now - vm.last_typed < SECOND;
             var just_sent;
             if (vm.messages && vm.messages.length > 0) {
-                just_sent = now - vm.messages[vm.messages.length - 1].time_sent < 0.1 * SECOND;
+                just_sent = now - vm.messages[vm.messages.length - 1].time_saved < 0.1 * SECOND;
             } else {
                 just_sent = false;
             };
