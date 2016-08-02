@@ -42,7 +42,7 @@ angular.module('queueDirective', [])
             });
             if (strand_messages.length > 0) {
                 var strands_last_message = _.max(strand_messages, function(message) {
-                    return new Date(message.time_sent);
+                    return new Date(message.time_saved);
                 });
                 var text = strands_last_message.text;
                 return text;
@@ -57,7 +57,7 @@ angular.module('queueDirective', [])
                 var unaddressed_unstranded_messages = _.filter(vm.messages, function(message) {
                     return message.receiver_id === vm.selected_user._id  && !message.addressed && !message.strand_id;
                 });
-                var sorted_unaddressed_unstranded_messages = _.sortBy(unaddressed_unstranded_messages, 'time_sent');
+                var sorted_unaddressed_unstranded_messages = _.sortBy(unaddressed_unstranded_messages, 'time_saved');
                 vm.unaddressed_unstranded_messages = sorted_unaddressed_unstranded_messages;
             };
         };
@@ -78,7 +78,7 @@ angular.module('queueDirective', [])
                 });
                 var sorted_unaddressed_strands = _.sortBy(unaddressed_strands, function(strand) {
                     var strands_last_message = lastMessageInStrand(strand);
-                    return strands_last_message ? new Date(strands_last_message.time_sent) : new Date(10e13);
+                    return strands_last_message ? new Date(strands_last_message.time_saved) : new Date(10e13);
                 });
                 vm.unaddressed_strands = sorted_unaddressed_strands;
             };
@@ -103,7 +103,7 @@ angular.module('queueDirective', [])
                 return message.strand_id === strand._id;
             });
             var strands_last_message = _.max(strand_messages, function(message) {
-                return new Date(message.time_sent);
+                return new Date(message.time_saved);
             });
             return strands_last_message;
         };

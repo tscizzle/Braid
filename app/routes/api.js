@@ -254,9 +254,9 @@ module.exports = function(app, io) {
     app.get('/api/messages/:convo_id/:num_messages', function(req, res) {
 
         Message.find({
-            'convo_id': req.params.convo_id
+            convo_id: req.params.convo_id
         }).sort({
-            time_sent: -1
+            time_saved: -1
         }).limit(
             parseInt(req.params.num_messages)
         ).exec(function(err, messages) {
@@ -306,19 +306,20 @@ module.exports = function(app, io) {
     app.post('/api/messages/:num_messages', function(req, res) {
 
         Message.create({
-            'text': req.body.text,
-            'convo_id': req.body.convo_id,
-            'sender_id': req.body.sender_id,
-            'receiver_id': req.body.receiver_id,
-            'time_sent': Date.parse(req.body.time_sent),
-            'strand_id': req.body.strand_id
+            text: req.body.text,
+            convo_id: req.body.convo_id,
+            sender_id: req.body.sender_id,
+            receiver_id: req.body.receiver_id,
+            time_sent: Date.parse(req.body.time_sent),
+            time_saved: Date.now(),
+            strand_id: req.body.strand_id
         }, function(err, message) {
             if (err) return res.status(500).send(err);
 
             Message.find({
-                'convo_id': req.body.convo_id
+                convo_id: req.body.convo_id
             }).sort({
-                time_sent: -1
+                time_saved: -1
             }).limit(
                 parseInt(req.params.num_messages)
             ).exec(function(err, messages) {
@@ -361,9 +362,9 @@ module.exports = function(app, io) {
             });
 
             Message.find({
-                'convo_id': req.params.convo_id
+                convo_id: req.params.convo_id
             }).sort({
-                time_sent: -1
+                time_saved: -1
             }).limit(
                 parseInt(req.body.num_messages)
             ).exec(function(err, messages) {
@@ -401,9 +402,9 @@ module.exports = function(app, io) {
             });
 
             Message.find({
-                'convo_id': req.params.convo_id
+                convo_id: req.params.convo_id
             }).sort({
-                time_sent: -1
+                time_saved: -1
             }).limit(
                 parseInt(req.body.num_messages)
             ).exec(function(err, messages) {
@@ -443,9 +444,9 @@ module.exports = function(app, io) {
             });
 
             Message.find({
-                'convo_id': req.params.convo_id
+                convo_id: req.params.convo_id
             }).sort({
-                time_sent: -1
+                time_saved: -1
             }).limit(
                 parseInt(req.body.num_messages)
             ).exec(function(err, messages) {
@@ -473,9 +474,9 @@ module.exports = function(app, io) {
             if (err) return res.status(500).send(err);
 
             Message.find({
-                'convo_id': req.params.convo_id
+                convo_id: req.params.convo_id
             }).sort({
-                time_sent: -1
+                time_saved: -1
             }).limit(
                 parseInt(req.body.num_messages)
             ).exec(function(err, messages) {
@@ -497,7 +498,7 @@ module.exports = function(app, io) {
         Message.update({
             strand_id: req.params.strand_id,
             receiver_id: req.user._id,
-            time_sent: {$lt: new Date(req.body.timestamp)}
+            time_saved: {$lt: new Date(req.body.timestamp)}
         }, {
             $set: {
                 addressed: true
@@ -508,9 +509,9 @@ module.exports = function(app, io) {
             if (err) return res.status(500).send(err);
 
             Message.find({
-                'convo_id': req.params.convo_id
+                convo_id: req.params.convo_id
             }).sort({
-                time_sent: -1
+                time_saved: -1
             }).limit(
                 parseInt(req.body.num_messages)
             ).exec(function(err, messages) {
@@ -540,9 +541,9 @@ module.exports = function(app, io) {
             };
 
             Message.find({
-                'convo_id': req.params.convo_id
+                convo_id: req.params.convo_id
             }).sort({
-                time_sent: -1
+                time_saved: -1
             }).limit(
                 parseInt(req.body.num_messages)
             ).exec(function(err, messages) {
@@ -560,7 +561,7 @@ module.exports = function(app, io) {
     app.get('/api/strands/:convo_id', function(req, res) {
 
         Strand.find({
-            'convo_id': req.params.convo_id
+            convo_id: req.params.convo_id
         }, function(err, strands) {
             if (err) return res.status(500).send(err);
 
@@ -576,16 +577,16 @@ module.exports = function(app, io) {
     app.post('/api/strands', function(req, res) {
 
         Strand.create({
-            'convo_id': req.body.convo_id,
-            'color_number': req.body.color_number,
-            'time_created': Date.parse(req.body.time_created),
-            'user_id_0': req.body.user_id_0,
-            'user_id_1': req.body.user_id_1
+            convo_id: req.body.convo_id,
+            color_number: req.body.color_number,
+            time_created: Date.parse(req.body.time_created),
+            user_id_0: req.body.user_id_0,
+            user_id_1: req.body.user_id_1
         }, function(err, strand) {
             if (err) return res.status(500).send(err);
 
             Strand.find({
-                'convo_id': req.body.convo_id
+                convo_id: req.body.convo_id
             }, function(err, strands) {
                 if (err) return res.status(500).send(err);
 
