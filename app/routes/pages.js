@@ -15,4 +15,8 @@ module.exports = function(app) {
         return res.sendfile('./public/index/index.html');
     });
 
+    app.get('/help', function(req, res) {
+        return res.sendfile('./public/index/index.html');
+    });
+
 };

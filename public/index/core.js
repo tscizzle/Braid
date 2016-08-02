@@ -50,6 +50,9 @@ var Braid = angular.module('Braid', [
             })
             .when('/profile', {
                 templateUrl: 'views/profile/profile.html'
+            })
+            .when('/help', {
+                templateUrl: 'views/help/help.html'
             });
     }])
 
