@@ -1,0 +1,10 @@
+.help-view-col {
+    background-color: white;
+    border-bottom: solid 1px #999;
+    border-right: solid 1px #999;
+    border-left: solid 1px #999;
+}
+
+.help-view-pane {
+    padding: 20px;
+}
