@@ -21,7 +21,7 @@ html, body {
     animation: fadeIn 0.3s ease-out;
 }
 
-/* STYLES TO USED ANYWHERE */
+/* STYLES TO USE ANYWHERE */
 
 textarea {
     resize: none;
