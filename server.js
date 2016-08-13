@@ -34,7 +34,7 @@ app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
 app.use(cookieParser());
 app.use(session({
     secret: process.env.SESSION_SECRET,
-    maxAge: Date.now() + 108000000, // 30 hour expire
+    maxAge: new Date(253402300000000), // don't expire any time soon
     store: new RedisStore({client: redisClient.client}),
     resave: false,
     saveUninitialized: false
