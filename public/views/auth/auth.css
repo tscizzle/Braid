@@ -1,34 +1,15 @@
+.auth-col img {
+    position: absolute;
+    top: 20px;
+    left: -200px;
+}
+
 .auth-all {
-    position: fixed;
-    right: 0;
-    left: 0;
-    margin-right: auto;
-    margin-left: auto;
-    text-align: center;
-    margin-top: 30px;
+    margin-top: 160px;
 }
 
 .auth-header {
     margin-bottom: 30px;
-}
-
-.auth-button {
-    -webkit-border-radius: 8;
-    -moz-border-radius: 8;
-    border-radius: 8px;
-    color: #ffffff;
-    background: #2c2e30;
-    padding: 5px 10px 7px 10px;
-    border: none;
-}
-
-.auth-button:hover {
-    background: #7a7a7a;
-    text-decoration: none;
-}
-
-.auth-switch {
-    margin-top: 10px;
 }
 
 .auth-error {
@@ -36,4 +17,13 @@
     color: #FF5C5C;
     margin-bottom: 1em;
     height: 1em;
+}
+
+.auth-form input, button {
+    width: 100%;
+}
+
+.auth-form p {
+    margin-top: 10px;
+    font-size: 0.9em;
 }

@@ -12,18 +12,11 @@
 
     <div class="row">
         <div class="col-sm-12">
-            <form ng-submit="registerCtrl.register()">
-                <div>
-                    <label for="register-username-input">Username:&nbsp;</label><input id="register-username-input" type="text" name="username" ng-model="registerCtrl.registerForm.username">
-                </div>
-                <br>
-                <div>
-                    <label for="register-password-input">Password:&nbsp;</label><input id="register-password-input" type="password" name="password" ng-model="registerCtrl.registerForm.password">
-                </div>
-                <br>
-                <button class="auth-button" type="submit">Register</button>
-                <br>
-                <button class="auth-switch auth-button" ng-click="registerCtrl.switchToLogin()" type="button">Already registered? Login here.</button>
+            <form class="auth-form" ng-submit="registerCtrl.register()">
+                <div class="form-group"><input type="text" placeholder="Username" ng-model="registerCtrl.registerForm.username"></div>
+                <div class="form-group"><input type="password" placeholder="Password" ng-model="registerCtrl.registerForm.password"></div>
+                <button class="btn btn-success" type="submit">Register</button>
+                <p>Already registered? <a class="clickable" ng-click="registerCtrl.switchToLogin()" type="button">Login here.</a></p>
             </form>
         </div>
     </div>

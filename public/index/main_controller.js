@@ -99,7 +99,7 @@ angular.module('braidMain', [])
 
         var DEFAULT_NUM_MESSAGES = 50;
 
-        var ooooh = new Audio('assets/audio/ooooh.wav');
+        var ooooh = new Audio('/assets/audio/ooooh.wav');
 
 
         // initialization
