@@ -1,8 +1,8 @@
 angular.module('navbarDirective', [])
 
     .controller('navbarController',
-                ['chat', 'AccountSettings', 'DEFAULT_PROFILE_PIC',
-                 function(chat, AccountSettings, DEFAULT_PROFILE_PIC) {
+                ['$location', 'chat', 'AccountSettings', 'DEFAULT_PROFILE_PIC',
+                 function($location, chat, AccountSettings, DEFAULT_PROFILE_PIC) {
 
         var vm = this;
 
@@ -25,6 +25,10 @@ angular.module('navbarDirective', [])
 
         vm.logoDestination = function() {
             return vm.selected_user ? '/' : '/auth';
+        };
+
+        vm.goToHelp = function() {
+            $location.path('/help');
         };
 
 

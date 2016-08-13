@@ -20,12 +20,12 @@
     padding: 0 10px;
 }
 
-.navbar-dropdown-container.open .username-link {
-    background-color: #333;
+.navbar-dropdown-container .username-link:hover {
+    color: #CCC;
 }
 
-.navbar-default .username-link:hover {
-    color: #CCC;
+.navbar-dropdown-container.open .username-link {
+    background-color: #333;
 }
 
 .navbar .dropdown-menu .btn:active:focus {
@@ -41,11 +41,11 @@
     border-top: solid 1px #AAA;
 }
 
-.dropdown-menu a {
+.navbar .dropdown-menu a {
     position: relative;
 }
 
-.dropdown-menu i {
+.navbar .dropdown-menu i {
     position: absolute;
     top: 10px;
     left: 10px;
@@ -54,7 +54,6 @@
 .navbar-profile-pic {
     height: 40px;
     width: 40px;
-    margin-top: 7px;
     margin-right: 15px;
     margin-left: 20px;
     border-radius: 50%;
@@ -68,6 +67,15 @@
     border: solid 3px #DDD;
 }
 
-.navbar-sound-button {
-    margin-top: 10px;
+.navbar-divider {
+    margin-left: 20px;
+    height: 30px;
+    width: 1px;
+    background-color: #DDD;
+    opacity: 0.5;
+}
+
+.navbar-button {
+    margin-left: 15px;
+    width: 40px;
 }

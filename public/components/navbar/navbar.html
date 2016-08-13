@@ -10,7 +10,7 @@
             <ul class="dropdown-menu">
                 <li><a class="btn" href="/"><i class="fa fa-lg fa-comments"></i>Chat</a></li>
                 <li><a class="btn" href="/profile"><i class="fa fa-lg fa-user"></i>Profile</a></li>
-                <li><a class="btn" href="/help"><i class="fa fa-lg fa-cubes"></i>Help</a></li>
+                <li><a class="btn" href="/help"><i class="fa fa-lg fa-book"></i>Help</a></li>
                 <li>
                     <a class="btn" href="" braid-logout selected_user="navbarCtrl.selected_user"
                                                         title_notifications="navbarCtrl.title_notifications">
@@ -20,8 +20,12 @@
                 </li>
             </ul>
         </div>
-        <a href="/profile"><img class="navbar-right navbar-profile-pic" ng-src="{{ navbarCtrl.account_settings.profile_pic_url || navbarCtrl.default_pic }}" err-src="{{ navbarCtrl.default_pic }}" ng-show="navbarCtrl.selected_user"></a>
-        <label class="btn btn-default navbar-right navbar-sound-button" ng-show="navbarCtrl.selected_user">
+        <a href="/profile"><img class="navbar-right vertical-center navbar-profile-pic" ng-src="{{ navbarCtrl.account_settings.profile_pic_url || navbarCtrl.default_pic }}" err-src="{{ navbarCtrl.default_pic }}" ng-show="navbarCtrl.selected_user"></a>
+
+        <div class="navbar-right vertical-center navbar-divider" ng-show="navbarCtrl.selected_user"></div>
+
+        <button class="btn btn-default navbar-right navbar-button vertical-center" ng-show="navbarCtrl.selected_user" ng-click="navbarCtrl.goToHelp()"><i class="fa fa-book"></i></button>
+        <label class="btn btn-default navbar-right navbar-button vertical-center" ng-show="navbarCtrl.selected_user">
             <input type="checkbox" ng-model="navbarCtrl.account_settings.sound_on" ng-change="navbarCtrl.updateSoundOn()" hidden>
             <i class="fa fa-volume-up" ng-show="navbarCtrl.account_settings.sound_on"></i>
             <i class="fa fa-volume-off" ng-hide="navbarCtrl.account_settings.sound_on"></i>
