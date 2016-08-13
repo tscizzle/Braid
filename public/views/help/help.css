@@ -8,3 +8,24 @@
 .help-view-pane {
     padding: 20px;
 }
+
+.help-view-pane ul {
+    padding-left: 20px;
+}
+
+.help-view-pane li {
+    margin: 13px 0;
+    padding-left: 25px;
+    list-style: none;
+    list-style-type: none;
+    background: url('/assets/img/poop_logo.ico') no-repeat left top;
+    background-size: 15px 15px;
+    background-position: 0px 3px;
+}
+
+.contact-us-container {
+    position: absolute;
+    top: 0;
+    right: 15px;
+    width: 55%;
+}

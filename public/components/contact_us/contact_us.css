@@ -1,0 +1,14 @@
+.contact-us-table {
+    width: 100%;
+    font-size: 15px;
+}
+
+.contact-us-table thead {
+    background-color: #EEE;
+    border-bottom: solid 2px #CCC;
+}
+
+.contact-us-table th, td {
+    width: 33%;
+    padding: 2px 15px;
+}

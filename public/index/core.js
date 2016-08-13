@@ -16,6 +16,7 @@ var Braid = angular.module('Braid', [
     'loginDirective',
     'logoutDirective',
     'accountSettingsDirective',
+    'contactUsDirective',
     'typingIndicatorDirective',
     'friendshipsDirective',
     'messagesDirective',
