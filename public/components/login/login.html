@@ -1,4 +1,4 @@
-<div class="auth-all">
+<div>
 
     <div class="row">
         <div class="col-sm-12">
@@ -8,7 +8,13 @@
         </div>
     </div>
 
-    <div class="auth-error" ng-style="{'opacity': loginCtrl.loginErrorOpacity()}">{{ loginCtrl.login_error }}</div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="auth-error" ng-style="{'opacity': loginCtrl.loginErrorOpacity()}">
+                <div class="auth-error-content">{{ loginCtrl.login_error }}</div>
+            </div>
+        </div>
+    </div>
 
     <div class="row">
         <div class="col-sm-12">

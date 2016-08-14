@@ -1,10 +1,19 @@
 angular.module('braidMain', [])
 
     .controller('mainController',
-                ['$scope', 'socket', 'auth', 'Users', 'Friendships', 'AccountSettings', 'DEFAULT_NUM_MESSAGES',
-                 function($scope, socket, auth, Users, Friendships, AccountSettings, DEFAULT_NUM_MESSAGES) {
+                ['$scope', 'socket', 'auth', 'Users', 'Friendships', 'AccountSettings',
+                 'DEFAULT_NUM_MESSAGES',
+                 function($scope, socket, auth, Users, Friendships, AccountSettings,
+                          DEFAULT_NUM_MESSAGES) {
 
         var vm = this;
+
+
+        // define page control functions used in the template
+
+        vm.navbarHeight = function() {
+            return $('nav').css('height');
+        };
 
 
         // register listeners

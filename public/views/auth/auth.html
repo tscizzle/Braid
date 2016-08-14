@@ -1,16 +1,17 @@
 <div class="row" ng-controller="authController as authCtrl">
-    <div class="col-sm-3 col-sm-offset-6 auth-col">
+    <div class="col-sm-12">
 
-        <img src="/assets/img/ivy.png">
+        <div class="auth-all" ng-show="authCtrl.login_object">
+            <braid-login selected_user="mainCtrl.selected_user"
+                         login_object="authCtrl.login_object">
+            </braid-login>
+        </div>
 
-        <braid-login ng-show="authCtrl.login_object"
-                     selected_user="mainCtrl.selected_user"
-                     login_object="authCtrl.login_object">
-        </braid-login>
-        <braid-register ng-hide="authCtrl.login_object"
-                        selected_user="mainCtrl.selected_user"
-                        login_object="authCtrl.login_object">
-        </braid-register>
+        <div class="auth-all" ng-hide="authCtrl.login_object">
+            <braid-register selected_user="mainCtrl.selected_user"
+                            login_object="authCtrl.login_object">
+            </braid-register>
+        </div>
 
     </div>
 </div>

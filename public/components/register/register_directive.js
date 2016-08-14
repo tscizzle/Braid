@@ -57,7 +57,7 @@ angular.module('registerDirective', [])
 
         var verifyUsernameLength = function(verification, username) {
             var maximum_length = 20;
-            if (username.length > maximum_length) {
+            if (username && username.length > maximum_length) {
                 verification.failed = true;
                 verification.failure_messages.push('Username cannot be more than ' + maximum_length + ' characters');
             };
@@ -65,7 +65,7 @@ angular.module('registerDirective', [])
 
         var verifyPasswordStrength = function(verification, password) {
             var minimum_length = 10;
-            if (password.length < minimum_length) {
+            if (password && password.length < minimum_length) {
                 verification.failed = true;
                 verification.failure_messages.push('Password must be at least ' + minimum_length + ' characters');
             };

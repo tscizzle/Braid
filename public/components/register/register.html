@@ -1,4 +1,4 @@
-<div class="auth-all">
+<div>
 
     <div class="row">
         <div class="col-sm-12">
@@ -8,7 +8,13 @@
         </div>
     </div>
 
-    <div class="auth-error" ng-style="{'opacity': registerCtrl.registerErrorOpacity()}">{{ registerCtrl.register_error }}</div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="auth-error" ng-style="{'opacity': registerCtrl.registerErrorOpacity()}">
+                <div class="auth-error-content">{{ registerCtrl.register_error }}</div>
+            </div>
+        </div>
+    </div>
 
     <div class="row">
         <div class="col-sm-12">
@@ -16,7 +22,7 @@
                 <div class="form-group"><input type="text" placeholder="Username" ng-model="registerCtrl.registerForm.username"></div>
                 <div class="form-group"><input type="password" placeholder="Password" ng-model="registerCtrl.registerForm.password"></div>
                 <button class="btn btn-success" type="submit">Register</button>
-                <p>Already registered? <a class="clickable" ng-click="registerCtrl.switchToLogin()" type="button">Login here.</a></p>
+                <p>Already have an account? <a class="clickable" ng-click="registerCtrl.switchToLogin()" type="button">Login here.</a></p>
             </form>
         </div>
     </div>
