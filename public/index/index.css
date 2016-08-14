@@ -31,14 +31,6 @@ textarea {
     cursor: pointer;
 }
 
-.vertical-center {
-    position: relative;
-    top: 50%;
-    -webkit-transform: translateY(-50%);
-    -ms-transform: translateY(-50%);
-    transform: translateY(-50%);
-}
-
 /* ANIMATIONS */
 
 @keyframes fadeIn {

@@ -52,6 +52,7 @@
 }
 
 .navbar-profile-pic {
+    margin-top: 8px;
     height: 40px;
     width: 40px;
     margin-right: 15px;
@@ -69,13 +70,22 @@
 
 .navbar-divider {
     margin-left: 20px;
-    height: 30px;
+    height: 100%;
     width: 1px;
+}
+
+.navbar-divider-placeholder {
+    height: 20%;
+}
+
+.navbar-divider-content {
+    height: 60%;
     background-color: #DDD;
     opacity: 0.5;
 }
 
 .navbar-button {
+    margin-top: 10px;
     margin-left: 15px;
     width: 40px;
 }
