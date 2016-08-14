@@ -15,6 +15,7 @@ angular.module('registerDirective', [])
 
             verifyUsernameLength(verification, vm.registerForm.username);
             verifyPasswordStrength(verification, vm.registerForm.password);
+            verifyPasswordsMatch(verification, vm.registerForm.password, vm.registerForm.confirm_password);
 
             if (verification.failed) {
                 vm.register_error = verification.failure_messages[0];
@@ -68,6 +69,15 @@ angular.module('registerDirective', [])
             if (password && password.length < minimum_length) {
                 verification.failed = true;
                 verification.failure_messages.push('Password must be at least ' + minimum_length + ' characters');
+            };
+        };
+
+        var verifyPasswordsMatch = function(verification, password, confirm_password) {
+            console.log('password', password);
+            console.log('confirm_password', confirm_password);
+            if (password !== confirm_password) {
+                verification.failed = true;
+                verification.failure_messages.push('Passwords don\'t match');
             };
         };
 

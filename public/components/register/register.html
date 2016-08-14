@@ -21,6 +21,7 @@
             <form class="auth-form" ng-submit="registerCtrl.register()">
                 <div class="form-group"><input type="text" placeholder="Username" ng-model="registerCtrl.registerForm.username"></div>
                 <div class="form-group"><input type="password" placeholder="Password" ng-model="registerCtrl.registerForm.password"></div>
+                <div class="form-group"><input type="password" placeholder="Confirm Password" ng-model="registerCtrl.registerForm.confirm_password"></div>
                 <button class="btn btn-success" type="submit">Register</button>
                 <p>Already have an account? <a class="clickable" ng-click="registerCtrl.switchToLogin()" type="button">Login here.</a></p>
             </form>
