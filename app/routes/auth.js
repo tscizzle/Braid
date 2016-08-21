@@ -10,7 +10,9 @@ module.exports = function(app, io, passport) {
 
     app.post('/register', function(req, res) {
 
-        User.register(new User({username: req.body.username}), req.body.password, function(err, user) {
+        var userDoc = {username: req.body.username, email: req.body.email};
+
+        User.register(new User(userDoc), req.body.password, function(err, user) {
             if (err) return res.status(500).json({err: err});
 
             bob.befriendBob(user, res, function(err, bobby) {

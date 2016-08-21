@@ -3,8 +3,8 @@ angular.module('authService', [])
     .factory('auth', ['$http', function($http) {
 
         return {
-            register: function(username, password) {
-                return $http.post('/register', {username: username, password: password});
+            register: function(username, password, email) {
+                return $http.post('/register', {username: username, password: password, email: email});
             },
             login: function(username, password) {
                 return $http.post('/login', {username: username, password: password});

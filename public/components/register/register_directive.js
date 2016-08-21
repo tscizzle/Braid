@@ -1,6 +1,8 @@
 angular.module('registerDirective', [])
 
-    .controller('registerController', ['$location', 'auth', function($location, auth) {
+    .controller('registerController',
+                ['$location', 'nodeValidator', 'auth',
+                 function($location, nodeValidator, auth) {
 
         var vm = this;
 
@@ -8,21 +10,19 @@ angular.module('registerDirective', [])
         // define functions used in the template
 
         vm.register = function() {
-            var verification = {
-                failed: false,
-                failure_messages: []
-            };
+            var failure_messages = [];
 
-            verifyUsernameLength(verification, vm.registerForm.username);
-            verifyPasswordStrength(verification, vm.registerForm.password);
-            verifyPasswordsMatch(verification, vm.registerForm.password, vm.registerForm.confirm_password);
+            verifyUsernameLength(failure_messages, vm.registerForm.username);
+            verifyPasswordStrength(failure_messages, vm.registerForm.password);
+            verifyConfirmPasswordMatches(failure_messages, vm.registerForm.password, vm.registerForm.confirm_password);
+            verifyEmailIsValid(failure_messages, vm.registerForm.email);
 
-            if (verification.failed) {
-                vm.register_error = verification.failure_messages[0];
+            if (failure_messages.length > 0) {
+                vm.register_error = failure_messages[0];
                 return;
             };
 
-            auth.register(vm.registerForm.username, vm.registerForm.password)
+            auth.register(vm.registerForm.username, vm.registerForm.password, vm.registerForm.email)
                 .success(function() {
                     auth.login(vm.registerForm.username, vm.registerForm.password)
                         .success(function(data) {
@@ -40,7 +40,6 @@ angular.module('registerDirective', [])
                     } else {
                         vm.register_error = 'An error occurred.';
                     };
-                    vm.registerForm = {};
                 });
 
         };
@@ -56,28 +55,30 @@ angular.module('registerDirective', [])
 
         // helpers
 
-        var verifyUsernameLength = function(verification, username) {
+        var verifyUsernameLength = function(failure_messages, username) {
             var maximum_length = 20;
             if (username && username.length > maximum_length) {
-                verification.failed = true;
-                verification.failure_messages.push('Username cannot be more than ' + maximum_length + ' characters');
+                failure_messages.push('Username cannot be more than ' + maximum_length + ' characters');
             };
         };
 
-        var verifyPasswordStrength = function(verification, password) {
+        var verifyPasswordStrength = function(failure_messages, password) {
             var minimum_length = 10;
             if (password && password.length < minimum_length) {
-                verification.failed = true;
-                verification.failure_messages.push('Password must be at least ' + minimum_length + ' characters');
+                failure_messages.push('Password must be at least ' + minimum_length + ' characters');
             };
         };
 
-        var verifyPasswordsMatch = function(verification, password, confirm_password) {
-            console.log('password', password);
-            console.log('confirm_password', confirm_password);
+        var verifyConfirmPasswordMatches = function(failure_messages, password, confirm_password) {
             if (password !== confirm_password) {
-                verification.failed = true;
-                verification.failure_messages.push('Passwords don\'t match');
+                failure_messages.push('Passwords don\'t match');
+            };
+        };
+
+        var verifyEmailIsValid = function(failure_messages, email) {
+            // only if an email is provided, make sure it's a valid email string
+            if (email && !nodeValidator.isEmail(email)) {
+                failure_messages.push('Email provided is not a valid email');
             };
         };
 

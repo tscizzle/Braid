@@ -30,9 +30,10 @@
     width: 100%;
 }
 
-.auth-form p {
+.auth-switch {
     margin-top: 10px;
     font-size: 0.9em;
+    color: #555;
 }
 
 /* ANIMATIONS */
