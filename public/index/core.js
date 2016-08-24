@@ -12,6 +12,8 @@ var Braid = angular.module('Braid', [
     'enterSubmitDirective',
     'errSrcDirective',
     'navbarDirective',
+    'resetPasswordDirective',
+    'initiateResetPasswordDirective',
     'registerDirective',
     'loginDirective',
     'logoutDirective',

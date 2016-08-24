@@ -13,17 +13,23 @@ module.exports = function(io) {
 
     var userSchema = new Schema({
         username: {type: String, required: true, unique: true},
-        email: String
+        email: String,
+        resetPasswordToken: String,
+        resetPasswordExpires: Date
     });
 
     userSchema.pre('save', function(next) {
-        AccountSettings.create({
-            _id: this._id
-        }, function(err, account_settings) {
-            if (err) return next(new Error(err.msg));
+        if (this.isNew) {
+            AccountSettings.create({
+                _id: this._id
+            }, function(err, account_settings) {
+                if (err) return next(err);
 
+                next();
+            });
+        } else {
             next();
-        });
+        };
     });
 
     userSchema.post('remove', function() {

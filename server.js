@@ -12,7 +12,13 @@ var RedisStore = require('connect-redis')(session);
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
-var database = require('./app/config/database');
+
+// mongo database
+
+require('./app/config/mongo-database');
+
+
+// express server
 
 var app = express();
 
@@ -35,7 +41,7 @@ app.use(cookieParser());
 app.use(session({
     secret: process.env.SESSION_SECRET,
     maxAge: new Date(253402300000000), // don't expire any time soon
-    store: new RedisStore({client: redisClient.client}),
+    store: new RedisStore({client: redisClient}),
     resave: false,
     saveUninitialized: false
 }));

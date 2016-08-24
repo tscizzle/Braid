@@ -2,7 +2,7 @@
     position: absolute;
     top: 120px;
     left: 250px;
-    width: 250px;
+    width: 300px;
 }
 
 .auth-all.ng-hide-remove {
@@ -30,8 +30,12 @@
     width: 100%;
 }
 
+.auth-form button {
+    margin-bottom: 10px;
+}
+
 .auth-switch {
-    margin-top: 10px;
+    margin-bottom: 5px;
     font-size: 0.9em;
     color: #555;
 }

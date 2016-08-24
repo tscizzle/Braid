@@ -44,10 +44,6 @@ angular.module('registerDirective', [])
 
         };
 
-        vm.switchToLogin = function(){
-            vm.login_object = true;
-        };
-
         vm.registerErrorOpacity = function() {
             return vm.register_error ? 1 : 0;
         };
@@ -95,7 +91,7 @@ angular.module('registerDirective', [])
             restrict: 'E',
             scope: {
                 selected_user: '=selectedUser',
-                login_object: '=loginObject'
+                auth_view: '=authView'
             },
             templateUrl: 'components/register/register.html',
             controller: 'registerController',

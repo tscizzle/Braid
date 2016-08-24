@@ -20,10 +20,6 @@ angular.module('loginDirective', [])
                 });
         };
 
-        vm.switchToRegister = function() {
-            vm.login_object = false;
-        };
-
         vm.loginErrorOpacity = function() {
             return vm.login_error ? 1 : 0;
         };
@@ -40,7 +36,7 @@ angular.module('loginDirective', [])
             restrict: 'E',
             scope: {
                 selected_user: '=selectedUser',
-                login_object: '=loginObject'
+                auth_view: '=authView'
             },
             templateUrl: 'components/login/login.html',
             controller: 'loginController',

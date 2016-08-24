@@ -14,6 +14,12 @@ angular.module('authService', [])
             },
             getLoggedInUser: function() {
                 return $http.get('/loggedInUser' + '?' + Math.random()); // the random number avoids the caching of the response
+            },
+            initiateResetPassword: function(username) {
+                return $http.post('/initiateResetPassword', {username: username});
+            },
+            resetPassword: function(new_password, token) {
+                return $http.post('/resetPassword/' + token, {new_password: new_password});
             }
         };
 

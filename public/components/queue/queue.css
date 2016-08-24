@@ -38,7 +38,7 @@
 .preview-in-list span:hover {
     top: -2px;
     left: -2px;
-    box-shadow: 2px 2px 2px #777;
+    box-shadow: 1px 1px 1px #777;
 }
 
 .preview-in-list:last-child {

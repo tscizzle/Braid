@@ -1,16 +1,30 @@
 <div class="row" ng-controller="authController as authCtrl">
-    <div class="col-sm-12">
+    <div class="col-sm-12" ng-switch="authCtrl.auth_view">
 
-        <div class="auth-all" ng-show="authCtrl.login_object">
+        <div class="auth-all" ng-switch-default>
             <braid-login selected_user="mainCtrl.selected_user"
-                         login_object="authCtrl.login_object">
+                         auth_view="authCtrl.auth_view">
             </braid-login>
         </div>
 
-        <div class="auth-all" ng-hide="authCtrl.login_object">
+        <div class="auth-all" ng-switch-when="register">
             <braid-register selected_user="mainCtrl.selected_user"
-                            login_object="authCtrl.login_object">
+                            auth_view="authCtrl.auth_view">
             </braid-register>
+        </div>
+
+        <div class="auth-all" ng-switch-when="initiate_reset_password">
+            <braid-initiate-reset-password selected_user="mainCtrl.selected_user"
+                                           auth_view="authCtrl.auth_view"
+                                           reset_password_token="authCtrl.reset_password_token">
+            </braid-initiate-reset-password>
+        </div>
+
+        <div class="auth-all" ng-switch-when="reset_password">
+            <braid-reset-password selected_user="mainCtrl.selected_user"
+                                  auth_view="authCtrl.auth_view"
+                                  reset_password_token="authCtrl.reset_password_token">
+            </braid-reset-password>
         </div>
 
     </div>
