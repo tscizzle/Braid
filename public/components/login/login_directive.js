@@ -8,16 +8,21 @@ angular.module('loginDirective', [])
         // define functions used in the template
 
         vm.login = function() {
+            vm.login_button_disabled = true;
+
             auth.login(vm.loginForm.username, vm.loginForm.password)
                 .success(function(data) {
                     vm.selected_user = data.user;
                     $location.path('/');
                     vm.loginForm = {};
+                    vm.login_button_disabled = false;
                 })
                 .catch(function(err) {
-                    vm.login_error = err.data.err.message;
                     vm.loginForm = {};
+                    vm.login_button_disabled = false;
+                    vm.login_error = err.data.err.message;
                 });
+
         };
 
         vm.loginErrorOpacity = function() {
@@ -26,6 +31,7 @@ angular.module('loginDirective', [])
 
         // initialization
 
+        vm.login_button_disabled = false;
         vm.login_error = '';
         vm.loginForm = {};
 

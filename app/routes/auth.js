@@ -111,7 +111,7 @@ module.exports = function(app, io, passport) {
                     var email_body = (
                         '<p>You may follow this link ' +
                         '(<b><a href="' + confirmation_link + '">' + confirmation_link + '</a></b>) ' +
-                        'to reset your password.</p>' +
+                        'to reset your password. The link will be valid for 1 hour.</p>' +
                         '<i style="font-size: 0.9em;">If this was not you, you may ignore this email ' +
                         '(or contact us if it happens again, using our info shown at ' +
                         '<b><a href="' + help_link + '">' + help_link + '</a></b>).</i>'

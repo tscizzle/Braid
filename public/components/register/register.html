@@ -27,7 +27,7 @@
                     <p class="why-we-need-email">Only for password recovery</p>
                 </div>
 
-                <button class="btn btn-success" type="submit">Register</button>
+                <button class="btn btn-success" type="submit" ng-disabled="registerCtrl.register_button_disabled">Register</button>
                 <p class="auth-switch">Already have an account? <a class="clickable" ng-click="registerCtrl.auth_view='login'" type="button">Login here.</a></p>
             </form>
         </div>

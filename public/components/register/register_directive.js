@@ -10,6 +10,8 @@ angular.module('registerDirective', [])
         // define functions used in the template
 
         vm.register = function() {
+            vm.register_button_disabled = true;
+
             var failure_messages = [];
 
             verifyUsernameLength(failure_messages, vm.registerForm.username);
@@ -19,6 +21,7 @@ angular.module('registerDirective', [])
 
             if (failure_messages.length > 0) {
                 vm.register_error = failure_messages[0];
+                vm.register_button_disabled = false;
                 return;
             };
 
@@ -29,12 +32,15 @@ angular.module('registerDirective', [])
                             vm.selected_user = data.user;
                             $location.path('/');
                             vm.registerForm = {};
+                            vm.register_button_disabled = false;
                         })
                         .catch(function() {
+                            vm.register_button_disabled = false;
                             vm.registerForm = {};
                         });
                 })
                 .catch(function(err) {
+                    vm.register_button_disabled = false;
                     if (err.data) {
                         vm.register_error = err.data.err.message;
                     } else {
@@ -81,6 +87,7 @@ angular.module('registerDirective', [])
 
         // initialization
 
+        vm.register_button_disabled = false;
         vm.register_error = '';
         vm.registerForm = {};
 
