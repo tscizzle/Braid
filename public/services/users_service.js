@@ -3,8 +3,8 @@ angular.module('userService', [])
     .factory('Users', ['$http', function($http) {
 
         return {
-            get: function() {
-                return $http.get('/api/users');
+            getUsernames: function() {
+                return $http.get('/api/usernames');
             },
             getFriendUsernames: function(user_id) {
                 return $http.get('/api/friendUsernames/' + user_id);

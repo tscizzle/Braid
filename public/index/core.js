@@ -39,7 +39,8 @@ var Braid = angular.module('Braid', [
     // 3rd-party dependencies
     'btford.socket-io',
     'luegg.directives',
-    'angular.validators'
+    'angular.validators',
+    'ui.bootstrap'
 
 ])
 

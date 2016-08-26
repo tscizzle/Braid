@@ -39,7 +39,7 @@
             <div class="row friendship-form-row">
                 <form>
                     <div class="col-sm-8">
-                        <input class="friendships-input" type="text" placeholder="Username" ng-model="friendshipCtrl.newFriendshipFormData.username" enter-submit="friendshipCtrl.createFriendship()" />
+                        <input class="friendships-input" type="text" placeholder="Username" ng-model="friendshipCtrl.newFriendshipFormData.username" enter-submit="friendshipCtrl.createFriendship()" uib-typeahead="user as user.username for user in friendshipCtrl.allUsernames" typeahead-popup-template-url="/components/typeahead/typeahead-popup.html" typeahead-template-url="/components/typeahead/typeahead-match.html"/>
                     </div>
 
                     <div class="col-sm-4 no-left-padding">

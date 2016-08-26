@@ -108,6 +108,16 @@
     padding: 15px 15px 10px 0px;
 }
 
+.friendship-form-row .typeahead-popup {
+    top: 0;
+    max-height: 300px;
+    overflow-y: auto;
+    -webkit-transform: translateY(-100%);
+    -ms-transform: translateY(-100%);
+    transform: translateY(-100%);
+}
+
+
 .friendships-input {
     width: 100%;
 }

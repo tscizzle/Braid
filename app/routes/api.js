@@ -667,6 +667,20 @@ module.exports = function(app, io) {
 
     });
 
+    // --- get all users
+    // this route doesn't have any special authentication
+    app.get('/api/usernames', function(req, res) {
+
+        User.find({}, {
+            username: 1
+        }, function(err, users) {
+            if (err) return res.status(500).send(err);
+
+            return res.json(users);
+        });
+
+    });
+
     // --- get all users who are friends of the user
     app.get('/api/friendUsernames/:user_id', resourceBelongsToUser(['params', 'user_id'], User));
     app.get('/api/friendUsernames/:user_id', function(req, res) {

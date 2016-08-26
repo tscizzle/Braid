@@ -1,8 +1,10 @@
 angular.module('friendshipsDirective', [])
 
     .controller('friendshipController',
-                ['$scope', '$timeout', '$location', 'socket', 'Messages', 'Friendships', 'Convos',
-                 function($scope, $timeout, $location, socket, Messages, Friendships, Convos) {
+                ['$scope', '$timeout', '$location', 'socket', 'Messages',
+                 'Friendships', 'Convos', 'Users',
+                 function($scope, $timeout, $location, socket, Messages,
+                          Friendships, Convos, Users) {
 
         var vm = this;
 
@@ -261,6 +263,11 @@ angular.module('friendshipsDirective', [])
                 });
 
         };
+
+        vm.allUsernames = Users.getUsernames()
+            .then(function(res) {
+                return res.data;
+            });
 
     }])
 
