@@ -264,10 +264,16 @@ angular.module('friendshipsDirective', [])
 
         };
 
-        vm.allUsernames = Users.getUsernames()
-            .then(function(res) {
-                return res.data;
-            });
+        vm.allUsernames = function(val) {
+
+            return Users.getUsernames()
+                .then(function(res) {
+                    return _.filter(res.data, function(user) {
+                        return user.username.indexOf(val) !== -1;
+                    });
+                });
+
+        };
 
     }])
 
