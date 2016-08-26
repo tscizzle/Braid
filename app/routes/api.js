@@ -667,21 +667,9 @@ module.exports = function(app, io) {
 
     });
 
-    // --- get all users
-    // TODO: anyone can see the list of users right now
-    app.get('/api/users', function(req, res) {
-
-        User.find(function(err, users) {
-            if (err) return res.status(500).send(err);
-
-            return res.json(users);
-        });
-
-    });
-
     // --- get all users who are friends of the user
-    app.get('/api/friendUsers/:user_id', resourceBelongsToUser(['params', 'user_id'], User));
-    app.get('/api/friendUsers/:user_id', function(req, res) {
+    app.get('/api/friendUsernames/:user_id', resourceBelongsToUser(['params', 'user_id'], User));
+    app.get('/api/friendUsernames/:user_id', function(req, res) {
 
         Friendship.find({
             $or: [{requester_id: req.params.user_id}, {target_id: req.params.user_id}]
@@ -698,6 +686,8 @@ module.exports = function(app, io) {
 
             User.find({
                 _id: {$in: friend_ids}
+            }, {
+                username: 1
             }, function(err, friend_users) {
                 if (err) return res.status(500).send(err);
 

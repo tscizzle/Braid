@@ -21,7 +21,7 @@ angular.module('braidMain', [])
         var refreshFriendUsers = function() {
             if (vm.selected_user) {
 
-                Users.getFriends(vm.selected_user._id)
+                Users.getFriendUsernames(vm.selected_user._id)
                     .success(function(data) {
                         vm.friend_users = data;
                     });
