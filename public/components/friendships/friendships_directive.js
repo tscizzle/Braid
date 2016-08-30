@@ -266,6 +266,7 @@ angular.module('friendshipsDirective', [])
 
         vm.allUsernames = function(val) {
 
+            // TODO: pass the substring `val` to the api call so the mongo query can use it to filter
             return Users.getUsernames()
                 .then(function(res) {
                     return _.filter(res.data, function(user) {

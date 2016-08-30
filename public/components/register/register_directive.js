@@ -65,7 +65,7 @@ angular.module('registerDirective', [])
         };
 
         var verifyPasswordStrength = function(failure_messages, password) {
-            var minimum_length = 10;
+            var minimum_length = 8;
             if (password && password.length < minimum_length) {
                 failure_messages.push('Password must be at least ' + minimum_length + ' characters');
             };
