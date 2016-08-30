@@ -670,8 +670,12 @@ module.exports = function(app, io) {
     // --- get all users
     // this route doesn't have any special authentication
     app.get('/api/usernames', function(req, res) {
+        var query = {};
+        if (req.query.substring) {
+            query.username = {$regex: req.query.substring};
+        };
 
-        User.find({}, {
+        User.find(query, {
             username: 1
         }, function(err, users) {
             if (err) return res.status(500).send(err);

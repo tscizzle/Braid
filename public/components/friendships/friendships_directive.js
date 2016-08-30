@@ -130,6 +130,15 @@ angular.module('friendshipsDirective', [])
             }, 0);
         };
 
+        vm.allUsernames = function(val) {
+
+            return Users.getUsernames(val)
+                .then(function(res) {
+                    return res.data;
+                });
+
+        };
+
 
         // helpers
 
@@ -260,18 +269,6 @@ angular.module('friendshipsDirective', [])
                 .success(function(data) {
                     vm.friendships = data;
                     refreshUnreadMessageCounts();
-                });
-
-        };
-
-        vm.allUsernames = function(val) {
-
-            // TODO: pass the substring `val` to the api call so the mongo query can use it to filter
-            return Users.getUsernames()
-                .then(function(res) {
-                    return _.filter(res.data, function(user) {
-                        return user.username.indexOf(val) !== -1;
-                    });
                 });
 
         };
