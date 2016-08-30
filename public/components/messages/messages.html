@@ -4,7 +4,7 @@
         <div class="col-sm-12">
             <div class="message-header-div">
                 <img class="partner-profile-pic" ng-src="{{ messageCtrl.partner_profile_pic || messageCtrl.default_pic }}" err-src="{{ messageCtrl.default_pic }}">
-                <h1>{{ messageCtrl.selected_convo | partner:messageCtrl.selected_user | username:messageCtrl.friend_user_map }}</h1>
+                <h1>{{ messageCtrl.selected_convo | partner: messageCtrl.selected_user | username: messageCtrl.friend_user_map }}</h1>
             </div>
         </div>
     </div>
@@ -15,11 +15,11 @@
                 <a class="clickable" ng-show="messageCtrl.showLoadMoreMessagesLink()" ng-click="messageCtrl.increaseNumMessages(); $event.stopPropagation();">Load earlier messages</a>
                 <div id="message-{{message._id}}" class="message-wrapper clickable" ng-class="[messageCtrl.messageUserClass(message), {'hovered-messages': messageCtrl.isOneOfHoveredMessages(message)}]" ng-hide="messageCtrl.messageIsHidden(message)" ng-mouseover="messageCtrl.hoverMessage(message)" ng-mouseleave="messageCtrl.unhoverMessage(message)" ng-click="messageCtrl.toggleMessage(message, $event); $event.stopPropagation();" ng-repeat="message in messageCtrl.messages track by message._id">
                     <div class="bubble" ng-style="{'background-color': messageCtrl.paintStrand(message)}">
-                        <span class="message-text" ng-bind-html="message.text | linky:'_blank'"></span>
+                        <span class="message-text" ng-bind-html="message.text | linky: '_blank':{rel:'noopener'}"></span>
                     </div>
                     <span class="message-time-sent" ng-show="messageCtrl.isOneOfHoveredMessages(message)">{{ message.time_saved | dateStretchy }}</span>
                 </div>
-                <div class="read-receipt pull-right" ng-show="messageCtrl.last_time_read">Read at {{messageCtrl.last_time_read | dateStretchy}}</div>
+                <div class="read-receipt pull-right" ng-show="messageCtrl.last_time_read">Read at {{ messageCtrl.last_time_read | dateStretchy }}</div>
                 <braid-typing-indicator messages="messageCtrl.messages"
                                         selected_convo="messageCtrl.selected_convo"
                                         selected_user="messageCtrl.selected_user">

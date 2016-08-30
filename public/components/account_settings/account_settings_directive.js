@@ -60,7 +60,8 @@ angular.module('accountSettingsDirective', [])
         vm.clickProfilePic = function(event) {
             var profile_pic_location = event.target.attributes.src.value;
             if (profile_pic_location !== DEFAULT_PROFILE_PIC) {
-                $window.open(profile_pic_location, '_blank');
+                var new_window = $window.open(profile_pic_location, '_blank');
+                new_window.opener = null;
             };
         };
 
