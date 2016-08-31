@@ -90,7 +90,7 @@ angular.module('braidMain', [])
             var SECOND = 1000;
             var just_received_message_sound = now - vm.last_message_received_sound < SECOND;
             if (sound_on && data.play_message_sound && !just_received_message_sound) {
-                ooooh.play();
+                MESSAGE_NOTIFICATION.play();
                 vm.last_message_received_sound = new Date();
             };
         });
@@ -108,7 +108,7 @@ angular.module('braidMain', [])
 
         var DEFAULT_NUM_MESSAGES = 50;
 
-        var ooooh = new Audio('/assets/audio/ooooh.wav');
+        var MESSAGE_NOTIFICATION = new Audio('/assets/audio/message_notification.wav');
 
 
         // initialization
