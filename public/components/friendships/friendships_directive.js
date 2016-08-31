@@ -92,7 +92,7 @@ angular.module('friendshipsDirective', [])
         };
 
         vm.showFriendshipNotificationBubble = function() {
-            return _.filter(vm.friendships, vm.friendshipNeedsAnswer).length > 0 && !vm.show_friendships;
+            return _.filter(vm.friendships, vm.friendshipNeedsAnswer).length > 0;
         };
 
         vm.friendshipConvoIsSelected = function(friendship) {
@@ -120,7 +120,7 @@ angular.module('friendshipsDirective', [])
         };
 
         vm.showTotalUnreadNotificationBubble = function() {
-            return vm.totalUnreadMessages() && !vm.show_friendships;
+            return vm.totalUnreadMessages();
         };
 
         vm.totalUnreadMessages = function() {

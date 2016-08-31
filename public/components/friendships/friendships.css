@@ -128,8 +128,8 @@
 
 .friendship-notification-bubble {
     position: absolute;
-    top: 84px;
-    right: -10px;
+    top: 62px;
+    right: -9px;
     width: 18px;
     height: 18px;
     border-radius: 10px;
@@ -163,8 +163,8 @@
 
 .total-unread-notification-bubble {
     position: absolute;
-    top: 84px;
-    left: -10px;
+    top: 62px;
+    left: -9px;
     width: 18px;
     height: 18px;
     border-radius: 9px;
