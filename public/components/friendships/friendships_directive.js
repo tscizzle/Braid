@@ -199,7 +199,9 @@ angular.module('friendshipsDirective', [])
                         });
                     });
 
-            };
+            } else {
+                vm.convo_unread_message_counts = {};
+            }
         };
 
 
@@ -233,9 +235,9 @@ angular.module('friendshipsDirective', [])
         var friend_users_watcher = function() {return vm.friend_users;};
         var selected_user_watcher = function() {return vm.selected_user;};
         var unread_messages_watcher = function() {return vm.totalUnreadMessages()};
-        $scope.$watchGroup([friendships_watcher, selected_user_watcher], refreshUnreadMessageCounts)
+        $scope.$watchGroup([friendships_watcher, selected_user_watcher], refreshUnreadMessageCounts);
         $scope.$watchGroup([friend_users_watcher, selected_user_watcher], refreshConvos);
-        $scope.$watch(unread_messages_watcher, resetTitleNotifications);
+        $scope.$watchGroup([selected_user_watcher, unread_messages_watcher], resetTitleNotifications);
 
 
         // register socket listeners

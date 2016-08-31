@@ -93,7 +93,6 @@ angular.module('accountSettingsDirective', [])
             restrict: 'EA',
             scope: {
                 selected_user: '=selectedUser',
-                title_notifications: '=titleNotifications'
             },
             templateUrl: 'components/account_settings/account_settings.html',
             controller: 'accountSettingsController',
