@@ -27,11 +27,11 @@
             <div class="navbar-divider-content"></div>
         </div>
 
-        <button class="btn btn-default navbar-right navbar-button" ng-show="navbarCtrl.selected_user" ng-click="navbarCtrl.goToHelp()"><i class="fa fa-book"></i></button>
-        <label class="btn btn-default navbar-right navbar-button" ng-show="navbarCtrl.selected_user">
+        <span class="icon-btn navbar-right navbar-button" ng-show="navbarCtrl.selected_user" ng-click="navbarCtrl.goToHelp()"><i class="fa fa-2x fa-book"></i></span>
+        <label class="icon-btn navbar-right navbar-button" ng-show="navbarCtrl.selected_user">
             <input type="checkbox" ng-model="navbarCtrl.account_settings.sound_on" ng-change="navbarCtrl.updateSoundOn()" hidden>
-            <i class="fa fa-volume-up" ng-show="navbarCtrl.account_settings.sound_on"></i>
-            <i class="fa fa-volume-off" ng-hide="navbarCtrl.account_settings.sound_on"></i>
+            <i class="fa fa-2x fa-volume-up" ng-show="navbarCtrl.account_settings.sound_on"></i>
+            <i class="fa fa-2x fa-volume-off" ng-hide="navbarCtrl.account_settings.sound_on"></i>
         </label>
 
     </div>

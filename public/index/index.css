@@ -36,8 +36,12 @@ textarea {
     cursor: pointer;
 }
 
-.icon-btn :hover {
+.icon-btn:hover {
     opacity: 0.6;
+}
+
+.icon-btn:active {
+    opacity: 0.8;
 }
 
 /* ANIMATIONS */
