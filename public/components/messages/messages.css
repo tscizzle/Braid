@@ -18,6 +18,28 @@
     margin-left: 80px;
 }
 
+.friendship-buttons {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto 0;
+    padding-right: 40px;
+    height: 33%;
+}
+
+.friendship-buttons span {
+    margin-left: 10px;
+}
+
+.favorite-friendship {
+    color: #FFCC00;
+}
+
+.delete-friendship {
+    color: #FF4444;
+}
+
 .message-list-wrapper {
     height: 62vh;
     overflow: auto;

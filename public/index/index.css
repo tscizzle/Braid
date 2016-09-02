@@ -31,6 +31,15 @@ textarea {
     cursor: pointer;
 }
 
+.icon-btn {
+    background: transparent;
+    cursor: pointer;
+}
+
+.icon-btn :hover {
+    opacity: 0.6;
+}
+
 /* ANIMATIONS */
 
 @keyframes fadeIn {
