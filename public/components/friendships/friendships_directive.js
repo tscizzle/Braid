@@ -136,8 +136,8 @@ angular.module('friendshipsDirective', [])
             if (friendship) {
                 var matching_convo = _.find(vm.convos, function(convo) {
                     var convo_pair = [convo.user_id_0, convo.user_id_1].sort();
-                    var freindship_pair = [friendship.requester_id, friendship.target_id].sort();
-                    return convo_pair[0] === freindship_pair[0] && convo_pair[1] === freindship_pair[1];
+                    var friendship_pair = [friendship.requester_id, friendship.target_id].sort();
+                    return convo_pair[0] === friendship_pair[0] && convo_pair[1] === friendship_pair[1];
                 });
                 return matching_convo;
             };

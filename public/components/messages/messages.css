@@ -32,6 +32,10 @@
     margin-left: 10px;
 }
 
+.friendship-buttons li {
+    width: 100%;
+}
+
 .favorite-friendship {
     color: #FFCC00;
 }

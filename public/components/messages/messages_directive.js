@@ -2,9 +2,11 @@ angular.module('messagesDirective', [])
 
     .controller('messageController',
                 ['$scope', '$window', 'focus', 'socket', 'helpers', 'Messages',
-                 'Strands', 'AccountSettings', 'DEFAULT_NUM_MESSAGES', 'DEFAULT_PROFILE_PIC',
+                 'Strands', 'Friendships', 'AccountSettings',
+                 'DEFAULT_NUM_MESSAGES', 'DEFAULT_PROFILE_PIC',
                  function($scope, $window, focus, socket, helpers, Messages,
-                          Strands, AccountSettings, DEFAULT_NUM_MESSAGES, DEFAULT_PROFILE_PIC) {
+                          Strands, Friendships, AccountSettings,
+                          DEFAULT_NUM_MESSAGES, DEFAULT_PROFILE_PIC) {
 
         var vm = this;
 
@@ -102,6 +104,21 @@ angular.module('messagesDirective', [])
                         };
                     });
 
+            };
+        };
+
+        vm.deleteSelectedFriendship = function() {
+            if (vm.selected_user && vm.selected_convo) {
+                var friendship = friendshipFromConvo(vm.selected_convo);
+                if (friendship) {
+
+                    Friendships.delete(friendship._id, vm.selected_user._id)
+                        .success(function(data) {
+                            vm.friendships = data;
+                            vm.selected_convo = undefined;
+                        });
+
+                }
             };
         };
 
@@ -454,6 +471,17 @@ angular.module('messagesDirective', [])
             focusSendableTextarea();
         };
 
+        var friendshipFromConvo = function(convo) {
+            if (convo) {
+                var matching_friendship = _.find(vm.friendships, function(friendship) {
+                    var friendship_pair = [friendship.requester_id, friendship.target_id].sort();
+                    var convo_pair = [convo.user_id_0, convo.user_id_1].sort();
+                    return friendship_pair[0] === convo_pair[0] && friendship_pair[1] === convo_pair[1];
+                });
+                return matching_friendship;
+            };
+        };
+
         var refreshStrands = function() {
             if (vm.selected_convo) {
 
@@ -528,6 +556,7 @@ angular.module('messagesDirective', [])
             scope: {
                 messages: '=',
                 strands: '=',
+                friendships: "=",
                 num_messages: '=numMessages',
                 selected_strand: '=selectedStrand',
                 selected_convo: '=selectedConvo',
