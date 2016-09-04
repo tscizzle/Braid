@@ -70,7 +70,12 @@
 }
 
 .friendship-needs-answer {
-    color: #FF3333;
+    color: #FF4444;
+}
+
+.hide-friendship-buttons {
+    opacity: 0;
+    pointer-events: none;
 }
 
 .convo-unread-notification-bubble {

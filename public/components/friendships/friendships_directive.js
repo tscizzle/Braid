@@ -73,22 +73,12 @@ angular.module('friendshipsDirective', [])
             };
         };
 
-        vm.showAcceptButton = function(friendship) {
-            if (vm.selected_user) {
-                return friendship.status === 'pending' && friendship.target_id === vm.selected_user._id;
-            };
-        };
-
         vm.hoverFriendship = function(friendship) {
             vm.hovered_friendship = friendship._id;
         };
 
         vm.unhoverFriendship = function(friendship) {
             vm.hovered_friendship = undefined;
-        };
-
-        vm.friendshipOpacity = function(friendship) {
-            return (vm.hovered_friendship === friendship._id || vm.showAcceptButton(friendship)) ? 1 : 0;
         };
 
         vm.showFriendshipNotificationBubble = function() {
