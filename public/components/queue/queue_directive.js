@@ -37,15 +37,19 @@ angular.module('queueDirective', [])
         };
 
         vm.strandPreview = function(strand) {
-            var strand_messages = _.filter(vm.messages, function(message) {
-                return message.strand_id === strand._id;
-            });
-            if (strand_messages.length > 0) {
-                var strands_last_message = _.max(strand_messages, function(message) {
-                    return new Date(message.time_saved);
+            if (vm.selected_user) {
+
+                var partner_strand_messages = _.filter(vm.messages, function(message) {
+                    return message.strand_id === strand._id && message.receiver_id === vm.selected_user._id;
                 });
-                var text = strands_last_message.text;
-                return text;
+                if (partner_strand_messages.length > 0) {
+                    var strands_last_message = _.max(partner_strand_messages, function(message) {
+                        return new Date(message.time_saved);
+                    });
+                    var text = strands_last_message.text;
+                    return text;
+                };
+
             };
         };
 
