@@ -44,5 +44,8 @@ envs/
 # TODO tasks
 TODO.txt
 
+# Things To Remember
+remember.txt
+
 # redis
 dump.rdb
