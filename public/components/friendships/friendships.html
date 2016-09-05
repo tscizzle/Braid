@@ -21,9 +21,9 @@
             <div class="row">
                 <div class="col-sm-12 friendship-list-col">
                     <div class="friendship-list-wrapper">
-                        <div class="friendship-in-list clearfix" ng-class="{'accepted': friendship.status==='accepted', 'selected': friendshipCtrl.friendshipConvoIsSelected(friendship)}" ng-click="friendshipCtrl.selectConvo(friendship)" ng-mouseover="friendshipCtrl.hoverFriendship(friendship)" ng-mouseleave="friendshipCtrl.unhoverFriendship(friendship)" ng-repeat="friendship in friendshipCtrl.friendships track by friendship._id">
-                            <span ng-class="{'friendship-needs-answer': friendshipCtrl.friendshipNeedsAnswer(friendship)}">{{ friendship | friend: friendshipCtrl.selected_user | username: friendshipCtrl.friend_user_map }} {{ friendshipCtrl.conditionalStatus(friendship) }}</span>
-                            <div class="btn-group pull-right" ng-class="{'hide-friendship-buttons': !friendshipCtrl.friendshipNeedsAnswer(friendship)}">
+                        <div class="friendship-in-list clearfix" ng-class="{'accepted': friendship.status==='accepted', 'selected': friendshipCtrl.friendshipConvoIsSelected(friendship)}" ng-click="friendshipCtrl.selectConvo(friendship)" ng-mouseover="friendshipCtrl.hoverFriendship(friendship)" ng-mouseleave="friendshipCtrl.unhoverFriendship(friendship)" ng-repeat="friendship in (friendshipCtrl.sorted_friendships = (friendshipCtrl.friendships | orderBy:friendshipCtrl.sortFriendships)) track by friendship._id">
+                            <span ng-class="{'friendship-pending': friendship.status==='pending'}">{{ friendship | friend: friendshipCtrl.selected_user | username: friendshipCtrl.friend_user_map }} {{ friendshipCtrl.conditionalStatus(friendship) }}</span>
+                            <div class="btn-group pull-right" ng-class="{'hide-friendship-buttons': friendshipCtrl.hideDeleteFriendshipButton(friendship)}">
                                 <a class="btn btn-danger dropdown-toggle" data-toggle="dropdown">&#10005;</a>
                                 <ul class="dropdown-menu">
                                     <li ng-click="friendshipCtrl.deleteFriendship(friendship._id); $event.stopPropagation();"><a class="btn btn-danger">Delete Friendship</a></li>

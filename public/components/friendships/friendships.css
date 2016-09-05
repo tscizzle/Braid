@@ -69,8 +69,8 @@
     background-color: #BBB;
 }
 
-.friendship-needs-answer {
-    color: #FF4444;
+.friendship-pending {
+    font-style: italic;
 }
 
 .hide-friendship-buttons {

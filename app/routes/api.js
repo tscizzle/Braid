@@ -670,12 +670,12 @@ module.exports = function(app, io) {
     // --- get all users
     // this route doesn't have any special authentication
     app.get('/api/usernames', function(req, res) {
-        var query = {};
+        var user_query = {};
         if (req.query.substring) {
-            query.username = {$regex: req.query.substring};
+            user_query.username = {$regex: req.query.substring};
         };
 
-        User.find(query, {
+        User.find(user_query, {
             username: 1
         }, function(err, users) {
             if (err) return res.status(500).send(err);
@@ -886,7 +886,7 @@ module.exports = function(app, io) {
 
     });
 
-    // --- get a profile pics for friends
+    // --- get a profile pic for a friend
     app.get('/api/account_settings/friendProfilePic/:user_id', paramsUserIdIsFriend);
     app.get('/api/account_settings/friendProfilePic/:user_id', function(req, res) {
 

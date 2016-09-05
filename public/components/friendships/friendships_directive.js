@@ -61,6 +61,25 @@ angular.module('friendshipsDirective', [])
 
         // define page control functions used in the template
 
+        vm.sortFriendships = [
+            function(friendship) { // friendships needing an answer go first
+                return !vm.friendshipNeedsAnswer(friendship);
+            },
+            function(friendship) { // then sort by most recent message
+                var friendship_convo = convoFromFriendship(friendship);
+                if (friendship_convo) {
+                    return friendship_convo.last_message_time ? new Date(friendship_convo.last_message_time) * -1 : 0;
+                };
+            },
+            function(friendship) { // then put the accepted friendships above the pending ones
+                return ['accepted', 'pending'].indexOf(friendship.status);
+            }
+        ];
+
+        vm.hideDeleteFriendshipButton = function(friendship) {
+            return (friendship.status === 'accepted' || vm.hovered_friendship !== friendship._id) && !vm.friendshipNeedsAnswer(friendship);
+        };
+
         vm.friendshipNeedsAnswer = function(friendship) {
             if (vm.selected_user) {
                 return friendship.status === 'pending' && friendship.target_id === vm.selected_user._id;
@@ -205,9 +224,13 @@ angular.module('friendshipsDirective', [])
                         vm.convos = data;
 
                         var noFriendshipIsSelected = !_.any(vm.friendships, vm.friendshipConvoIsSelected);
-                        var arbitrary_friendship = vm.friendships[0];
-                        if (noFriendshipIsSelected && arbitrary_friendship) {
-                            vm.selected_convo = convoFromFriendship(arbitrary_friendship);
+                        // vm.sorted_friendships is from the ng-repeat in the template
+                        var sorted_accepted_friendships = _.filter(vm.sorted_friendships, function(friendship) {
+                            return friendship.status === 'accepted';
+                        });
+                        var arbitrary_accepted_friendship = sorted_accepted_friendships[0];
+                        if (noFriendshipIsSelected && arbitrary_accepted_friendship) {
+                            vm.selected_convo = convoFromFriendship(arbitrary_accepted_friendship);
                         };
                     });
 

@@ -33,6 +33,13 @@ module.exports = function(io) {
         });
     });
 
+    messageSchema.post('save', function() {
+        var convo_model = this.model('Convo');
+        var convo = convo_model.findOne(this.convo_id).exec(function(err, convo) {
+            if (convo) convo.setLastMessageTime();
+        });
+    });
+
     messageSchema.post('remove', function() {
         io.to(this.receiver_id).emit('messages:receive_update', {
             convo_id: this.convo_id,
@@ -43,6 +50,13 @@ module.exports = function(io) {
             convo_id: this.convo_id,
             strand_id: this.strand_id,
             receiver_id: this.receiver_id
+        });
+    });
+
+    messageSchema.post('remove', function() {
+        var convo_model = this.model('Convo');
+        var convo = convo_model.findOne(this.convo_id).exec(function(err, convo) {
+            if (convo) convo.setLastMessageTime();
         });
     });
 

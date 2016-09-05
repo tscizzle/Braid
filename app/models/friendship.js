@@ -42,7 +42,9 @@ module.exports = function(io) {
     friendshipSchema.post('remove', function() {
         io.to(this.requester_id).emit('friendships:receive_update');
         io.to(this.target_id).emit('friendships:receive_update');
+    });
 
+    friendshipSchema.post('remove', function() {
         // find, loop, and instance-level remove, instead of simply model-level remove all at once which doesn't trigger middleware hooks
         Convo.find({
             $or: [{

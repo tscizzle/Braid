@@ -39,12 +39,18 @@ module.exports = function(io) {
                 convo.remove();
             });
         });
+    });
+
+    userSchema.post('remove', function() {
         // find, loop, and instance-level remove, instead of simply model-level remove all at once which doesn't trigger middleware hooks
         Friendship.find({$or: [{requester_id: this._id}, {target_id: this._id}]}, function(err, friendships) {
             _.each(friendships, function(friendship) {
                 friendship.remove();
             });
         });
+    });
+
+    userSchema.post('remove', function() {
         AccountSettings.remove({_id: this._id});
     });
 

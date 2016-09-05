@@ -5,9 +5,7 @@
             <div class="message-header-div">
                 <img ng-src="{{ messageCtrl.partner_profile_pic || messageCtrl.default_pic }}" err-src="{{ messageCtrl.default_pic }}">
                 <h1>{{ messageCtrl.selected_convo | partner: messageCtrl.selected_user | username: messageCtrl.friend_user_map }}</h1>
-                <div class="friendship-buttons">
-                    <!-- TODO: make this toggle a friendship to favorite or not -->
-                    <span class="icon-btn favorite-friendship"><i class="fa fa-2x fa-star-o"></i></span>
+                <div class="btn-group friendship-buttons">
                     <span class="icon-btn delete-friendship" data-toggle="dropdown"><i class="fa fa-2x fa-trash"></i></span>
                     <ul class="dropdown-menu">
                         <li class="btn btn-danger" ng-click="messageCtrl.deleteSelectedFriendship()">Delete Friendship</li>
