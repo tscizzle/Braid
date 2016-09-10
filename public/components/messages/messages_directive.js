@@ -459,6 +459,10 @@ angular.module('messagesDirective', [])
             };
         });
 
+        socket.on('reconnect', function() {
+            refreshMessages();
+        });
+
 
         // helpers
 
