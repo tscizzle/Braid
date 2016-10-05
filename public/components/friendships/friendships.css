@@ -1,10 +1,10 @@
 .friendship-list-pane {
     font-size: 0.85em;
     background-color: white;
-    border-right: solid 1px #999;
-    border-bottom: solid 1px #999;
-    border-left: solid 1px #999;
     position: relative;
+    -moz-box-shadow: 0 0 15px #555;
+    -webkit-box-shadow: 0 0 15px #555;
+    box-shadow: 0 0 15px #555;
 }
 
 .friendship-list-pane .btn {

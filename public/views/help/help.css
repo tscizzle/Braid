@@ -1,8 +1,8 @@
 .help-view-col {
     background-color: white;
-    border-bottom: solid 1px #999;
-    border-right: solid 1px #999;
-    border-left: solid 1px #999;
+    -moz-box-shadow: 0 0 15px #555;
+    -webkit-box-shadow: 0 0 15px #555;
+    box-shadow: 0 0 15px #555;
 }
 
 .help-view-pane {
