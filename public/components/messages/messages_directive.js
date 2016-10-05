@@ -259,6 +259,10 @@ angular.module('messagesDirective', [])
             };
         };
 
+        vm.isHoveredMessage = function(message) {
+            return vm.hovered_message === message._id;
+        }
+
         vm.thisColorNumber = function() {
             /* looks at the previous strand's color_number, and returns the next one in the queue. */
 
