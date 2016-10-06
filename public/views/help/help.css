@@ -1,5 +1,7 @@
 .help-view-col {
     background-color: white;
+    max-height: 90vh;
+    overflow-y: scroll;
     -moz-box-shadow: 0 0 15px #555;
     -webkit-box-shadow: 0 0 15px #555;
     box-shadow: 0 0 15px #555;
