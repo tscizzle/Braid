@@ -233,6 +233,7 @@ angular.module('messagesDirective', [])
                             Messages.assignMessagesToStrand(new_strand_message_ids, strand_data.new_strand._id, vm.selected_convo._id, vm.num_messages)
                                 .success(function(assign_messages_data) {
                                     vm.messages = assign_messages_data;
+                                    clearPrimedMessages();
                                 });
 
                         });
