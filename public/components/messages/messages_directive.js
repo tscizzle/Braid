@@ -38,6 +38,7 @@ angular.module('messagesDirective', [])
                     // create a new strand
                     Strands.create(vm.newStrandFormData)
                         .success(function(strand_data) {
+                            vm.newStrandFormData = {};
                             vm.strands = strand_data.strands;
                             vm.newMessageFormData.strand_id = strand_data.new_strand._id;
                             var message_ids = vm.primed_messages.map(function(message) {return message._id});
@@ -211,6 +212,30 @@ angular.module('messagesDirective', [])
                             });
 
                     };
+                // if the clicked message does not already have a strand, add it and any primed messages to a new strand
+                } else {
+                    vm.newStrandFormData.convo_id = vm.selected_convo._id;
+                    vm.newStrandFormData.color_number = vm.thisColorNumber();
+                    vm.newStrandFormData.time_created = new Date();
+                    vm.newStrandFormData.user_id_0 = vm.selected_convo.user_id_0;
+                    vm.newStrandFormData.user_id_1 = vm.selected_convo.user_id_1;
+
+                    Strands.create(vm.newStrandFormData)
+                        .success(function(strand_data) {
+                            vm.newStrandFormData = {};
+                            vm.strands = strand_data.strands;
+                            // the new strand messages will be the primed messages plus the clicked message
+                            var new_strand_message_ids = _.map(vm.primed_messages, function(primed_message) {
+                                return primed_message._id;
+                            });
+                            new_strand_message_ids.push(message._id);
+
+                            Messages.assignMessagesToStrand(new_strand_message_ids, strand_data.new_strand._id, vm.selected_convo._id, vm.num_messages)
+                                .success(function(assign_messages_data) {
+                                    vm.messages = assign_messages_data;
+                                });
+
+                        });
                 };
                 // don't continue
                 return;
