@@ -47,14 +47,16 @@ angular.module('messagesDirective', [])
                             Messages.assignMessagesToStrand(message_ids, strand_data.new_strand._id, vm.selected_convo._id, vm.num_messages)
                                 .success(function(assign_messages_data) {
                                     vm.messages = assign_messages_data;
-                                    vm.selected_strand = strand_data.new_strand;
 
                                     // create the new message as part of the new strand
                                     vm.num_messages += 1;
                                     Messages.create(vm.newMessageFormData, vm.num_messages)
                                         .success(function(create_messages_data) {
                                             vm.newMessageFormData = {};
+                                            var selected_strand_id = (vm.selected_strand || {})._id;
+                                            delete vm.drafts[selected_strand_id];
                                             vm.messages = create_messages_data;
+                                            vm.selected_strand = strand_data.new_strand;
                                             clearPrimedMessages();
                                         })
                                         .finally(afterMessageCreation);
@@ -74,6 +76,8 @@ angular.module('messagesDirective', [])
                     Messages.create(vm.newMessageFormData, vm.num_messages)
                         .success(function(create_messages_data) {
                             vm.newMessageFormData = {};
+                            var selected_strand_id = (vm.selected_strand || {})._id;
+                            delete vm.drafts[selected_strand_id];
                             vm.messages = create_messages_data;
                         })
                         .finally(afterMessageCreation);
@@ -125,12 +129,6 @@ angular.module('messagesDirective', [])
 
 
         // define page control functions used in the template
-
-        vm.pressKeyInChat = function(event) {
-            if (event.keyCode === 27) {
-                deselectStrand();
-            };
-        };
 
         vm.clickMessageListWrapper = function() {
             if (vm.selected_strand) {
@@ -334,6 +332,9 @@ angular.module('messagesDirective', [])
                 };
                 socket.emit('this_user_typing', typing_data);
             };
+
+            var selected_strand_id = (vm.selected_strand || {})._id;
+            vm.drafts[selected_strand_id] = vm.newMessageFormData.text;
         };
 
         vm.paintStrand = function(message) {
@@ -458,6 +459,12 @@ angular.module('messagesDirective', [])
             };
         };
 
+        var setTextFromDrafts = function() {
+            var selected_strand_id = (vm.selected_strand || {})._id;
+            var strandDraft = vm.drafts[selected_strand_id];
+            vm.newMessageFormData.text = !vm.selected_strand || strandDraft ? strandDraft : '';
+        };
+
         var num_messages_watcher = function() {return vm.num_messages;};
         var messages_watcher = function() {return vm.messages;};
         var strands_watcher = function() {return vm.strands;};
@@ -473,6 +480,7 @@ angular.module('messagesDirective', [])
         $scope.$watch(selected_convo_watcher, resetNumMessages);
         $scope.$watchGroup([messages_watcher, selected_strand_watcher], resetMostRecentTimeRead);
         $scope.$watch(selected_strand_watcher, markStrandMessagesAsAddressed);
+        $scope.$watch(selected_strand_watcher, setTextFromDrafts);
 
 
         // register socket listeners
@@ -571,6 +579,7 @@ angular.module('messagesDirective', [])
 
         // initialization
 
+        vm.drafts = {};
         vm.primed_messages = [];
         vm.hovered_message = undefined;
         vm.hovered_strand = undefined;
