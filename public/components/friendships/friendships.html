@@ -21,17 +21,41 @@
             <div class="row">
                 <div class="col-sm-12 friendship-list-col">
                     <div class="friendship-list-wrapper">
-                        <div class="friendship-in-list clearfix" ng-class="{'accepted': friendship.status==='accepted', 'selected': friendshipCtrl.friendshipConvoIsSelected(friendship)}" ng-click="friendshipCtrl.selectConvo(friendship)" ng-mouseover="friendshipCtrl.hoverFriendship(friendship)" ng-mouseleave="friendshipCtrl.unhoverFriendship(friendship)" ng-repeat="friendship in (friendshipCtrl.sorted_friendships = (friendshipCtrl.friendships | orderBy:friendshipCtrl.sortFriendships)) track by friendship._id">
-                            <span ng-class="{'friendship-pending': friendship.status==='pending'}">{{ friendship | friend: friendshipCtrl.selected_user | username: friendshipCtrl.friend_user_map }} {{ friendshipCtrl.conditionalStatus(friendship) }}</span>
-                            <div class="btn-group pull-right" ng-class="{'hide-friendship-buttons': friendshipCtrl.hideDeleteFriendshipButton(friendship)}">
+                        <div class="friendship-in-list clearfix"
+                             ng-class="{'accepted': friendship.status==='accepted',
+                                        'selected': friendshipCtrl.friendshipConvoIsSelected(friendship)}"
+                             ng-click="friendshipCtrl.selectConvo(friendship)"
+                             ng-mouseover="friendshipCtrl.hoverFriendship(friendship)"
+                             ng-mouseleave="friendshipCtrl.unhoverFriendship(friendship)"
+                             ng-repeat="friendship in
+                                        (friendshipCtrl.sorted_friendships = (friendshipCtrl.friendships
+                                                                              | orderBy:friendshipCtrl.sortFriendships))
+                                        track by friendship._id">
+                            <span ng-class="{'friendship-pending': friendship.status==='pending'}">
+                                {{ friendship
+                                   | friend: friendshipCtrl.selected_user
+                                   | username: friendshipCtrl.friend_user_map }}
+                                {{ friendshipCtrl.conditionalStatus(friendship) }}
+                            </span>
+                            <div class="btn-group pull-right"
+                                 ng-class="{'hide-friendship-buttons': friendshipCtrl.hideDeleteFriendshipButton(friendship)}">
                                 <a class="btn btn-danger dropdown-toggle" data-toggle="dropdown">&#10005;</a>
                                 <ul class="dropdown-menu">
-                                    <li ng-click="friendshipCtrl.deleteFriendship(friendship._id); $event.stopPropagation();"><a class="btn btn-danger">Delete Friendship</a></li>
+                                    <li ng-click="friendshipCtrl.deleteFriendship(friendship._id); $event.stopPropagation();">
+                                        <a class="btn btn-danger">Delete Friendship</a>
+                                    </li>
                                 </ul>
                             </div>
-                            <a class="btn btn-success pull-right" ng-class="{'hide-friendship-buttons': !friendshipCtrl.friendshipNeedsAnswer(friendship)}" ng-click="friendshipCtrl.acceptFriendship(friendship._id); $event.stopPropagation();">&#10003;</a>
+                            <a class="btn btn-success pull-right"
+                               ng-class="{'hide-friendship-buttons': !friendshipCtrl.friendshipNeedsAnswer(friendship)}"
+                               ng-click="friendshipCtrl.acceptFriendship(friendship._id); $event.stopPropagation();">
+                                &#10003;
+                            </a>
 
-                            <div class="convo-unread-notification-bubble" ng-show="friendshipCtrl.showConvoUnreadNotificationBubble(friendship)">{{ friendshipCtrl.convo_unread_message_counts[friendship._id] }}</div>
+                            <div class="convo-unread-notification-bubble"
+                                 ng-show="friendshipCtrl.showConvoUnreadNotificationBubble(friendship)">
+                                {{ friendshipCtrl.convo_unread_message_counts[friendship._id] }}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -40,7 +64,14 @@
             <div class="row friendship-form-row">
                 <form>
                     <div class="col-sm-8">
-                        <input class="friendships-input" type="text" placeholder="Username" ng-model="friendshipCtrl.newFriendshipFormData.username" enter-submit="friendshipCtrl.createFriendship()" uib-typeahead="user.username for user in friendshipCtrl.allUsernames($viewValue)" typeahead-popup-template-url="/components/typeahead/typeahead-popup.html" typeahead-template-url="/components/typeahead/typeahead-match.html"/>
+                        <input class="friendships-input"
+                               type="text"
+                               placeholder="Username"
+                               ng-model="friendshipCtrl.newFriendshipFormData.username"
+                               enter-submit="friendshipCtrl.createFriendship()"
+                               uib-typeahead="user.username for user in friendshipCtrl.allUsernames($viewValue)"
+                               typeahead-popup-template-url="/components/typeahead/typeahead-popup.html"
+                               typeahead-template-url="/components/typeahead/typeahead-match.html"/>
                     </div>
 
                     <div class="col-sm-4 no-left-padding">
@@ -58,8 +89,13 @@
         <div class="friendship-notification-inner-bubble"></div>
     </div>
 
-    <div class="total-unread-notification-bubble" ng-show="friendshipCtrl.showTotalUnreadNotificationBubble()">{{ friendshipCtrl.totalUnreadMessages() }}</div>
+    <div class="total-unread-notification-bubble"
+         ng-show="friendshipCtrl.showTotalUnreadNotificationBubble()">
+        {{ friendshipCtrl.totalUnreadMessages() }}
+    </div>
 
-    <div class="friendship-error" ng-style="{'opacity': friendshipCtrl.friendship_error.opacity}">{{ friendshipCtrl.friendship_error.message }}</div>
+    <div class="friendship-error" ng-style="{'opacity': friendshipCtrl.friendship_error.opacity}">
+        {{ friendshipCtrl.friendship_error.message }}
+    </div>
 
 </div>

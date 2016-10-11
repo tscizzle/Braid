@@ -20,16 +20,27 @@
                 </li>
             </ul>
         </div>
-        <a href="/profile"><img class="navbar-right navbar-profile-pic" ng-src="{{ navbarCtrl.account_settings.profile_pic_url || navbarCtrl.default_pic }}" err-src="{{ navbarCtrl.default_pic }}" ng-show="navbarCtrl.selected_user"></a>
+        <a href="/profile">
+            <img class="navbar-right navbar-profile-pic"
+                 ng-src="{{ navbarCtrl.account_settings.profile_pic_url || navbarCtrl.default_pic }}"
+                 err-src="{{ navbarCtrl.default_pic }}"
+                 ng-show="navbarCtrl.selected_user">
+        </a>
 
         <div class="navbar-right navbar-divider" ng-show="navbarCtrl.selected_user">
             <div class="navbar-divider-placeholder"></div>
             <div class="navbar-divider-content"></div>
         </div>
 
-        <span class="icon-btn navbar-right navbar-button" ng-show="navbarCtrl.selected_user" ng-click="navbarCtrl.goToHelp()"><i class="fa fa-2x fa-book"></i></span>
+        <span class="icon-btn navbar-right navbar-button"
+              ng-show="navbarCtrl.selected_user"
+              ng-click="navbarCtrl.goToHelp()">
+            <i class="fa fa-2x fa-book"></i>
+        </span>
         <label class="icon-btn navbar-right navbar-button" ng-show="navbarCtrl.selected_user">
-            <input type="checkbox" ng-model="navbarCtrl.account_settings.sound_on" ng-change="navbarCtrl.updateSoundOn()" hidden>
+            <input type="checkbox" ng-model="navbarCtrl.account_settings.sound_on"
+                   ng-change="navbarCtrl.updateSoundOn()"
+                   hidden>
             <i class="fa fa-2x fa-volume-up" ng-show="navbarCtrl.account_settings.sound_on"></i>
             <i class="fa fa-2x fa-volume-off" ng-hide="navbarCtrl.account_settings.sound_on"></i>
         </label>
