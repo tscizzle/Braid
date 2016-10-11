@@ -47,6 +47,8 @@ angular.module('messagesDirective', [])
                             Messages.assignMessagesToStrand(message_ids, strand_data.new_strand._id, vm.selected_convo._id, vm.num_messages)
                                 .success(function(assign_messages_data) {
                                     vm.messages = assign_messages_data;
+                                    clearPrimedMessages();
+                                    vm.selected_strand = strand_data.new_strand;
 
                                     // create the new message as part of the new strand
                                     vm.num_messages += 1;
@@ -56,8 +58,6 @@ angular.module('messagesDirective', [])
                                             var selected_strand_id = (vm.selected_strand || {})._id;
                                             delete vm.drafts[selected_strand_id];
                                             vm.messages = create_messages_data;
-                                            vm.selected_strand = strand_data.new_strand;
-                                            clearPrimedMessages();
                                         })
                                         .finally(afterMessageCreation);
 
