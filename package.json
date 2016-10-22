@@ -33,6 +33,7 @@
   },
   "scripts": {
     "postinstall": "bower cache clean && bower install",
-    "deploy": "git push staging master; heroku pipelines:promote -r staging;"
+    "deploy": "git push staging master; heroku pipelines:promote -r staging;",
+    "start": "nodemon"
   }
 }
