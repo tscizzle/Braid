@@ -29,8 +29,8 @@ angular.module('messagesDirective', [])
                 vm.newMessageFormData.receiver_id = helpers.partnerIdFromSelectedConvo(vm);
                 vm.newMessageFormData.time_sent = new Date();
 
-                // if responding to a new strand
-                if (vm.primed_messages.length > 0) {
+                // if no strand is selected
+                if (!vm.selected_strand) {
                     vm.newStrandFormData.convo_id = vm.selected_convo._id;
                     vm.newStrandFormData.color_number = vm.thisColorNumber();
                     vm.newStrandFormData.time_created = new Date();
@@ -43,7 +43,7 @@ angular.module('messagesDirective', [])
                             vm.newStrandFormData = {};
                             vm.strands = strand_data.strands;
                             vm.newMessageFormData.strand_id = strand_data.new_strand._id;
-                            var message_ids = vm.primed_messages.map(function(message) {return message._id});
+                            var message_ids = _.map(vm.primed_messages, function(message) {return message._id});
 
                             // update the primed messages to be part of the new strand
                             Messages.assignMessagesToStrand(message_ids, strand_data.new_strand._id, vm.selected_convo._id, vm.num_messages)
@@ -68,11 +68,9 @@ angular.module('messagesDirective', [])
                         })
                         .catch(afterMessageCreation);
 
-                // if not responding to a new strand
+                // if a strand is selected
                 } else {
-                    if (vm.selected_strand) {
-                        vm.newMessageFormData.strand_id = vm.selected_strand._id;
-                    };
+                    vm.newMessageFormData.strand_id = vm.selected_strand._id;
 
                     Messages.create(vm.newMessageFormData, vm.num_messages)
                         .success(function(create_messages_data) {
@@ -95,12 +93,12 @@ angular.module('messagesDirective', [])
                 Messages.delete(message_id, vm.selected_convo._id, vm.num_messages)
                     .success(function(data) {
                         vm.messages = data;
-                        vm.primed_messages = vm.primed_messages.filter(function(primed_message) {
+                        vm.primed_messages = _.filter(vm.primed_messages, function(primed_message) {
                             return message_id !== primed_message._id;
                         });
 
                         if (vm.selected_strand) {
-                            var strand_messages = vm.messages.filter(function(message) {
+                            var strand_messages = _.filter(vm.messages, function(message) {
                                 return message.strand_id === vm.selected_strand._id;
                             });
 
@@ -151,7 +149,7 @@ angular.module('messagesDirective', [])
         };
 
         vm.messageIsPrimed = function(message) {
-            var primed_message_ids = vm.primed_messages.map(function(primed_message) {
+            var primed_message_ids = _.map(vm.primed_messages, function(primed_message) {
                 return primed_message._id;
             });
             return $.inArray(message._id, primed_message_ids) !== -1;
@@ -192,7 +190,7 @@ angular.module('messagesDirective', [])
                 if (message.strand_id) {
                     // if there are any primed messages, add them to the clicked strand
                     if (vm.primed_messages.length > 0) {
-                        var primed_message_ids = vm.primed_messages.map(function(primed_message) {
+                        var primed_message_ids = _.map(vm.primed_messages, function(primed_message) {
                             return primed_message._id;
                         });
 
@@ -248,13 +246,13 @@ angular.module('messagesDirective', [])
                     vm.selected_strand = vm.strand_map[message.strand_id];
                 // if the clicked message does not already have a strand we should add or subtract it from the primed messages
                 } else {
-                    var primed_message_ids = vm.primed_messages.map(function(primed_message) {
+                    var primed_message_ids = _.map(vm.primed_messages, function(primed_message) {
                         return primed_message._id;
                     });
                     if ($.inArray(message._id, primed_message_ids) === -1) {
                         vm.primed_messages.push(message);
                     } else {
-                        vm.primed_messages = vm.primed_messages.filter(function(primed_message) {
+                        vm.primed_messages = _.filter(vm.primed_messages, function(primed_message) {
                             return message._id !== primed_message._id;
                         });
                     };
@@ -368,12 +366,9 @@ angular.module('messagesDirective', [])
             // if a strand is selected, color it the faded version of that color
             if (vm.selected_strand) {
                 textarea_color = COLOR_TO_FADED_MAP[STRAND_COLOR_ORDER[vm.selected_strand.color_number]];
-            // if there are any primed messages, color it the faded version of what color it would be next
-            } else if (vm.primed_messages.length > 0) {
-                textarea_color = COLOR_TO_FADED_MAP[STRAND_COLOR_ORDER[vm.thisColorNumber()]];
-            // if there is no selected strand and no primed messages, make it no color
+            // if no strand is selected, color it the faded version of what color it would be next
             } else {
-                textarea_color = '#F0F0F0';
+                textarea_color = COLOR_TO_FADED_MAP[STRAND_COLOR_ORDER[vm.thisColorNumber()]];
             };
             return textarea_color;
         };
@@ -543,7 +538,7 @@ angular.module('messagesDirective', [])
             var unread_visible_messages = _.filter(vm.messages, function(message) {
                 return !vm.messageIsHidden(message) && message.receiver_id === vm.selected_user._id && !message.time_read;
             });
-            var unread_visible_message_ids = unread_visible_messages.map(function(message) {
+            var unread_visible_message_ids = _.map(unread_visible_messages, function(message) {
                 return message._id
             });
 

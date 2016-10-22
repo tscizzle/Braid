@@ -115,7 +115,7 @@ module.exports = function(app, io) {
             });
 
             var isUsersFriend = function(other_user_id) {
-                return friend_ids.filter(function(friend_id) {return friend_id == other_user_id}).length > 0;
+                return _.filter(friend_ids, function(friend_id) {return friend_id == other_user_id}).length > 0;
             };
 
             if (!isUsersFriend(req.body.receiver_id)) {
@@ -171,7 +171,7 @@ module.exports = function(app, io) {
             });
 
             var isUsersFriend = function(other_user_id) {
-                return friend_ids.filter(function(friend_id) {return friend_id == other_user_id}).length > 0;
+                return _.filter(friend_ids, function(friend_id) {return friend_id == other_user_id}).length > 0;
             };
 
             // are user_id_0 and user_id_1 the logged in user and one of his/her friends
@@ -232,7 +232,7 @@ module.exports = function(app, io) {
             });
 
             var isUsersFriend = function(other_user_id) {
-                return friend_ids.filter(function(friend_id) {return friend_id == other_user_id}).length > 0;
+                return _.filter(friend_ids, function(friend_id) {return friend_id == other_user_id}).length > 0;
             };
 
             if (!isUsersFriend(req.params.user_id)) {
