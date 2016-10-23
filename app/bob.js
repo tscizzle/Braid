@@ -55,6 +55,8 @@ module.exports = function(io) {
                         color_number: 2
                     }, {
                         color_number: 3
+                    }, {
+                        color_number: 4
                     }];
                     _.each(intro_strands, function(strand) {
                         strand.convo_id = convo_id;
@@ -73,6 +75,7 @@ module.exports = function(io) {
                         var strand_id_1 = strand_ids[1];
                         var strand_id_2 = strand_ids[2];
                         var strand_id_3 = strand_ids[3];
+                        var strand_id_4 = strand_ids[4];
 
                         var intro_messages = [{
                             text: 'Hi! I\'m Bob. Here\'s a quick intro to using this thing!',
@@ -80,38 +83,45 @@ module.exports = function(io) {
                             receiver_id: new_user_id,
                             strand_id: strand_id_0
                         }, {
-                            text: 'This Message is part of a Strand, as shown by its being colored.',
+                            text: 'This Message is part of a Strand. See what happens when you click it!',
                             sender_id: bob_id,
                             receiver_id: new_user_id,
                             strand_id: strand_id_1
                         }, {
-                            text: 'This Message is NOT part of a Strand, as shown by its NOT being colored.',
+                            text: 'Clicking a Message in a Strand selects that Strand, hiding all Messages except for the ones in that Strand.',
                             sender_id: bob_id,
-                            receiver_id: new_user_id
+                            receiver_id: new_user_id,
+                            strand_id: strand_id_1
+                        }, {
+                            text: 'Click again to de-select the Strand.',
+                            sender_id: bob_id,
+                            receiver_id: new_user_id,
+                            strand_id: strand_id_1
+                        }, {
+                            text: 'When no Strand is selected, sending a Message will automatically create a new Strand.',
+                            sender_id: bob_id,
+                            receiver_id: new_user_id,
+                            strand_id: strand_id_2
                         }, {
                             text: 'Wow! And my Messages can be in the same Strand as your Messages?',
                             sender_id: new_user_id,
                             receiver_id: bob_id,
                             strand_id: strand_id_1
                         }, {
-                            text: 'Yep. To respond to a particular Strand, first select that Strand by clicking any Message in that Strand, and then send a Message while that Strand is selected.',
+                            text: 'Yep. To respond on a particular Strand, first select that Strand, and then send a Message.',
                             sender_id: bob_id,
                             receiver_id: new_user_id,
                             strand_id: strand_id_1
                         }, {
-                            text: 'When no Strand is selected, you can prime Messages that aren\'t in a Strand yet by clicking them, and then send a new Message to create a new Strand containing those primed messages.',
-                            sender_id: bob_id,
-                            receiver_id: new_user_id,
-                            strand_id: strand_id_2
-                        }, {
-                            text: 'You can add friends by typing their username into the form in the Friends pane on the right and clicking Request.',
+                            text: 'You can add friends by typing their username into the form in the Friends pane on the right and then clicking Request.',
                             sender_id: bob_id,
                             receiver_id: new_user_id,
                             strand_id: strand_id_3
                         }, {
-                            text: 'Unrelated point (great opportunity for a new Strand, try clicking me and then responding), do you like guacamole? I forgot to ask.',
+                            text: 'If you want, you can start by adding usernames preethiv and tscizzle. They are the creators of Braid, and love when people talk to them.',
                             sender_id: bob_id,
-                            receiver_id: new_user_id
+                            receiver_id: new_user_id,
+                            strand_id: strand_id_3
                         }];
                         _.each(intro_messages, function(message, index) {
                             var now = new Date();
