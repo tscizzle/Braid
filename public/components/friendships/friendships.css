@@ -21,7 +21,7 @@
 
 .friendships-content {
     overflow-y: hidden;
-    height: 74vh;
+    height: 77vh;
 }
 
 .friendships-content.ng-hide-add, .friendships-content.ng-hide-remove {
@@ -197,7 +197,7 @@
 
 .friendship-error {
     position: absolute;
-    bottom: -35px;
+    bottom: -10px;
     left: -10px;
     max-width: 100%;
     font-size: 0.85em;
