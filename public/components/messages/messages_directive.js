@@ -322,7 +322,7 @@ angular.module('messagesDirective', [])
             if (vm.selected_user) {
                 var typist = vm.selected_user._id;
                 var recipient = helpers.partnerIdFromSelectedConvo(vm);
-                var color_number = vm.selected_strand ? vm.selected_strand.color_number : -1;
+                var color_number = vm.selected_strand ? vm.selected_strand.color_number : vm.thisColorNumber();
                 var typing_color = STRAND_COLOR_ORDER[color_number];
                 var typing_data = {
                     typist: typist,
