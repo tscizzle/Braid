@@ -287,34 +287,15 @@ angular.module('messagesDirective', [])
         }
 
         vm.thisColorNumber = function() {
-            /* looks at the previous strand's color_number, and returns the next one in the queue. */
-
-            var thisColorIndex;
-
-            // make a list of all the ID's of strands that have an associated message
-            var messageStrands = _.map(vm.messages, function(message) {
-                if (message.strand_id) {
-                    return vm.strand_map[message.strand_id];
+            /* returns the least recently used color_number */
+            var messageColorNumbers = _.map(vm.messages, function(message) {
+                if (message.strand_id && vm.strand_map[message.strand_id]) {
+                    return vm.strand_map[message.strand_id].color_number;
                 };
             });
-            // remove any undefined's (from messages with no strand)
-            messageStrands = _.filter(messageStrands, function(strand) {
-                return strand;
+            var thisColorIndex = _.min(_.range(STRAND_COLOR_ORDER.length), function(color_number) {
+                return _.lastIndexOf(messageColorNumbers, color_number);
             });
-
-            // if there are no existing strands, start at the beginning of the order
-            if (messageStrands.length === 0) {
-                thisColorIndex = 0;
-            } else {
-                // order strands by time
-                var strandsByTime = _.sortBy(messageStrands, function(strand) {
-                    return Date.parse(strand.time_created);
-                });
-                // take the next color in the order after the most recent existing strand's color
-                var prevStrandColorNumber = strandsByTime[strandsByTime.length - 1].color_number;
-                thisColorIndex = (prevStrandColorNumber + 1) % STRAND_COLOR_ORDER.length;
-            };
-
             return thisColorIndex;
         };
 
