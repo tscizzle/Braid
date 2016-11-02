@@ -20,6 +20,8 @@ angular.module('messagesDirective', [])
 
             disableSendButton();
 
+            markMessagesAsRead();
+
             if (vm.newMessageFormData.text && vm.selected_convo && vm.selected_user) {
 
                 var strand_that_had_draft = (vm.selected_strand || {})._id;
@@ -519,10 +521,7 @@ angular.module('messagesDirective', [])
             var unread_visible_messages = _.filter(vm.messages, function(message) {
                 return !vm.messageIsHidden(message) && message.receiver_id === vm.selected_user._id && !message.time_read;
             });
-            var unread_visible_message_ids = _.map(unread_visible_messages, function(message) {
-                return message._id
-            });
-
+            var unread_visible_message_ids = _.map(unread_visible_messages, '_id');
             if (unread_visible_message_ids.length > 0) {
 
                 Messages.markMessagesAsRead(unread_visible_message_ids, vm.selected_convo._id, current_time, vm.num_messages)
