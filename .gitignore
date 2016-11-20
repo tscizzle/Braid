@@ -41,11 +41,11 @@ jspm_packages
 envs/
 .env
 
+# redis
+dump.rdb
+
 # TODO tasks
 TODO.txt
 
 # Things To Remember
 REMEMBER.txt
-
-# redis
-dump.rdb

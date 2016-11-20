@@ -1,6 +1,6 @@
 var crypto = require('crypto');
 var mongoose = require('mongoose');
-var sendgridAPI = require('../config/sendgrid-email');
+var sendgridAPI = require('../config/sendgrid-api');
 
 
 module.exports = function(app, io, passport) {
