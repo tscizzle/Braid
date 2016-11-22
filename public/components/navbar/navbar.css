@@ -2,8 +2,12 @@
     height: 8vh;
     min-height: 40px;
     margin-bottom: 0;
-    background-color: #AAA;
-    border-bottom: solid 3px #777;
+
+    background: #AAA;
+    background: -webkit-linear-gradient(to top, #879595, #DDD);
+    background: -o-linear-gradient(to top, #879595, #DDD);
+    background: -moz-linear-gradient(to top, #879595, #DDD);
+    background: linear-gradient(to top, #879595, #DDD);
 }
 
 .navbar-container {

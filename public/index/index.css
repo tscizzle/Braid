@@ -2,11 +2,11 @@ html, body {
     height: 100vh;
     overflow-x: hidden;
 
-    background: #FFF; /* For browsers that do not support gradients */
-    background: -webkit-linear-gradient(#FFF, #d8e7ed); /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(#FFF, #d8e7ed); /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(#FFF, #d8e7ed); /* For Firefox 3.6 to 15 */
-    background: linear-gradient(#FFF, #d8e7ed); /* Standard syntax */
+    background: #FFF;
+    background: -webkit-linear-gradient(#FFF, #C8D7Dd);
+    background: -o-linear-gradient(#FFF, #C8D7Dd);
+    background: -moz-linear-gradient(#FFF, #C8D7Dd);
+    background: linear-gradient(#FFF, #C8D7Dd);
 }
 
 .main-content {
