@@ -4,10 +4,10 @@
     margin-bottom: 0;
 
     background: #AAA;
-    background: -webkit-linear-gradient(to top, #879595, #DDD);
-    background: -o-linear-gradient(to top, #879595, #DDD);
-    background: -moz-linear-gradient(to top, #879595, #DDD);
-    background: linear-gradient(to top, #879595, #DDD);
+    background: -webkit-linear-gradient(to top, #AABBBB, #DDD);
+    background: -o-linear-gradient(to top, #AABBBB, #DDD);
+    background: -moz-linear-gradient(to top, #AABBBB, #DDD);
+    background: linear-gradient(to top, #AABBBB, #DDD);
 }
 
 .navbar-container {
