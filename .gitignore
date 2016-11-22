@@ -44,6 +44,9 @@ envs/
 # redis
 dump.rdb
 
+# General ignore folder
+ignore/
+
 # TODO tasks
 TODO.txt
 
