@@ -1,4 +1,7 @@
 var mongoose = require('mongoose');
+var _ = require('underscore');
+var apn = require('apn');
+var apnProvider = require('../config/apn-provider');
 
 
 module.exports = function(io) {
@@ -34,8 +37,39 @@ module.exports = function(io) {
     });
 
     messageSchema.post('save', function() {
+        console.log('here we go');
+        var user_model = this.model('User');
+        var message_model = this.model('Message');
+        user_model.findOne(this.receiver_id).exec(function(err, receiver) {
+            user_model.findOne(this.sender_id).exec(function(err, sender) {
+                message_model.count({
+                    receiver_id: this.receiver_id,
+                    time_read: {
+                        $exists: false
+                    }
+                }).exec(function(err, unreadCount) {
+                    _.each(receiver.devices, function(device) {
+                        var note = new apn.Notification();
+                        note.expiry = Math.floor(Date.now() / 1000) + 3600;
+                        note.title = sender.username;
+                        note.body = this.text.length < 20 ? this.text : this.text.slice(17) + '...';
+                        note.badge = unreadCount;
+                        apnProvider.send(note, device.id).then(function(result) {
+                            console.log('\n---send result BEGIN---\n');
+                            console.log('note', note);
+                            console.log('device_id', device_id);
+                            console.log('result', result);
+                            console.log('\n---send result END---\n');
+                        });
+                    });
+                });
+            })
+        });
+    });
+
+    messageSchema.post('save', function() {
         var convo_model = this.model('Convo');
-        var convo = convo_model.findOne(this.convo_id).exec(function(err, convo) {
+        convo_model.findOne(this.convo_id).exec(function(err, convo) {
             if (convo) convo.setLastMessageTime();
         });
     });
@@ -55,7 +89,7 @@ module.exports = function(io) {
 
     messageSchema.post('remove', function() {
         var convo_model = this.model('Convo');
-        var convo = convo_model.findOne(this.convo_id).exec(function(err, convo) {
+        convo_model.findOne(this.convo_id).exec(function(err, convo) {
             if (convo) convo.setLastMessageTime();
         });
     });
