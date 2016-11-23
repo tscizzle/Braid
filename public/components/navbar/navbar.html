@@ -1,12 +1,12 @@
-<nav class="navbar navbar-default navbar-fixed-top">
+<nav class="navbar navbar-fixed-top">
     <div class="container-fluid navbar-container">
 
         <a href="{{ navbarCtrl.logoDestination() }}"><img class="navbar-logo" src="/assets/img/poop_logo.jpeg?"></a>
 
         <div class="navbar-right navbar-dropdown-container" ng-show="navbarCtrl.selected_user">
-            <a class="btn navbar-brand dropdown-toggle clickable username-link" data-toggle="dropdown">
-                {{ navbarCtrl.selected_user.username }} <i class="fa fa-caret-down"></i>
-            </a>
+            <span class="btn navbar-brand dropdown-toggle clickable username-link" data-toggle="dropdown">
+                {{ navbarCtrl.selected_user.username }} <i class="fa fa-bars"></i>
+            </span>
             <ul class="dropdown-menu">
                 <li><a class="btn" href="/"><i class="fa fa-lg fa-comments"></i>Chat</a></li>
                 <li><a class="btn" href="/profile"><i class="fa fa-lg fa-user"></i>Profile</a></li>
