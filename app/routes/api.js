@@ -722,6 +722,11 @@ module.exports = function(app, io) {
         console.log('req.params.user_id', req.params.user_id);
         console.log('req.body.device_id', req.body.device_id);
 
+        User.count({_id: req.params.user_id}, function(err, res) {console.log('_id res', res);});
+        User.count({_id: ObjectId(req.params.user_id)}, function(err, res) {console.log('ObjectId _id res', res);});
+        User.count({_id: req.params.user_id, 'devices.id': {$ne: req.body.device_id}}, function(err, res) {console.log('res', res);});
+        User.count({_id: ObjectId(req.params.user_id), 'devices.id': {$ne: req.body.device_id}}, function(err, res) {console.log('res', res);});
+
         User.findOneAndUpdate({
             _id: req.params.user_id,
             'devices.id': {$ne: req.body.device_id}

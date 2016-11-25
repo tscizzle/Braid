@@ -14,6 +14,10 @@ module.exports = function(io) {
     var userSchema = new Schema({
         username: {type: String, required: true, unique: true},
         email: String,
+        devices: [{
+            id: {type: String, required: true},
+            platform: {type: String, required: true, enum: ['ios']}
+        }],
         resetPasswordToken: String,
         resetPasswordExpires: Date
     });
