@@ -16,7 +16,8 @@ module.exports = function(io) {
         email: String,
         devices: [{
             id: {type: String, required: true},
-            platform: {type: String, required: true, enum: ['ios']}
+            platform: {type: String, required: true, enum: ['ios']},
+            _id: false
         }],
         resetPasswordToken: String,
         resetPasswordExpires: Date
