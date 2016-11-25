@@ -722,26 +722,22 @@ module.exports = function(app, io) {
         console.log('req.params.user_id', req.params.user_id);
         console.log('req.body.device_id', req.body.device_id);
 
-        User.update({
+        User.findOneAndUpdate({
             _id: req.params.user_id,
             'devices.id': {$ne: req.body.device_id}
         }, {
             $push: {
                 devices: {id: req.body.device_id, platform: req.body.platform},
             }
-        }, function(err, numAffected) {
-            console.log('numAffected', numAffected);
+        }, {
+            runValidators: true,
+            new: true
+        }, function(err, user) {
+            console.log('err', err);
+            console.log('user', user);
             if (err) return res.status(500).send(err);
 
-            User.findOne({
-                _id: req.params.user_id
-            }, function(err, user) {
-                console.log('user at the end', user);
-                if (err) return res.status(500).send(err);
-
-                return res.json(user);
-            });
-
+            return res.json(user);
         });
 
     });
