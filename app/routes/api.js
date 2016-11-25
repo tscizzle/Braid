@@ -719,6 +719,8 @@ module.exports = function(app, io) {
     // --- update a user to have a new device and send the user after update
     app.post('/api/addDeviceIDForUser/:user_id', resourceBelongsToUser(['params', 'user_id'], User));
     app.post('/api/addDeviceIDForUser/:user_id', function(req, res) {
+        console.log('req.params.user_id', req.params.user_id);
+        console.log('req.body.device_id', req.body.device_id);
 
         User.update({
             _id: req.params.user_id,
@@ -728,11 +730,13 @@ module.exports = function(app, io) {
                 devices: {id: req.body.device_id, platform: req.body.platform},
             }
         }, function(err, numAffected) {
+            console.log('numAffected', numAffected);
             if (err) return res.status(500).send(err);
 
             User.findOne({
                 _id: req.params.user_id
             }, function(err, user) {
+                console.log('user at the end', user);
                 if (err) return res.status(500).send(err);
 
                 return res.json(user);
