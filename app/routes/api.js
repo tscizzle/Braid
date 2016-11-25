@@ -716,6 +716,33 @@ module.exports = function(app, io) {
 
     });
 
+    // --- update a user to have a new device and send the user after update
+    app.post('/api/addDeviceIDForUser/:user_id', resourceBelongsToUser(['params', 'user_id'], Convo));
+    app.post('/api/addDeviceIDForUser/:user_id', function(req, res) {
+
+        User.update({
+            _id: req.params.user_id,
+            'devices.id': {$ne: req.body.device_id}
+        }, {
+            $push: {
+                devices: {id: req.body.device_id, platform: req.body.platform},
+            }
+        }, function(err, numAffected) {
+            if (err) return res.status(500).send(err);
+
+            User.findOne({
+                _id: req.params.user_id
+            }, function(err, user) {
+                if (err) return res.status(500).send(err);
+
+                return res.json(user);
+            });
+
+        });
+
+    });
+
+
     // --- delete user and send back all users after deletion
     app.delete('/api/users/:user_id', resourceBelongsToUser(['params', 'user_id'], User));
     app.delete('/api/users/:user_id', function(req, res) {
