@@ -719,13 +719,6 @@ module.exports = function(app, io) {
     // --- update a user to have a new device and send the user after update
     app.post('/api/addDeviceIDForUser/:user_id', resourceBelongsToUser(['params', 'user_id'], User));
     app.post('/api/addDeviceIDForUser/:user_id', function(req, res) {
-        console.log('req.params.user_id', req.params.user_id);
-        console.log('req.body.device_id', req.body.device_id);
-
-        User.count({_id: req.params.user_id}, function(err, res) {console.log('_id res', res);});
-        User.count({_id: ObjectId(req.params.user_id)}, function(err, res) {console.log('ObjectId _id res', res);});
-        User.count({_id: req.params.user_id, 'devices.id': {$ne: req.body.device_id}}, function(err, res) {console.log('res', res);});
-        User.count({_id: ObjectId(req.params.user_id), 'devices.id': {$ne: req.body.device_id}}, function(err, res) {console.log('res', res);});
 
         User.findOneAndUpdate({
             _id: req.params.user_id,
@@ -738,8 +731,6 @@ module.exports = function(app, io) {
             runValidators: true,
             new: true
         }, function(err, user) {
-            console.log('err', err);
-            console.log('user', user);
             if (err) return res.status(500).send(err);
 
             return res.json(user);
