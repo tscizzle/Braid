@@ -716,7 +716,7 @@ module.exports = function(app, io) {
 
     });
 
-    // --- update a user to have a new device and send the user after update
+    // --- update a user to have a new device and send back the user after update
     app.post('/api/addDeviceIDForUser/:user_id', resourceBelongsToUser(['params', 'user_id'], User));
     app.post('/api/addDeviceIDForUser/:user_id', function(req, res) {
 
@@ -734,6 +734,22 @@ module.exports = function(app, io) {
             if (err) return res.status(500).send(err);
 
             return res.json(user);
+        });
+
+    });
+
+    // --- push the number of unread messages to a user's devices as the badge number
+    app.post('/api/pushUserBadgeNumber/:user_id', resourceBelongsToUser(['params', 'user_id'], User));
+    app.post('/api/pushUserBadgeNumber/:user_id', function(req, res) {
+
+        User.findOne({
+            _id: req.params.user_id,
+        }, function(err, user) {
+            if (err) return res.status(500).send(err);
+
+            user.sendPush();
+
+            res.status(200).end();
         });
 
     });

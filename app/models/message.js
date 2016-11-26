@@ -1,7 +1,5 @@
 var mongoose = require('mongoose');
 var _ = require('underscore');
-var apn = require('apn');
-var apnProvider = require('../config/apn-provider');
 
 
 module.exports = function(io) {
@@ -43,29 +41,9 @@ module.exports = function(io) {
         var sender_id = this.sender_id;
         var text = this.text;
         user_model.findOne(receiver_id).exec(function(err, receiver) {
-            var devices = receiver.devices;
             user_model.findOne(sender_id).exec(function(err, sender) {
                 var sender_username = sender.username;
-                message_model.count({
-                    receiver_id: receiver_id,
-                    time_read: {
-                        $exists: false
-                    }
-                }).exec(function(err, unread_count) {
-                    _.each(devices, function(device) {
-                        var device_id = device.id;
-                        var note = new apn.Notification();
-                        note.expiry = Math.floor(Date.now() / 1000) + 3600;
-                        note.title = sender_username;
-                        note.body = text;
-                        note.badge = unread_count;
-                        apnProvider.send(note, device_id).then(function(result) {
-                            if (!_.isEmpty(result.failed)) {
-                                console.log('\nERROR SENDING PUSH AFTER MESSAGE SEND\n', result.failed);
-                            };
-                        });
-                    });
-                });
+                receiver.sendPush(sender_username, text);
             });
         });
     });

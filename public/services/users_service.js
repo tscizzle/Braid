@@ -10,6 +10,9 @@ angular.module('userService', [])
             getFriendUsernames: function(user_id) {
                 return $http.get('/api/friendUsernames/' + user_id);
             },
+            pushBadgeNumber: function(user_id) {
+                return $http.post('/api/pushUserBadgeNumber/' + user_id);
+            },
             delete: function(user_id) {
                 return $http.delete('/api/users/' + user_id);
             }

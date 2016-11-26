@@ -1,10 +1,13 @@
 var mongoose = require('mongoose');
 var _ = require('underscore');
 var passportLocalMongoose = require('passport-local-mongoose');
+var apn = require('apn');
+var apnProvider = require('../config/apn-provider');
 
 
 module.exports = function(io) {
 
+    var Message = require('./message')(io);
     var Convo = require('./convo')(io);
     var Friendship = require('./friendship')(io);
     var AccountSettings = require('./account_settings')(io);
@@ -58,6 +61,32 @@ module.exports = function(io) {
     userSchema.post('remove', function() {
         AccountSettings.remove({_id: this._id});
     });
+
+    userSchema.methods.sendPush = function(title, body) {
+        var receiver_id = this._id;
+        var devices = this.devices;
+        Message.count({
+            receiver_id: receiver_id,
+            time_read: {
+                $exists: false
+            }
+        }).exec(function(err, unread_count) {
+            var note = new apn.Notification();
+            note.expiry = Math.floor(Date.now() / 1000) + 3600;
+            if (title) note.title = title;
+            if (body) note.body = body;
+            note.badge = unread_count;
+            _.each(devices, function(device) {
+                var device_id = device.id;
+                apnProvider.send(note, device_id)
+                    .then(function(result) {
+                        if (!_.isEmpty(result.failed)) {
+                            console.log('\nERROR SENDING PUSH AFTER MESSAGE SEND:\n', result.failed);
+                        };
+                    });
+            });
+        });
+    };
 
     userSchema.plugin(passportLocalMongoose);
 
