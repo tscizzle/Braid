@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var _ = require('underscore');
 var passportLocalMongoose = require('passport-local-mongoose');
 var apn = require('apn');
-var apnProvider = require('../config/apn-provider');
+// var apnProvider = require('../config/apn-provider');
 
 
 module.exports = function(io) {
@@ -79,12 +79,12 @@ module.exports = function(io) {
             note.badge = unread_count;
             _.each(devices, function(device) {
                 var device_id = device.id;
-                apnProvider.send(note, device_id)
-                    .then(function(result) {
-                        if (!_.isEmpty(result.failed)) {
-                            console.log('\nERROR SENDING PUSH AFTER MESSAGE SEND:\n', result.failed);
-                        };
-                    });
+                // apnProvider.send(note, device_id)
+                //     .then(function(result) {
+                //         if (!_.isEmpty(result.failed)) {
+                //             console.log('\nERROR SENDING PUSH AFTER MESSAGE SEND:\n', result.failed);
+                //         };
+                //     });
             });
         });
     };
