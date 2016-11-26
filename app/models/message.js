@@ -37,33 +37,36 @@ module.exports = function(io) {
     });
 
     messageSchema.post('save', function() {
-        console.log('here we go');
         var user_model = this.model('User');
         var message_model = this.model('Message');
-        user_model.findOne(this.receiver_id).exec(function(err, receiver) {
-            user_model.findOne(this.sender_id).exec(function(err, sender) {
+        var receiver_id = this.receiver_id;
+        var sender_id = this.sender_id;
+        var text = this.text;
+        user_model.findOne(receiver_id).exec(function(err, receiver) {
+            var devices = receiver.devices;
+            user_model.findOne(sender_id).exec(function(err, sender) {
+                var sender_username = sender.username;
                 message_model.count({
-                    receiver_id: this.receiver_id,
+                    receiver_id: receiver_id,
                     time_read: {
                         $exists: false
                     }
-                }).exec(function(err, unreadCount) {
-                    _.each(receiver.devices, function(device) {
+                }).exec(function(err, unread_count) {
+                    _.each(devices, function(device) {
+                        var device_id = device.id;
                         var note = new apn.Notification();
                         note.expiry = Math.floor(Date.now() / 1000) + 3600;
-                        note.title = sender.username;
-                        note.body = this.text.length < 20 ? this.text : this.text.slice(17) + '...';
-                        note.badge = unreadCount;
-                        apnProvider.send(note, device.id).then(function(result) {
-                            console.log('\n---send result BEGIN---\n');
-                            console.log('note', note);
-                            console.log('device_id', device_id);
-                            console.log('result', result);
-                            console.log('\n---send result END---\n');
+                        note.title = sender_username;
+                        note.body = text;
+                        note.badge = unread_count;
+                        apnProvider.send(note, device_id).then(function(result) {
+                            if (!_.isEmpty(result.failed)) {
+                                console.log('\nERROR SENDING PUSH AFTER MESSAGE SEND\n', result.failed);
+                            };
                         });
                     });
                 });
-            })
+            });
         });
     });
 
