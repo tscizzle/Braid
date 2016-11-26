@@ -20,6 +20,7 @@ module.exports = function(io) {
         devices: [{
             id: {type: String, required: true},
             platform: {type: String, required: true, enum: ['ios']},
+            time_stored: {type: Date, required: true},
             _id: false
         }],
         resetPasswordToken: String,

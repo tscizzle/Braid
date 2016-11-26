@@ -725,7 +725,11 @@ module.exports = function(app, io) {
             'devices.id': {$ne: req.body.device_id}
         }, {
             $push: {
-                devices: {id: req.body.device_id, platform: req.body.platform},
+                devices: {
+                    id: req.body.device_id,
+                    platform: req.body.platform,
+                    time_stored: new Date(),
+                },
             }
         }, {
             runValidators: true,
