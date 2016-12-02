@@ -667,7 +667,23 @@ module.exports = function(app, io) {
 
     });
 
-    // --- get all users
+    // --- get a single username
+    // this route doesn't have any special authentication
+    app.get('/api/username/:user_id', function(req, res) {
+
+        User.findOne({
+            _id: req.params.user_id
+        }, {
+            username: 1
+        }, function(err, user) {
+            if (err) return res.status(500).send(err);
+
+            return res.json(user);
+        });
+
+    });
+
+    // --- get all usernames
     // this route doesn't have any special authentication
     app.get('/api/usernames', function(req, res) {
         var user_query = {};
