@@ -911,7 +911,9 @@ module.exports = function(app, io) {
     // --- update a friendship to be accepted and send back friendships for the user after update
     app.post('/api/friendships/accept/:friendship_id/:user_id', resourceBelongsToUser(['params', 'friendship_id'], Friendship),
                                                                 resourceBelongsToUser(['params', 'user_id'], User),
-                                                                friendshipTargetIsUser('params'));
+                                                                friendshipTargetIsUser('params'),
+                                                                userId0OrUserId1IsUser('body'),
+                                                                otherUserIdXIsFriend('body'));
     app.post('/api/friendships/accept/:friendship_id/:user_id', function(req, res) {
 
         Friendship.update({
