@@ -642,9 +642,9 @@ module.exports = function(app, io) {
     });
 
     // --- get a convo for a pair of users
-    app.get('/api/convoByUsers/:user_id_0/:user_id_1', userId0OrUserId1IsUser('params'),
-                                                       otherUserIdXIsFriend('body'));
-    app.get('/api/convoByUsers/:user_id_0/:user_id_1', function(req, res) {
+    app.get('/api/convoFromUsers/:user_id_0/:user_id_1', userId0OrUserId1IsUser('params'),
+                                                         otherUserIdXIsFriend('params'));
+    app.get('/api/convoFromUsers/:user_id_0/:user_id_1', function(req, res) {
 
         Convo.findOne({
             $or: [{
