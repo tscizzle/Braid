@@ -41,6 +41,8 @@ angular.module('friendshipsDirective', [])
                 Friendships.accept(friendship_id, vm.selected_user._id)
                     .success(function(data) {
                         vm.friendships = data;
+                        var acceptedFriendship = _.filter(vm.friendships, friendship => friendship._id === friendship_id)[0];
+                        createConvo(acceptedFriendship);
                     });
 
             };

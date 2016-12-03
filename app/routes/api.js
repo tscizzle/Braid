@@ -911,9 +911,7 @@ module.exports = function(app, io) {
     // --- update a friendship to be accepted and send back friendships for the user after update
     app.post('/api/friendships/accept/:friendship_id/:user_id', resourceBelongsToUser(['params', 'friendship_id'], Friendship),
                                                                 resourceBelongsToUser(['params', 'user_id'], User),
-                                                                friendshipTargetIsUser('params'),
-                                                                userId0OrUserId1IsUser('body'),
-                                                                otherUserIdXIsFriend('body'));
+                                                                friendshipTargetIsUser('params'));
     app.post('/api/friendships/accept/:friendship_id/:user_id', function(req, res) {
 
         Friendship.update({
@@ -924,12 +922,6 @@ module.exports = function(app, io) {
             }
         }, function(err, numAffected) {
             if (err) return res.status(500).send(err);
-
-            // if this call fails because a convo already exists for these users, that's fine
-            Convo.create({
-                user_id_0: req.body.user_id_0,
-                user_id_1: req.body.user_id_1
-            });
 
             // unfortunately have to call .emit() here instead of in a post hook on .update(), since mongoose doesn't have document middleware for .update()
             Friendship.findOne({
