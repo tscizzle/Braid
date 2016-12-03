@@ -100,149 +100,179 @@ module.exports = function(app, io) {
 
     // define some custom auth middleware for particular routes whose needs are outside the ability of the dynamic middleware-generating function
 
-    var bodyReceiverIdIsFriend = function(req, res, next) {
+    var receiverIdIsFriend = function(paramsOrBody) {
 
-        Friendship.find({
-            $or: [{requester_id: req.user._id}, {target_id: req.user._id}],
-            status: 'accepted'
-        }, function(err, friendships) {
-            var friend_ids = _.map(friendships, function(friendship) {
-                if (friendship.requester_id.equals(req.user._id)) {
-                    return friendship.target_id;
-                } else if (friendship.target_id.equals(req.user._id)) {
-                    return friendship.requester_id;
-                };
-            });
+        return function(req, res, next) {
 
-            var isUsersFriend = function(other_user_id) {
-                return _.filter(friend_ids, function(friend_id) {return friend_id == other_user_id}).length > 0;
-            };
-
-            if (!isUsersFriend(req.body.receiver_id)) {
-                return res.status(401).json({
-                    err: 'Logged in user does not have access to one of the involved resources.'
+            Friendship.find({
+                $or: [{requester_id: req.user._id}, {target_id: req.user._id}],
+                status: 'accepted'
+            }, function(err, friendships) {
+                var friend_ids = _.map(friendships, function(friendship) {
+                    if (friendship.requester_id.equals(req.user._id)) {
+                        return friendship.target_id;
+                    } else if (friendship.target_id.equals(req.user._id)) {
+                        return friendship.requester_id;
+                    };
                 });
-            } else {
-                return next();
-            };
-        });
-    };
 
-    var bodyMessageIdsBelongToUser = function(req, res, next) {
+                var isUsersFriend = function(other_user_id) {
+                    return _.filter(friend_ids, function(friend_id) {return friend_id == other_user_id}).length > 0;
+                };
 
-        Message.find({
-            _id: {$in: req.body.message_ids}
-        }, function(err, messages) {
-            _.each(messages, function(message) {
-                if (!(message.sender_id.equals(req.user._id) || message.receiver_id.equals(req.user._id))) {
+                if (!isUsersFriend(req[paramsOrBody].receiver_id)) {
                     return res.status(401).json({
                         err: 'Logged in user does not have access to one of the involved resources.'
                     });
+                } else {
+                    return next();
                 };
             });
-            return next();
-        });
 
-    };
-
-    var bodyUserId0OrUserId1IsUser = function(req, res, next) {
-        // use '==' instead of .equals() because these may be strings whereas we should use .equals() for ObjectId's
-        if (!(req.body.user_id_0 == req.user._id || req.body.user_id_1 == req.user._id)) {
-            return res.status(401).json({
-                err: 'Logged in user does not have access to one of the involved resources.'
-            });
-        } else {
-            return next();
         };
+
     };
 
-    var bodyOtherUserIdXIsFriend = function(req, res, next) {
+    var messageIdsBelongToUser = function(paramsOrBody) {
 
-        Friendship.find({
-            $or: [{requester_id: req.user._id}, {target_id: req.user._id}],
-            status: 'accepted'
-        }, function(err, friendships) {
-            var friend_ids = _.map(friendships, function(friendship) {
-                if (friendship.requester_id.equals(req.user._id)) {
-                    return friendship.target_id;
-                } else if (friendship.target_id.equals(req.user._id)) {
-                    return friendship.requester_id;
-                };
+        return function(req, res, next) {
+
+            Message.find({
+                _id: {$in: req[paramsOrBody].message_ids}
+            }, function(err, messages) {
+                _.each(messages, function(message) {
+                    if (!(message.sender_id.equals(req.user._id) || message.receiver_id.equals(req.user._id))) {
+                        return res.status(401).json({
+                            err: 'Logged in user does not have access to one of the involved resources.'
+                        });
+                    };
+                });
+                return next();
             });
 
-            var isUsersFriend = function(other_user_id) {
-                return _.filter(friend_ids, function(friend_id) {return friend_id == other_user_id}).length > 0;
-            };
+        };
 
-            // are user_id_0 and user_id_1 the logged in user and one of his/her friends
+    };
+
+    var userId0OrUserId1IsUser = function(paramsOrBody) {
+
+        return function(req, res, next) {
             // use '==' instead of .equals() because these may be strings whereas we should use .equals() for ObjectId's
-            var ownersAreUserAndFriend = (req.body.user_id_0 == req.user._id && isUsersFriend(req.body.user_id_1) ||
-                                          req.body.user_id_1 == req.user._id && isUsersFriend(req.body.user_id_0))
-
-            if (!ownersAreUserAndFriend) {
+            if (!(req[paramsOrBody].user_id_0 == req.user._id || req[paramsOrBody].user_id_1 == req.user._id)) {
                 return res.status(401).json({
                     err: 'Logged in user does not have access to one of the involved resources.'
                 });
             } else {
                 return next();
             };
-        });
-
-    };
-
-    var bodyRequesterIdOrTargetIdIsUser = function(req, res, next) {
-        // use '==' instead of .equals() because these may be strings whereas we should use .equals() for ObjectId's
-        if (!(req.body.requester_id == req.user._id || req.body.target_id == req.user._id)) {
-            return res.status(401).json({
-                err: 'Logged in user does not have access to one of the involved resources.'
-            });
-        } else {
-            return next();
         };
+
     };
 
-    var friendshipTargetIsUser = function(req, res, next) {
+    var otherUserIdXIsFriend = function(paramsOrBody) {
 
-        Friendship.findOne({
-            _id: req.params.friendship_id
-        }, function(err, friendship) {
-            if (!friendship.target_id.equals(req.user._id)) {
-                return res.status(401).json({
-                    err: 'Logged in user does not have access to one of the involved resources.'
+        return function(req, res, next) {
+
+            Friendship.find({
+                $or: [{requester_id: req.user._id}, {target_id: req.user._id}],
+                status: 'accepted'
+            }, function(err, friendships) {
+                var friend_ids = _.map(friendships, function(friendship) {
+                    if (friendship.requester_id.equals(req.user._id)) {
+                        return friendship.target_id;
+                    } else if (friendship.target_id.equals(req.user._id)) {
+                        return friendship.requester_id;
+                    };
                 });
-            } else {
-                return next();
-            };
-        });
 
-    };
+                var isUsersFriend = function(other_user_id) {
+                    return _.filter(friend_ids, function(friend_id) {return friend_id == other_user_id}).length > 0;
+                };
 
-    var paramsUserIdIsFriend = function(req, res, next) {
+                // are user_id_0 and user_id_1 the logged in user and one of his/her friends
+                // use '==' instead of .equals() because these may be strings whereas we should use .equals() for ObjectId's
+                var ownersAreUserAndFriend = (req[paramsOrBody].user_id_0 == req.user._id && isUsersFriend(req[paramsOrBody].user_id_1) ||
+                                              req[paramsOrBody].user_id_1 == req.user._id && isUsersFriend(req[paramsOrBody].user_id_0))
 
-        Friendship.find({
-            $or: [{requester_id: req.user._id}, {target_id: req.user._id}],
-            status: 'accepted'
-        }, function(err, friendships) {
-            var friend_ids = _.map(friendships, function(friendship) {
-                if (friendship.requester_id.equals(req.user._id)) {
-                    return friendship.target_id;
-                } else if (friendship.target_id.equals(req.user._id)) {
-                    return friendship.requester_id;
+                if (!ownersAreUserAndFriend) {
+                    return res.status(401).json({
+                        err: 'Logged in user does not have access to one of the involved resources.'
+                    });
+                } else {
+                    return next();
                 };
             });
 
-            var isUsersFriend = function(other_user_id) {
-                return _.filter(friend_ids, function(friend_id) {return friend_id == other_user_id}).length > 0;
-            };
+        };
 
-            if (!isUsersFriend(req.params.user_id)) {
+    };
+
+    var requesterIdOrTargetIdIsUser = function(paramsOrBody) {
+
+        return function(req, res, next) {
+            // use '==' instead of .equals() because these may be strings whereas we should use .equals() for ObjectId's
+            if (!(req[paramsOrBody].requester_id == req.user._id || req[paramsOrBody].target_id == req.user._id)) {
                 return res.status(401).json({
                     err: 'Logged in user does not have access to one of the involved resources.'
                 });
             } else {
                 return next();
             };
-        });
+        };
+
+    };
+
+    var friendshipTargetIsUser = function(paramsOrBody) {
+
+        return function(req, res, next) {
+
+            Friendship.findOne({
+                _id: req[paramsOrBody].friendship_id
+            }, function(err, friendship) {
+                if (!friendship.target_id.equals(req.user._id)) {
+                    return res.status(401).json({
+                        err: 'Logged in user does not have access to one of the involved resources.'
+                    });
+                } else {
+                    return next();
+                };
+            });
+
+        };
+
+    };
+
+    var userIdIsFriend = function(paramsOrBody) {
+
+        return function(req, res, next) {
+
+            Friendship.find({
+                $or: [{requester_id: req.user._id}, {target_id: req.user._id}],
+                status: 'accepted'
+            }, function(err, friendships) {
+                var friend_ids = _.map(friendships, function(friendship) {
+                    if (friendship.requester_id.equals(req.user._id)) {
+                        return friendship.target_id;
+                    } else if (friendship.target_id.equals(req.user._id)) {
+                        return friendship.requester_id;
+                    };
+                });
+
+                var isUsersFriend = function(other_user_id) {
+                    return _.filter(friend_ids, function(friend_id) {return friend_id == other_user_id}).length > 0;
+                };
+
+                if (!isUsersFriend(req[paramsOrBody].user_id)) {
+                    return res.status(401).json({
+                        err: 'Logged in user does not have access to one of the involved resources.'
+                    });
+                } else {
+                    return next();
+                };
+            });
+
+        };
+
     };
 
 
@@ -302,7 +332,7 @@ module.exports = function(app, io) {
     app.post('/api/messages/:num_messages', resourceBelongsToUser(['body', 'sender_id'], User),
                                             resourceBelongsToUser(['body', 'strand_id'], Strand),
                                             resourceBelongsToUser(['body', 'convo_id'], Convo),
-                                            bodyReceiverIdIsFriend);
+                                            receiverIdIsFriend('body'));
     app.post('/api/messages/:num_messages', function(req, res) {
 
         Message.create({
@@ -336,7 +366,7 @@ module.exports = function(app, io) {
     // --- assign messages to a strand and send back messages for the convo after update
     app.post('/api/assignMessagesToStrand/:strand_id/:convo_id', resourceBelongsToUser(['params', 'strand_id'], Strand),
                                                                  resourceBelongsToUser(['params', 'convo_id'], Convo),
-                                                                 bodyMessageIdsBelongToUser);
+                                                                 messageIdsBelongToUser('body'));
     app.post('/api/assignMessagesToStrand/:strand_id/:convo_id', function(req, res) {
 
         Message.update({
@@ -418,7 +448,7 @@ module.exports = function(app, io) {
 
     // --- mark messages as read and send back messages for the convo after update
     app.post('/api/markMessagesAsRead/:convo_id', resourceBelongsToUser(['params', 'convo_id'], Convo),
-                                                  bodyMessageIdsBelongToUser);
+                                                  messageIdsBelongToUser('body'));
     app.post('/api/markMessagesAsRead/:convo_id', function(req, res) {
 
         Message.update({
@@ -572,8 +602,8 @@ module.exports = function(app, io) {
 
     // --- create a strand and send back the new strand_id as well as strands for the convo after creation
     app.post('/api/strands', resourceBelongsToUser(['body', 'convo_id'], Convo),
-                             bodyUserId0OrUserId1IsUser,
-                             bodyOtherUserIdXIsFriend);
+                             userId0OrUserId1IsUser('body'),
+                             otherUserIdXIsFriend('body'));
     app.post('/api/strands', function(req, res) {
 
         Strand.create({
@@ -611,9 +641,27 @@ module.exports = function(app, io) {
 
     });
 
+    // --- get a convo for a pair of users
+    app.get('/api/convoByUsers/:user_id_0/:user_id_1', userId0OrUserId1IsUser('params'),
+                                                       otherUserIdXIsFriend('body'));
+    app.get('/api/convoByUsers/:user_id_0/:user_id_1', function(req, res) {
+
+        Convo.findOne({
+            $or: [{
+                user_id_0: req.params.user_id_0, user_id_1: req.params.user_id_1,
+                user_id_0: req.params.user_id_1, user_id_1: req.params.user_id_0,
+            }]
+        }, function(err, convo) {
+            if (err) return res.status(500).send(err);
+
+            return res.json(convo);
+        });
+
+    });
+
     // --- create a convo and send back the new convo_id as well as convos for the user after creation
-    app.post('/api/convos', bodyUserId0OrUserId1IsUser,
-                            bodyOtherUserIdXIsFriend);
+    app.post('/api/convos', userId0OrUserId1IsUser('body'),
+                            otherUserIdXIsFriend('body'));
     app.post('/api/convos', function(req, res) {
 
         Convo.create({
@@ -812,7 +860,7 @@ module.exports = function(app, io) {
     });
 
     // --- create a friendship and send back the new friendship_id as well as friendships for the user after creation
-    app.post('/api/friendships', bodyRequesterIdOrTargetIdIsUser);
+    app.post('/api/friendships', requesterIdOrTargetIdIsUser('body'));
     app.post('/api/friendships', function(req, res) {
 
         User.findOne({
@@ -863,7 +911,7 @@ module.exports = function(app, io) {
     // --- update a friendship to be accepted and send back friendships for the user after update
     app.post('/api/friendships/accept/:friendship_id/:user_id', resourceBelongsToUser(['params', 'friendship_id'], Friendship),
                                                                 resourceBelongsToUser(['params', 'user_id'], User),
-                                                                friendshipTargetIsUser);
+                                                                friendshipTargetIsUser('params'));
     app.post('/api/friendships/accept/:friendship_id/:user_id', function(req, res) {
 
         Friendship.update({
@@ -945,7 +993,7 @@ module.exports = function(app, io) {
     });
 
     // --- get a profile pic for a friend
-    app.get('/api/account_settings/friendProfilePic/:user_id', paramsUserIdIsFriend);
+    app.get('/api/account_settings/friendProfilePic/:user_id', userIdIsFriend('params'));
     app.get('/api/account_settings/friendProfilePic/:user_id', function(req, res) {
 
         AccountSettings.findOne({
