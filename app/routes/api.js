@@ -645,12 +645,12 @@ module.exports = function(app, io) {
     app.get('/api/convoFromUsers/:user_id_0/:user_id_1', userId0OrUserId1IsUser('params'),
                                                          otherUserIdXIsFriend('params'));
     app.get('/api/convoFromUsers/:user_id_0/:user_id_1', function(req, res) {
+        console.log('req.params.user_id_0', req.params.user_id_0);
+        console.log('req.params.user_id_1', req.params.user_id_1);
 
         Convo.findOne({
-            $or: [{
-                user_id_0: req.params.user_id_0, user_id_1: req.params.user_id_1,
-                user_id_0: req.params.user_id_1, user_id_1: req.params.user_id_0,
-            }]
+            $or: [{user_id_0: req.params.user_id_0, user_id_1: req.params.user_id_1},
+                  {user_id_0: req.params.user_id_1, user_id_1: req.params.user_id_0}]
         }, function(err, convo) {
             if (err) return res.status(500).send(err);
 
