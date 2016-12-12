@@ -305,9 +305,7 @@ module.exports = function(app, io) {
         Message.aggregate([{
             $match: {
                 receiver_id: ObjectId(req.user._id),
-                time_read: {
-                    $exists: false
-                }
+                time_read: {$exists: false}
             }
         }, {
             $group: {
@@ -447,12 +445,16 @@ module.exports = function(app, io) {
     });
 
     // --- mark messages as read and send back messages for the convo after update
+    // TODO: auth a body user_id
+    // TODO: send a push to the body user_id
+    // TODO: add to the update message query a check for receiver_id being the body user_id
     app.post('/api/markMessagesAsRead/:convo_id', resourceBelongsToUser(['params', 'convo_id'], Convo),
                                                   messageIdsBelongToUser('body'));
     app.post('/api/markMessagesAsRead/:convo_id', function(req, res) {
 
         Message.update({
-            _id: {$in: req.body.message_ids}
+            _id: {$in: req.body.message_ids},
+            time_read: {$exists: false}
         }, {
             $set: {
                 time_read: Date.parse(req.body.time_read)
