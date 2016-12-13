@@ -524,7 +524,11 @@ angular.module('messagesDirective', [])
             var unread_visible_message_ids = _.map(unread_visible_messages, '_id');
             if (unread_visible_message_ids.length > 0) {
 
-                Messages.markMessagesAsRead(unread_visible_message_ids, vm.selected_convo._id, current_time, vm.num_messages)
+                Messages.markMessagesAsRead(unread_visible_message_ids,
+                                            vm.selected_user._id,
+                                            vm.selected_convo._id,
+                                            current_time,
+                                            vm.num_messages)
                     .success(function(data) {
                         vm.messages = data;
                     });

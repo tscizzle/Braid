@@ -246,14 +246,6 @@ angular.module('friendshipsDirective', [])
             vm.title_notifications = vm.totalUnreadMessages();
         };
 
-        var setUserBadgeNumber = function() {
-            if (vm.selected_user) {
-
-                Users.pushBadgeNumber(vm.selected_user._id);
-
-            };
-        };
-
         var friendships_watcher = function() {return vm.friendships;};
         var friend_users_watcher = function() {return vm.friend_users;};
         var selected_user_watcher = function() {return vm.selected_user;};
@@ -261,7 +253,6 @@ angular.module('friendshipsDirective', [])
         $scope.$watchGroup([friendships_watcher, selected_user_watcher], refreshUnreadMessageCounts);
         $scope.$watchGroup([friend_users_watcher, selected_user_watcher], refreshConvos);
         $scope.$watchGroup([selected_user_watcher, unread_messages_watcher], resetTitleNotifications);
-        $scope.$watch(unread_messages_watcher, setUserBadgeNumber);
 
 
         // register socket listeners

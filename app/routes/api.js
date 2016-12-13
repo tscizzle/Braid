@@ -445,16 +445,15 @@ module.exports = function(app, io) {
     });
 
     // --- mark messages as read and send back messages for the convo after update
-    // TODO: auth a body user_id
-    // TODO: send a push to the body user_id
-    // TODO: add to the update message query a check for receiver_id being the body user_id
     app.post('/api/markMessagesAsRead/:convo_id', resourceBelongsToUser(['params', 'convo_id'], Convo),
+                                                  resourceBelongsToUser(['body', 'user_id'], User),
                                                   messageIdsBelongToUser('body'));
     app.post('/api/markMessagesAsRead/:convo_id', function(req, res) {
 
         Message.update({
             _id: {$in: req.body.message_ids},
-            time_read: {$exists: false}
+            time_read: {$exists: false},
+            receiver_id: req.body.user_id,
         }, {
             $set: {
                 time_read: Date.parse(req.body.time_read)
@@ -473,6 +472,12 @@ module.exports = function(app, io) {
                 _.each(user_ids, function(user_id) {
                     io.to(user_id).emit('messages:receive_update', {convo_id: req.params.convo_id});
                 });
+            });
+
+            User.findOne({
+                _id: req.body.user_id
+            }, function(err, user) {
+                user.sendPush();
             });
 
             Message.find({
@@ -802,22 +807,6 @@ module.exports = function(app, io) {
             if (err) return res.status(500).send(err);
 
             return res.json(user);
-        });
-
-    });
-
-    // --- push the number of unread messages to a user's devices as the badge number
-    app.post('/api/pushUserBadgeNumber/:user_id', resourceBelongsToUser(['params', 'user_id'], User));
-    app.post('/api/pushUserBadgeNumber/:user_id', function(req, res) {
-
-        User.findOne({
-            _id: req.params.user_id,
-        }, function(err, user) {
-            if (err) return res.status(500).send(err);
-
-            user.sendPush();
-
-            res.status(200).end();
         });
 
     });
