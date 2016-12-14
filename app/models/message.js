@@ -39,10 +39,11 @@ module.exports = function(io) {
         var receiver_id = this.receiver_id;
         var sender_id = this.sender_id;
         var text = this.text;
+        var payload = {convo_id: this.convo_id};
         user_model.findOne(receiver_id).exec(function(err, receiver) {
             user_model.findOne(sender_id).exec(function(err, sender) {
                 var sender_username = sender.username;
-                receiver.sendPush(sender_username, text);
+                receiver.sendPush(sender_username, text, payload);
             });
         });
     });

@@ -63,7 +63,7 @@ module.exports = function(io) {
         AccountSettings.remove({_id: this._id});
     });
 
-    userSchema.methods.sendPush = function(title, body) {
+    userSchema.methods.sendPush = function(title, body, payload) {
         var receiver_id = this._id;
         var devices = this.devices;
         Message.count({
@@ -76,6 +76,7 @@ module.exports = function(io) {
             note.expiry = Math.floor(Date.now() / 1000) + 3600;
             if (title) note.title = title;
             if (body) note.body = body;
+            if (payload) note.payload = payload;
             note.badge = unread_count;
             _.each(devices, function(device) {
                 if (device.platform === 'ios') {
