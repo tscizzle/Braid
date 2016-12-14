@@ -78,13 +78,15 @@ module.exports = function(io) {
             if (body) note.body = body;
             note.badge = unread_count;
             _.each(devices, function(device) {
-                var device_id = device.id;
-                apnProvider.send(note, device_id)
-                    .then(function(result) {
-                        if (!_.isEmpty(result.failed)) {
-                            console.log('\nERROR SENDING PUSH AFTER MESSAGE SEND:\n', result.failed);
-                        };
-                    });
+                if (device.platform === 'ios') {
+                    var device_id = device.id;
+                    apnProvider.send(note, device_id)
+                        .then(function(result) {
+                            if (!_.isEmpty(result.failed)) {
+                                console.log('\nERROR SENDING PUSH:\n', result.failed);
+                            };
+                        });
+                }
             });
         });
     };
