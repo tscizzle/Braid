@@ -634,12 +634,27 @@ module.exports = function(app, io) {
 
     });
 
+    // --- get a single convo
+    app.get('/api/convo/:convo_id', resourceBelongsToUser(['params', 'convo_id'], Convo));
+    app.get('/api/convo/:convo_id', function(req, res) {
+
+        Convo.findOne({
+            _id: req.params.convo_id
+        }, function(err, convo) {
+            if (err) return res.status(500).send(err);
+
+            return res.json(convo);
+        });
+
+    });
+
     // --- get convos for a user
     app.get('/api/convos/:user_id', resourceBelongsToUser(['params', 'user_id'], User));
     app.get('/api/convos/:user_id', function(req, res) {
 
         Convo.find({
-            $or: [{user_id_0: req.params.user_id}, {user_id_1: req.params.user_id}]
+            $or: [{user_id_0: req.params.user_id},
+                  {user_id_1: req.params.user_id}]
         }, function(err, convos) {
             if (err) return res.status(500).send(err);
 
