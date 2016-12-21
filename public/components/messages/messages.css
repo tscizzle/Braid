@@ -55,6 +55,13 @@
 .message-wrapper {
     position: relative;
     font-size: 0.9em;
+    top: 0;
+    left: 0;
+    transition: top 0.2s, left 0.2s;
+}
+
+.message-wrapper .bubble {
+    transition: box-shadow 0.2s;
 }
 
 .sender-message {
@@ -94,11 +101,10 @@
 
 .bubble {
     position: relative;
+    margin: 3px 0;
     padding: 5px 10px;
-    margin-top: 3px;
     display: inline-block;
     max-width: 80%;
-    margin-bottom: 3px;
     text-align: left;
 }
 
