@@ -497,7 +497,7 @@ angular.module('messagesDirective', [])
                 var matching_friendship = _.find(vm.friendships, function(friendship) {
                     var friendship_pair = [friendship.requester_id, friendship.target_id].sort();
                     var convo_pair = [convo.user_id_0, convo.user_id_1].sort();
-                    return friendship_pair[0] === convo_pair[0] && friendship_pair[1] === convo_pair[1];
+                    return _.isEqual(friendship_pair, convo_pair);
                 });
                 return matching_friendship;
             };
