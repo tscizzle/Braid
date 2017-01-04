@@ -30,7 +30,7 @@
                 </tr>
 
                 <tr>
-                    <td>Sound On/Off</td>
+                    <td>Sound</td>
                     <td>
                         <label class="icon-btn">
                             <input type="checkbox"
@@ -39,6 +39,17 @@
                                    hidden>
                             <i class="fa fa-2x fa-volume-up" ng-show="actSetCtrl.account_settings.sound_on"></i>
                             <i class="fa fa-2x fa-volume-off" ng-hide="actSetCtrl.account_settings.sound_on"></i>
+                        </label>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Email Digest</td>
+                    <td>
+                        <label class="icon-btn">
+                            <input type="checkbox"
+                                   ng-model="actSetCtrl.account_settings.digest_enabled"
+                                   ng-change="actSetCtrl.updateDigestEnabled()">
                         </label>
                     </td>
                 </tr>

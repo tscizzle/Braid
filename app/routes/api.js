@@ -5,11 +5,11 @@ var _ = require('underscore');
 module.exports = function(app, io) {
 
     var Message = require('../models/message')(io);
-    var Strand = require('../models/strand')(io);
+    var Strand = require('../models/strand')();
     var Convo = require('../models/convo')(io);
     var User = require('../models/user')(io);
     var Friendship = require('../models/friendship')(io);
-    var AccountSettings = require('../models/account_settings')(io);
+    var AccountSettings = require('../models/account_settings')();
 
     var ObjectId = mongoose.Types.ObjectId;
 

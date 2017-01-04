@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 
-module.exports = function(io) {
+module.exports = function() {
 
     var Schema = mongoose.Schema;
     var ObjectId = Schema.ObjectId;
@@ -9,7 +9,8 @@ module.exports = function(io) {
     var accountSettingsSchema = new Schema({
         _id: {type: ObjectId, ref: 'User', required: true},
         sound_on: {type: Boolean, default: false},
-        profile_pic_url: String
+        profile_pic_url: String,
+        digest_enabled: {type: Boolean, default: true}
     });
 
     // if the model already exists, use the existing model

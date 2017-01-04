@@ -5,7 +5,7 @@ var _ = require('underscore');
 module.exports = function(io) {
 
     var Message = require('./message')(io);
-    var Strand = require('./strand')(io);
+    var Strand = require('./strand')();
 
     var Schema = mongoose.Schema;
     var ObjectId = Schema.ObjectId;

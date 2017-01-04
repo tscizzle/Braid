@@ -33,6 +33,17 @@ angular.module('accountSettingsDirective', [])
             };
         };
 
+        vm.updateDigestEnabled = function() {
+            if (vm.selected_user) {
+
+                AccountSettings.set(vm.selected_user._id, 'digest_enabled', vm.account_settings.digest_enabled)
+                    .success(function(data) {
+                        AccountSettings.refresh(vm.selected_user._id);
+                    });
+
+            };
+        }
+
         vm.deleteUser = function() {
             if (vm.selected_user) {
 

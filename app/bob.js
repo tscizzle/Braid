@@ -5,7 +5,7 @@ var _ = require('underscore');
 module.exports = function(io) {
 
     var Message = require('./models/message')(io);
-    var Strand = require('./models/strand')(io);
+    var Strand = require('./models/strand')();
     var Convo = require('./models/convo')(io);
     var User = require('./models/user')(io);
     var Friendship = require('./models/friendship')(io);

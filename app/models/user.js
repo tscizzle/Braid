@@ -10,7 +10,7 @@ module.exports = function(io) {
     var Message = require('./message')(io);
     var Convo = require('./convo')(io);
     var Friendship = require('./friendship')(io);
-    var AccountSettings = require('./account_settings')(io);
+    var AccountSettings = require('./account_settings')();
 
     var Schema = mongoose.Schema;
 
@@ -23,6 +23,7 @@ module.exports = function(io) {
             time_stored: {type: Date, required: true},
             _id: false
         }],
+        last_digest_time: Date,
         resetPasswordToken: String,
         resetPasswordExpires: Date
     });

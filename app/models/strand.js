@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 
-module.exports = function(io) {
+module.exports = function() {
 
     var Schema = mongoose.Schema;
     var ObjectId = Schema.ObjectId;

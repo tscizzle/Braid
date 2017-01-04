@@ -81,6 +81,11 @@ io.sockets.on('connection', require('./app/routes/socket')(io));
 require('./app/bob')(io).createBob();
 
 
+// jobs
+
+require('./app/jobs/digest')(io);
+
+
 // listen
 
 var PORT = (process.env.PORT || 8080);
