@@ -107,6 +107,7 @@ module.exports = function(app, io, passport) {
                     var help_link = 'http://' + req.headers.host + '/help';
 
                     var from_email = 'Bob <bob@braid.space>';
+                    var from_name = 'Braid Bob';
                     var subject = 'Braid Password Reset';
                     var email_body = (
                         '<p>You may follow this link ' +
@@ -119,6 +120,7 @@ module.exports = function(app, io, passport) {
                     sendgridAPI.send({
                         to: user_email,
                         from: from_email,
+                        fromname: from_name,
                         subject: subject,
                         html: email_body
                     }, function(err, json) {

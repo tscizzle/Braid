@@ -68,7 +68,6 @@ module.exports = function(io) {
                   // can't just use _.contains(enabled_user_ids, user._id) because needs to use _.isEqual instead of ===
                   return _.find(enabled_user_ids, enabled_user_id => _.isEqual(enabled_user_id, user._id));
                 });
-                User.find()
                 _.each(eligible_users, user => {
                     var message_query = {
                         time_read: {$exists: false},
@@ -82,17 +81,23 @@ module.exports = function(io) {
                         if (!err && messages.length > 0) {
                             var to_email = user.email;
                             var from_email = 'Bob <bob@braid.space>';
-                            // TODO: try from_email = {email: 'bob@braid.space', name: 'Braid Bob'}
-                            //       ALSO PUT IN THE OTHER EMAIL SEND PLACE
+                            var from_name = 'Braid Bob';
                             var subject = 'Unread Braid Messages';
                             var digestHTML = getDigestHTML(messages);
                             sendgridAPI.send({
                                 to: to_email,
                                 from: from_email,
+                                fromname: from_name,
                                 subject: subject,
                                 html: digestHTML
-                            }, function() {
-                                // TODO: set user's last_digest_time to this_time_triggered
+                            }, function(err, res) {
+                                if (!err && res.message === 'success') {
+                                    User.update({
+                                        _id: user._id
+                                    }, {
+                                        $set: {last_digest_time: this_time_triggered}
+                                    }).exec();
+                                };
                             });
                         }
                     });
