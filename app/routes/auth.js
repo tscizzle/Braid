@@ -103,8 +103,8 @@ module.exports = function(app, io, passport) {
                 }, function(err, numAffected) {
                     if (err) return res.status(500).send(err);
 
-                    var confirmation_link = 'http://' + req.headers.host + '/auth/?token=' + token;
-                    var help_link = 'http://' + req.headers.host + '/help';
+                    var confirmation_link = 'https://' + req.headers.host + '/auth/?token=' + token;
+                    var help_link = 'https://' + req.headers.host + '/help';
 
                     var from_email = 'Bob <bob@braid.space>';
                     var from_name = 'Braid Bob';
