@@ -26,16 +26,22 @@ function getDigestHTML(messages) {
           <div style="margin-bottom: 5em;">
             ${convo_previews}
           </div>
-          <a style="color: #ffffff;
-                    background-color: #43ac6a;
-                    border: 1px solid transparent;
-                    border-color: #3c9a5f;
-                    padding: 8px 12px;
-                    cursor: pointer;
-                    font-size: 15px;
-                    line-height: 1.4;" href="https://www.braid.space">
-            Go To Braid
-          </a>
+          <div style="margin-bottom: 20px;">
+            <a style="color: #ffffff;
+                      background-color: #43ac6a;
+                      border: 1px solid transparent;
+                      border-color: #3c9a5f;
+                      padding: 8px 12px;
+                      cursor: pointer;
+                      font-size: 15px;
+                      line-height: 1.4;"
+               href="https://www.braid.space">
+              Go To Braid
+            </a>
+          </div>
+          <div style="font-size: 0.75em">
+            Edit notification settings in your <a href="https://www.braid.space/profile">profile</a>.
+          </div>
         </body>
       </html>
     `;
@@ -83,6 +89,8 @@ module.exports = function(io) {
                             var from_email = 'Bob <bob@braid.space>';
                             var from_name = 'Braid Bob';
                             var subject = 'Unread Braid Messages';
+                            // TODO: make a call to get all the usernames for senders of the unread messages, and
+                            //       pass to getDigestHTML
                             var digestHTML = getDigestHTML(messages);
                             sendgridAPI.send({
                                 to: to_email,
