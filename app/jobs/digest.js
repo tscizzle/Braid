@@ -7,17 +7,17 @@ var MINUTE = 60 * SECOND;
 var HOUR = 60 * MINUTE;
 var DAY = 24 * HOUR;
 
-function getDigestHTML(messages) {
+function getDigestHTML(messages, username_map) {
     var convo_grouped_messages = _.groupBy(messages, 'convo_id');
     var sorted_convo_messages = _.mapObject(convo_grouped_messages, function(convo_messages, convo_id) {
         return _.sortBy(convo_messages, 'time_saved');
     });
     var convo_previews = _.map(_.values(sorted_convo_messages), function(convo_messages) {
         var first_message = convo_messages[0];
-        var sender = first_message.sender_id; // TODO: make this the sender's username somehow
-        return ('<p><b>' + 'Someone' + ' says:</b> ' +
-                first_message.text.slice(0, 25) + (first_message.text.length > 25 ? '...' : '') +
-                '</p>');
+        var message_preview = first_message.text.slice(0, 25) + (first_message.text.length > 25 ? '...' : '')
+        var sender_id = first_message.sender_id;
+        var sender_name = username_map[sender_id];
+        return `<p><b>${sender_name} says:</b> ${message_preview}</p>`;
     }).join('');
     return `
       <html style="font-family: sans-serif;">
@@ -89,23 +89,30 @@ module.exports = function(io) {
                             var from_email = 'Bob <bob@braid.space>';
                             var from_name = 'Braid Bob';
                             var subject = 'Unread Braid Messages';
-                            // TODO: make a call to get all the usernames for senders of the unread messages, and
-                            //       pass to getDigestHTML
-                            var digestHTML = getDigestHTML(messages);
-                            sendgridAPI.send({
-                                to: to_email,
-                                from: from_email,
-                                fromname: from_name,
-                                subject: subject,
-                                html: digestHTML
-                            }, function(err, res) {
-                                if (!err && res.message === 'success') {
-                                    User.update({
-                                        _id: user._id
-                                    }, {
-                                        $set: {last_digest_time: this_time_triggered}
-                                    }).exec();
-                                };
+                            var sender_ids = _.uniq(_.map(messages, 'sender_id'));
+                            User.find({
+                                _id: {$in: sender_ids}
+                            }, function(err, senders) {
+                                var sender_name_map = _.reduce(senders, function(mapSoFar, sender) {
+                                    mapSoFar[sender._id] = sender.username;
+                                    return mapSoFar;
+                                }, {});
+                                var digestHTML = getDigestHTML(messages, sender_name_map);
+                                sendgridAPI.send({
+                                    to: to_email,
+                                    from: from_email,
+                                    fromname: from_name,
+                                    subject: subject,
+                                    html: digestHTML
+                                }, function(err, res) {
+                                    if (!err && res.message === 'success') {
+                                        User.update({
+                                            _id: user._id
+                                        }, {
+                                            $set: {last_digest_time: this_time_triggered}
+                                        }).exec();
+                                    };
+                                });
                             });
                         }
                     });
