@@ -74,6 +74,7 @@ module.exports = function(io) {
             }
         }).exec(function(err, unread_count) {
             var note = new apn.Notification();
+            note.topic = 'com.tyler.Braid';
             note.expiry = Math.floor(Date.now() / 1000) + 3600;
             if (title) note.title = title;
             if (body) note.body = body;
