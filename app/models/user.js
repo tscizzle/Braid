@@ -82,8 +82,11 @@ module.exports = function(io) {
             _.each(devices, function(device) {
                 if (device.platform === 'ios') {
                     var device_id = device.id;
+                    console.log('device_id', device_id);
+                    console.log('note', note);
                     apnProvider.send(note, device_id)
                         .then(function(result) {
+                            console.log('result', result);
                             if (!_.isEmpty(result.failed)) {
                                 console.log('\nERROR SENDING PUSH:\n', result.failed);
                             };
