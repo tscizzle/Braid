@@ -13,10 +13,11 @@ angular.module('messageService', [])
                 return $http.post('/api/messages/' + num_messages_to_get, messageData);
             },
             createOnNewStrand: function(messageData, strandData, strand_message_ids, num_messages_to_get) {
-                return $http.post('/api/messagesNewStrand/' + num_messages_to_get, {
+                return $http.post('/api/messagesNewStrand', {
                     message: messageData,
                     strand: strandData,
-                    strand_message_ids: {message_ids: strand_message_ids}
+                    strand_message_ids: {message_ids: strand_message_ids},
+                    num_messages: num_messages_to_get,
                 });
             },
             assignMessagesToStrand: function(message_ids, strand_id, convo_id, num_messages_to_get) {

@@ -378,14 +378,14 @@ module.exports = function(app, io) {
     });
 
     // --- create a message on a new strand, potentially with some other messages, and send back messages, strands, and the new strand just created
-    app.post('/api/messagesNewStrand/:num_messages', resourceBelongsToUser(['body', 'message', 'sender_id'], User),
-                                                     resourceBelongsToUser(['body', 'message', 'convo_id'], Convo),
-                                                     receiverIdIsFriend(['body', 'message']),
-                                                     resourceBelongsToUser(['body', 'strand', 'convo_id'], Convo),
-                                                     userId0OrUserId1IsUser(['body', 'strand']),
-                                                     otherUserIdXIsFriend(['body', 'strand']),
-                                                     messageIdsBelongToUser(['body', 'strand_message_ids']));
-    app.post('/api/messagesNewStrand/:num_messages', function(req, res) {
+    app.post('/api/messagesNewStrand', resourceBelongsToUser(['body', 'message', 'sender_id'], User),
+                                       resourceBelongsToUser(['body', 'message', 'convo_id'], Convo),
+                                       receiverIdIsFriend(['body', 'message']),
+                                       resourceBelongsToUser(['body', 'strand', 'convo_id'], Convo),
+                                       userId0OrUserId1IsUser(['body', 'strand']),
+                                       otherUserIdXIsFriend(['body', 'strand']),
+                                       messageIdsBelongToUser(['body', 'strand_message_ids']));
+    app.post('/api/messagesNewStrand', function(req, res) {
 
         Strand.create({
             convo_id: req.body.strand.convo_id,
@@ -428,7 +428,7 @@ module.exports = function(app, io) {
                         }).sort({
                             time_saved: -1
                         }).limit(
-                            parseInt(req.params.num_messages)
+                            parseInt(req.body.num_messages)
                         ).exec(function(err, messages) {
                             if (err) return res.status(500).send(err);
 
