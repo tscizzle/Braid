@@ -39,36 +39,18 @@ angular.module('messagesDirective', [])
                     vm.newStrandFormData.user_id_0 = vm.selected_convo.user_id_0;
                     vm.newStrandFormData.user_id_1 = vm.selected_convo.user_id_1;
 
-                    // create a new strand
-                    Strands.create(vm.newStrandFormData)
-                        .success(function(strand_data) {
+                    var primed_message_ids = _.map(vm.primed_messages, function(primed_message) {return primed_message._id});
+                    Messages.createOnNewStrand(vm.newMessageFormData, vm.newStrandFormData, primed_message_ids, vm.num_messages)
+                        .success(function(data) {
+                            vm.newMessageFormData = {};
                             vm.newStrandFormData = {};
-                            vm.strands = strand_data.strands;
-                            vm.newMessageFormData.strand_id = strand_data.new_strand._id;
-                            var message_ids = _.map(vm.primed_messages, function(message) {return message._id});
-
-                            // update the primed messages to be part of the new strand
-                            Messages.assignMessagesToStrand(message_ids, strand_data.new_strand._id, vm.selected_convo._id, vm.num_messages)
-                                .success(function(assign_messages_data) {
-                                    vm.messages = assign_messages_data;
-                                    clearPrimedMessages();
-                                    vm.selected_strand = strand_data.new_strand;
-
-                                    // create the new message as part of the new strand
-                                    vm.num_messages += 1;
-                                    Messages.create(vm.newMessageFormData, vm.num_messages)
-                                        .success(function(create_messages_data) {
-                                            vm.newMessageFormData = {};
-                                            delete vm.drafts[strand_that_had_draft];
-                                            vm.messages = create_messages_data;
-                                        })
-                                        .finally(afterMessageCreation);
-
-                                })
-                                .catch(afterMessageCreation);
-
+                            clearPrimedMessages();
+                            vm.selected_strand = data.new_strand;
+                            delete vm.drafts[strand_that_had_draft];
+                            vm.strands = data.strands;
+                            vm.messages = data.messages;
                         })
-                        .catch(afterMessageCreation);
+                        .finally(afterMessageCreation);
 
                 // if a strand is selected
                 } else {

@@ -100,9 +100,13 @@ module.exports = function(app, io) {
 
     // define some custom auth middleware for particular routes whose needs are outside the ability of the dynamic middleware-generating function
 
-    var receiverIdIsFriend = function(paramsOrBody) {
+    var receiverIdIsFriend = function(reqPathToObj) {
 
         return function(req, res, next) {
+            var resource = req;
+            _.each(reqPathToObj, function(req_field_name) {
+                resource = resource[req_field_name];
+            });
 
             Friendship.find({
                 $or: [{requester_id: req.user._id}, {target_id: req.user._id}],
@@ -120,7 +124,7 @@ module.exports = function(app, io) {
                     return _.filter(friend_ids, function(friend_id) {return friend_id == other_user_id}).length > 0;
                 };
 
-                if (!isUsersFriend(req[paramsOrBody].receiver_id)) {
+                if (!isUsersFriend(resource.receiver_id)) {
                     return res.status(401).json({
                         err: 'Logged in user does not have access to one of the involved resources.'
                     });
@@ -133,12 +137,16 @@ module.exports = function(app, io) {
 
     };
 
-    var messageIdsBelongToUser = function(paramsOrBody) {
+    var messageIdsBelongToUser = function(reqPathToObj) {
 
         return function(req, res, next) {
+            var resource = req;
+            _.each(reqPathToObj, function(req_field_name) {
+                resource = resource[req_field_name];
+            });
 
             Message.find({
-                _id: {$in: req[paramsOrBody].message_ids}
+                _id: {$in: resource.message_ids}
             }, function(err, messages) {
                 _.each(messages, function(message) {
                     if (!(message.sender_id.equals(req.user._id) || message.receiver_id.equals(req.user._id))) {
@@ -154,11 +162,15 @@ module.exports = function(app, io) {
 
     };
 
-    var userId0OrUserId1IsUser = function(paramsOrBody) {
+    var userId0OrUserId1IsUser = function(reqPathToObj) {
 
         return function(req, res, next) {
+            var resource = req;
+            _.each(reqPathToObj, function(req_field_name) {
+                resource = resource[req_field_name];
+            });
             // use '==' instead of .equals() because these may be strings whereas we should use .equals() for ObjectId's
-            if (!(req[paramsOrBody].user_id_0 == req.user._id || req[paramsOrBody].user_id_1 == req.user._id)) {
+            if (!(resource.user_id_0 == req.user._id || resource.user_id_1 == req.user._id)) {
                 return res.status(401).json({
                     err: 'Logged in user does not have access to one of the involved resources.'
                 });
@@ -169,9 +181,13 @@ module.exports = function(app, io) {
 
     };
 
-    var otherUserIdXIsFriend = function(paramsOrBody) {
+    var otherUserIdXIsFriend = function(reqPathToObj) {
 
         return function(req, res, next) {
+            var resource = req;
+            _.each(reqPathToObj, function(req_field_name) {
+                resource = resource[req_field_name];
+            });
 
             Friendship.find({
                 $or: [{requester_id: req.user._id}, {target_id: req.user._id}],
@@ -191,8 +207,8 @@ module.exports = function(app, io) {
 
                 // are user_id_0 and user_id_1 the logged in user and one of his/her friends
                 // use '==' instead of .equals() because these may be strings whereas we should use .equals() for ObjectId's
-                var ownersAreUserAndFriend = (req[paramsOrBody].user_id_0 == req.user._id && isUsersFriend(req[paramsOrBody].user_id_1) ||
-                                              req[paramsOrBody].user_id_1 == req.user._id && isUsersFriend(req[paramsOrBody].user_id_0))
+                var ownersAreUserAndFriend = (resource.user_id_0 == req.user._id && isUsersFriend(resource.user_id_1) ||
+                                              resource.user_id_1 == req.user._id && isUsersFriend(resource.user_id_0))
 
                 if (!ownersAreUserAndFriend) {
                     return res.status(401).json({
@@ -330,7 +346,7 @@ module.exports = function(app, io) {
     app.post('/api/messages/:num_messages', resourceBelongsToUser(['body', 'sender_id'], User),
                                             resourceBelongsToUser(['body', 'strand_id'], Strand),
                                             resourceBelongsToUser(['body', 'convo_id'], Convo),
-                                            receiverIdIsFriend('body'));
+                                            receiverIdIsFriend(['body']));
     app.post('/api/messages/:num_messages', function(req, res) {
 
         Message.create({
@@ -361,10 +377,74 @@ module.exports = function(app, io) {
 
     });
 
+    // --- create a message on a new strand, potentially with some other messages, and send back messages, strands, and the new strand just created
+    app.post('/api/messagesNewStrand/:num_messages', resourceBelongsToUser(['body', 'message', 'sender_id'], User),
+                                                     resourceBelongsToUser(['body', 'message', 'convo_id'], Convo),
+                                                     receiverIdIsFriend(['body', 'message']),
+                                                     resourceBelongsToUser(['body', 'strand', 'convo_id'], Convo),
+                                                     userId0OrUserId1IsUser(['body', 'strand']),
+                                                     otherUserIdXIsFriend(['body', 'strand']),
+                                                     messageIdsBelongToUser(['body', 'strand_message_ids']));
+    app.post('/api/messagesNewStrand/:num_messages', function(req, res) {
+
+        Strand.create({
+            convo_id: req.body.strand.convo_id,
+            color_number: req.body.strand.color_number,
+            time_created: Date.parse(req.body.strand.time_created),
+            user_id_0: req.body.strand.user_id_0,
+            user_id_1: req.body.strand.user_id_1
+        }, function(err, new_strand) {
+            if (err) return res.status(500).send(err);
+
+            Message.update({
+                _id: {$in: req.body.strand_message_ids.message_ids}
+            }, {
+                $set: {
+                    strand_id: new_strand._id
+                }
+            }, {
+                multi: true
+            }, function(err, numAffected) {
+                if (err) return res.status(500).send(err);
+
+                Message.create({
+                    text: req.body.message.text,
+                    convo_id: req.body.message.convo_id,
+                    sender_id: req.body.message.sender_id,
+                    receiver_id: req.body.message.receiver_id,
+                    time_sent: Date.parse(req.body.message.time_sent),
+                    time_saved: Date.now(),
+                    strand_id: new_strand._id
+                }, function(err, message) {
+                    if (err) return res.status(500).send(err);
+
+                    Strand.find({
+                        convo_id: req.body.strand.convo_id
+                    }, function(err, strands) {
+                        if (err) return res.status(500).send(err);
+
+                        Message.find({
+                            convo_id: req.body.message.convo_id
+                        }).sort({
+                            time_saved: -1
+                        }).limit(
+                            parseInt(req.params.num_messages)
+                        ).exec(function(err, messages) {
+                            if (err) return res.status(500).send(err);
+
+                            messages.reverse();
+                            return res.json({messages: messages, strands: strands, new_strand: new_strand});
+                        });
+                    });
+                });
+            });
+        });
+    });
+
     // --- assign messages to a strand and send back messages for the convo after update
     app.post('/api/assignMessagesToStrand/:strand_id/:convo_id', resourceBelongsToUser(['params', 'strand_id'], Strand),
                                                                  resourceBelongsToUser(['params', 'convo_id'], Convo),
-                                                                 messageIdsBelongToUser('body'));
+                                                                 messageIdsBelongToUser(['body']));
     app.post('/api/assignMessagesToStrand/:strand_id/:convo_id', function(req, res) {
 
         Message.update({
@@ -447,7 +527,7 @@ module.exports = function(app, io) {
     // --- mark messages as read and send back messages for the convo after update
     app.post('/api/markMessagesAsRead/:convo_id', resourceBelongsToUser(['params', 'convo_id'], Convo),
                                                   resourceBelongsToUser(['body', 'user_id'], User),
-                                                  messageIdsBelongToUser('body'));
+                                                  messageIdsBelongToUser(['body']));
     app.post('/api/markMessagesAsRead/:convo_id', function(req, res) {
 
         Message.update({
@@ -609,8 +689,8 @@ module.exports = function(app, io) {
 
     // --- create a strand and send back the new strand_id as well as strands for the convo after creation
     app.post('/api/strands', resourceBelongsToUser(['body', 'convo_id'], Convo),
-                             userId0OrUserId1IsUser('body'),
-                             otherUserIdXIsFriend('body'));
+                             userId0OrUserId1IsUser(['body']),
+                             otherUserIdXIsFriend(['body']));
     app.post('/api/strands', function(req, res) {
 
         Strand.create({
@@ -664,8 +744,8 @@ module.exports = function(app, io) {
     });
 
     // --- get a convo for a pair of users
-    app.get('/api/convoFromUsers/:user_id_0/:user_id_1', userId0OrUserId1IsUser('params'),
-                                                         otherUserIdXIsFriend('params'));
+    app.get('/api/convoFromUsers/:user_id_0/:user_id_1', userId0OrUserId1IsUser(['params']),
+                                                         otherUserIdXIsFriend(['params']));
     app.get('/api/convoFromUsers/:user_id_0/:user_id_1', function(req, res) {
 
         Convo.findOne({
@@ -680,8 +760,8 @@ module.exports = function(app, io) {
     });
 
     // --- create a convo and send back the new convo_id as well as convos for the user after creation
-    app.post('/api/convos', userId0OrUserId1IsUser('body'),
-                            otherUserIdXIsFriend('body'));
+    app.post('/api/convos', userId0OrUserId1IsUser(['body']),
+                            otherUserIdXIsFriend(['body']));
     app.post('/api/convos', function(req, res) {
 
         Convo.create({
