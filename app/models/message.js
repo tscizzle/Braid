@@ -9,12 +9,12 @@ module.exports = function(io) {
 
     var messageSchema = new Schema({
         text: {type: String, required: true},
-        convo_id: {type: ObjectId, ref: 'Convo', required: true},
+        convo_id: {type: ObjectId, ref: 'Convo', required: true, index: true},
         sender_id: {type: ObjectId, ref: 'User', required: true},
         receiver_id: {type: ObjectId, ref: 'User', required: true},
         strand_id: {type: ObjectId, ref: 'Strand'},
         time_sent: {type: Date, required: true},
-        time_saved: {type: Date, required: true},
+        time_saved: {type: Date, required: true, index: true},
         time_read: Date,
         addressed: {type: Boolean, default: false}
     });

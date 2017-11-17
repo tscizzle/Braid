@@ -59,8 +59,7 @@ angular.module('messagesDirective', [])
                     Messages.create(vm.newMessageFormData, vm.num_messages)
                         .success(function(create_messages_data) {
                             vm.newMessageFormData = {};
-                            var selected_strand_id = (vm.selected_strand || {})._id;
-                            delete vm.drafts[selected_strand_id];
+                            delete vm.drafts[strand_that_had_draft];
                             vm.messages = create_messages_data;
                         })
                         .finally(afterMessageCreation);
