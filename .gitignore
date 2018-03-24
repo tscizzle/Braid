@@ -44,6 +44,9 @@ envs/
 # redis
 dump.rdb
 
+# generated stylesheets
+public/stylesheets
+
 # General ignore folder
 ignore/
 
