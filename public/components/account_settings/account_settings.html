@@ -1,77 +1,69 @@
 <div class="account-settings-pane">
-    <div class="row">
-        <div class="col-sm-12">
-            <h1>Settings</h1>
-            <hr>
-        </div>
+    <div class="settings-header-div">
+        Settings
     </div>
 
-    <div class="row">
-        <div class="col-sm-7">
-            <table class="settings-table">
+    <div class="settings-table-row">
+        <table class="settings-table">
+            <tr>
+                <td>Profile Picture</td>
+                <td class="profile-pic-form-cell">
+                    <span class="profile-pic-example"
+                          ng-show="actSetCtrl.showProfilePicExample()">
+                        Ex. http://i.imgur.com/Bc4s4kn.jpg
+                    </span>
+                    <input type="url"
+                           placeholder="URL of image"
+                           ng-model="actSetCtrl.candidate_pic_url"
+                           enter-submit="actSetCtrl.updateProfilePic()" />
+                    <a class="btn btn-success profile-pic-save"
+                       ng-show="actSetCtrl.unsavedProfilePic()"
+                       ng-click="actSetCtrl.updateProfilePic()">
+                        Save
+                    </a>
+                </td>
+            </tr>
 
-                <tr>
-                    <td>Profile Picture</td>
-                    <td class="profile-pic-form-cell">
-                        <span class="profile-pic-example"
-                              ng-show="actSetCtrl.showProfilePicExample()">
-                            Ex. http://i.imgur.com/Bc4s4kn.jpg
-                        </span>
-                        <input type="url"
-                               placeholder="URL of image"
-                               ng-model="actSetCtrl.candidate_pic_url"
-                               enter-submit="actSetCtrl.updateProfilePic()" />
-                        <a class="btn btn-success profile-pic-save"
-                           ng-show="actSetCtrl.unsavedProfilePic()"
-                           ng-click="actSetCtrl.updateProfilePic()">
-                            Save
-                        </a>
-                    </td>
-                </tr>
+            <tr>
+                <td>Sound</td>
+                <td>
+                    <label class="icon-btn">
+                        <input type="checkbox"
+                               ng-model="actSetCtrl.account_settings.sound_on"
+                               ng-change="actSetCtrl.updateSoundOn()"
+                               hidden>
+                        <i class="fa fa-2x fa-volume-up" ng-show="actSetCtrl.account_settings.sound_on"></i>
+                        <i class="fa fa-2x fa-volume-off" ng-hide="actSetCtrl.account_settings.sound_on"></i>
+                    </label>
+                </td>
+            </tr>
 
-                <tr>
-                    <td>Sound</td>
-                    <td>
-                        <label class="icon-btn">
-                            <input type="checkbox"
-                                   ng-model="actSetCtrl.account_settings.sound_on"
-                                   ng-change="actSetCtrl.updateSoundOn()"
-                                   hidden>
-                            <i class="fa fa-2x fa-volume-up" ng-show="actSetCtrl.account_settings.sound_on"></i>
-                            <i class="fa fa-2x fa-volume-off" ng-hide="actSetCtrl.account_settings.sound_on"></i>
-                        </label>
-                    </td>
-                </tr>
+            <tr ng-show="actSetCtrl.selected_user.email">
+                <td>Email Digest</td>
+                <td>
+                    <label class="icon-btn">
+                        <input type="checkbox"
+                               ng-model="actSetCtrl.account_settings.digest_enabled"
+                               ng-change="actSetCtrl.updateDigestEnabled()">
+                    </label>
+                </td>
+            </tr>
 
-                <tr ng-show="actSetCtrl.selected_user.email">
-                    <td>Email Digest</td>
-                    <td>
-                        <label class="icon-btn">
-                            <input type="checkbox"
-                                   ng-model="actSetCtrl.account_settings.digest_enabled"
-                                   ng-change="actSetCtrl.updateDigestEnabled()">
-                        </label>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td></td>
-                    <td>
-                        <div class="btn-group">
-                            <a class="btn btn-danger dropdown-toggle" data-toggle="dropdown">Delete Account</a>
-                            <ul class="dropdown-menu">
-                                <li ng-click="actSetCtrl.deleteUser()">
-                                    <a class="btn btn-danger">Definitely Delete Account</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </td>
-                </tr>
-
-            </table>
-        </div>
-
-        <div class="col-sm-5">
+            <tr>
+                <td></td>
+                <td>
+                    <div class="btn-group">
+                        <a class="btn btn-danger dropdown-toggle" data-toggle="dropdown">Delete Account</a>
+                        <ul class="dropdown-menu">
+                            <li ng-click="actSetCtrl.deleteUser()">
+                                <a class="btn btn-danger">Definitely Delete Account</a>
+                            </li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <div class="settings-pic-container">
             <div class="profile-pic-error-msg" ng-show="actSetCtrl.showProfilePicErrorMsg()">
                 No image found at that URL
             </div>

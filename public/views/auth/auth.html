@@ -1,5 +1,5 @@
-<div class="row" ng-controller="authController as authCtrl">
-    <div class="col-sm-12" ng-switch="authCtrl.auth_view">
+<div class="auth-view-col" ng-controller="authController as authCtrl">
+    <div class="auth-view-col-inner" ng-switch="authCtrl.auth_view">
 
         <div class="auth-all" ng-switch-default>
             <braid-login selected_user="mainCtrl.selected_user"
