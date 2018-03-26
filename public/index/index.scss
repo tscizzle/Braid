@@ -10,11 +10,17 @@ html, body {
 }
 
 .main-content {
-    position: relative;
+    display: flex;
+    padding: 0 150px;
 }
 
-.margin-fixer-grid-wrapper {
-    padding: 0 15px;
+.main-view-container {
+    flex: 5;
+    margin: 0 15px;
+}
+
+.friendships-view-col {
+    flex: 1;
 }
 
 .main-view-container.ng-enter {

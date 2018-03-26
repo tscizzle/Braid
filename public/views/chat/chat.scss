@@ -1,6 +1,17 @@
+.chat-container {
+  display: flex;
+  flex: 1;
+}
+
+.queue-view-col {
+  flex: 1;
+}
+
 .message-view-col {
-    background-color: white;
-    -moz-box-shadow: 0 0 15px #555;
-    -webkit-box-shadow: 0 0 15px #555;
-    box-shadow: 0 0 15px #555;
+  flex: 3;
+  margin: 0 0 0 15px;
+  background-color: white;
+  -moz-box-shadow: 0 0 15px #555;
+  -webkit-box-shadow: 0 0 15px #555;
+  box-shadow: 0 0 15px #555;
 }

@@ -102,27 +102,18 @@
                   title_notifications="mainCtrl.title_notifications">
     </braid-navbar>
 
-    <div class="main-content" class="container-fluid">
-    <div class="margin-fixer-grid-wrapper">
-        <div class="row">
-            <div class="col-sm-9">
-
-                <div class="main-view-container" ng-view></div>
-
-            </div>
-
-            <div class="col-sm-2">
-                <braid-friendships ng-show="mainCtrl.selected_user"
-                                   friend_users="mainCtrl.friend_users"
-                                   friendships="mainCtrl.friendships"
-                                   selected_convo="mainCtrl.selected_convo"
-                                   selected_user="mainCtrl.selected_user"
-                                   friend_user_map="mainCtrl.friend_user_map"
-                                   title_notifications="mainCtrl.title_notifications">
-                </braid-friendships>
-            </div>
+    <div class="main-content">
+        <div class="main-view-container" ng-view></div>
+        <div class="friendships-view-col">
+            <braid-friendships ng-show="mainCtrl.selected_user"
+                               friend_users="mainCtrl.friend_users"
+                               friendships="mainCtrl.friendships"
+                               selected_convo="mainCtrl.selected_convo"
+                               selected_user="mainCtrl.selected_user"
+                               friend_user_map="mainCtrl.friend_user_map"
+                               title_notifications="mainCtrl.title_notifications">
+            </braid-friendships>
         </div>
-    </div>
     </div>
 
 </body>

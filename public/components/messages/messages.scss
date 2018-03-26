@@ -1,21 +1,25 @@
-.message-header-div {
-    height: 8vh;
-    margin-top: 15px;
+.messages-container {
+    display: flex;
+    flex-direction: column;
+    padding: 0 15px;
 }
 
-.message-header-div img {
-    position: absolute;
-    top: 15px;
-    left: 25px;
+.convo-header-div {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+}
+
+.convo-header-div img {
     width: 50px;
     height: 50px;
     border-radius: 50%;
 }
 
-.message-header-div h1 {
-    margin-top: 10px;
-    margin-bottom: 20px;
-    margin-left: 80px;
+.convo-header {
+    font-size: 2.5em;
+    font-weight: 300;
 }
 
 .friendship-buttons {

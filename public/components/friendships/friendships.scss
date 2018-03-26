@@ -1,4 +1,6 @@
 .friendship-list-pane {
+    display: flex;
+    flex-direction: column;
     font-size: 0.85em;
     background-color: white;
     position: relative;
@@ -7,12 +9,22 @@
     box-shadow: 0 0 15px #555;
 }
 
-.friendship-list-pane .btn {
-    font-size: 0.85em;
+.friendships-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 0;
+    padding: 10px;
+    border-bottom: solid 1px #DDD;
 }
 
-.show-friendships-button-col {
-    margin-top: 20px;
+.friendships-header {
+    font-size: 2.5em;
+    font-weight: 300;
+}
+
+.friendship-list-pane .btn {
+    font-size: 0.85em;
 }
 
 .friendship-header-hr {
@@ -108,8 +120,13 @@
 }
 
 .friendship-form-row {
+    padding: 10px;
     border-top: solid 2px #777;
-    padding: 15px 15px 10px 0px;
+
+    form {
+        position: relative;
+        display: flex;
+    }
 }
 
 .friendship-form-row .typeahead-popup {
@@ -123,11 +140,7 @@
 
 
 .friendships-input {
-    width: 100%;
-}
-
-.no-left-padding {
-    padding-left: 0;
+    width: 60%;
 }
 
 .friendship-notification-bubble {

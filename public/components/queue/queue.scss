@@ -4,11 +4,11 @@
 }
 
 .queue-header-row {
-    height: 10vh;
-}
-
-.queue-header-hr {
-    margin-bottom: 0;
+    text-align: center;
+    padding: 10px;
+    border-bottom: solid 1px #DDD;
+    font-size: 2.5em;
+    font-weight: 300;
 }
 
 .queue-list-col {
@@ -17,25 +17,24 @@
 }
 
 .preview-in-list {
+    position: relative;
     margin-top: 10px;
     margin-right: 10px;
     height: 40px;
-    display: table;
-    clear: both;
-    position: relative;
 }
 
-.preview-in-list span {
-    display: table-cell;
+.preview-in-list > * {
+    position: relative;
+    display: flex;
+    align-items: center;
     padding-right: 15px;
     padding-left: 15px;
-    vertical-align: middle;
+    height: 100%;
     cursor: pointer;
-    position: relative;
     border-radius: 5px;
 }
 
-.preview-in-list span:hover {
+.preview-in-list > *:hover {
     top: -2px;
     left: -2px;
     box-shadow: 1px 1px 1px #777;
