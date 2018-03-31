@@ -3,7 +3,7 @@
 .chat-container {
   flex: 1;
   display: flex;
-  @include breakpoint(mobile) { flex-direction: column; };
+  @include breakpoint(mobile) { flex-direction: column-reverse; };
 }
 
 .queue-view-col {

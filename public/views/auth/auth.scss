@@ -38,8 +38,10 @@
     bottom: 0;
 }
 
-.auth-form input, button {
-    width: 100%;
+.auth-form {
+    input, button {
+        width: 100%;
+    }
 }
 
 .auth-form button {

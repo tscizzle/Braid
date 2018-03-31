@@ -1,3 +1,5 @@
+@import '../../index/index.scss';
+
 .messages-container {
     display: flex;
     flex-direction: column;
@@ -126,19 +128,28 @@
     opacity: 0.5;
 }
 
-.send-message-form {
-    height: 15vh;
-    margin-top: 3vh;
-}
-
 .read-receipt {
     font-size: 0.8em;
     opacity: 0.5;
 }
 
+.send-message-form {
+    display: flex;
+    align-items: flex-start;
+    margin: 20px 0 0 0;
+    padding: 0 0 15px 0;
+}
+
 #sendable-textarea {
+    margin: 0 15px 0 0;
+    height: 95px;
     font-size: 0.8em;
-    height: 13vh;
+}
+
+.send-message-btn {
+    @include breakpoint(desktop) { padding: 16px 20px; };
+    @include breakpoint(desktop) { font-size: 19px; };
+    @include breakpoint(desktop) { line-height: 1.33333em; };
 }
 
 .no-disabled-cursor:disabled {
