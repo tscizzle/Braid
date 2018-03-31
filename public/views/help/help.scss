@@ -1,7 +1,10 @@
+@import '../../index/index.scss';
+
 .help-view-col {
-    background-color: white;
+    margin: 10px 0;
     max-height: 90vh;
     overflow-y: scroll;
+    background-color: white;
     -moz-box-shadow: 0 0 15px #555;
     -webkit-box-shadow: 0 0 15px #555;
     box-shadow: 0 0 15px #555;
@@ -27,6 +30,7 @@
 
 .help-header-div {
     display: flex;
+    @include breakpoint(mobile) { flex-direction: column; };
     justify-content: space-between;
     padding: 10px;
     border-bottom: solid 1px #DDD;
@@ -35,4 +39,9 @@
 .help-header {
     font-size: 2.5em;
     font-weight: 300;
+}
+
+.contact-us-container {
+    padding: 5px 0;
+    overflow-x: scroll;
 }

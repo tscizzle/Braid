@@ -1,6 +1,9 @@
+@import '../../index/index.scss';
+
 .account-settings-pane {
     display: flex;
     flex-direction: column;
+    margin: 10px 0;
     padding: 20px;
 }
 
@@ -13,6 +16,7 @@
 
 .settings-table-row {
     display: flex;
+    @include breakpoint(mobile) { flex-direction: column-reverse; };
     padding: 10px;
 }
 
