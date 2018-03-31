@@ -1,6 +1,9 @@
+@import '../../index/index.scss';
+
 .chat-container {
-  display: flex;
   flex: 1;
+  display: flex;
+  @include breakpoint(mobile) { flex-direction: column; };
 }
 
 .queue-view-col {

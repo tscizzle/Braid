@@ -1,43 +1,8 @@
-<nav class="navbar navbar-fixed-top">
-    <div class="container-fluid navbar-container">
+<div class="braid-navbar">
+    <a href="{{ navbarCtrl.logoDestination() }}"><img class="navbar-logo" src="/assets/img/poop_logo.jpeg?"></a>
 
-        <a href="{{ navbarCtrl.logoDestination() }}"><img class="navbar-logo" src="/assets/img/poop_logo.jpeg?"></a>
-
-        <div class="navbar-right navbar-dropdown-container" ng-show="navbarCtrl.selected_user">
-            <span class="btn navbar-brand dropdown-toggle clickable username-link" data-toggle="dropdown">
-                {{ navbarCtrl.selected_user.username }} <i class="fa fa-bars"></i>
-            </span>
-            <ul class="dropdown-menu">
-                <li><a class="btn" href="/"><i class="fa fa-lg fa-comments"></i>Chat</a></li>
-                <li><a class="btn" href="/profile"><i class="fa fa-lg fa-user"></i>Profile</a></li>
-                <li><a class="btn" href="/help"><i class="fa fa-lg fa-book"></i>Help</a></li>
-                <li>
-                    <a class="btn" href="" braid-logout selected_user="navbarCtrl.selected_user"
-                                                        title_notifications="navbarCtrl.title_notifications">
-                        <i class="fa fa-lg fa-sign-out"></i>
-                        Logout
-                    </a>
-                </li>
-            </ul>
-        </div>
-        <a href="/profile">
-            <img class="navbar-right navbar-profile-pic"
-                 ng-src="{{ navbarCtrl.account_settings.profile_pic_url || navbarCtrl.default_pic }}"
-                 err-src="{{ navbarCtrl.default_pic }}"
-                 ng-show="navbarCtrl.selected_user">
-        </a>
-
-        <div class="navbar-right navbar-divider" ng-show="navbarCtrl.selected_user">
-            <div class="navbar-divider-placeholder"></div>
-            <div class="navbar-divider-content"></div>
-        </div>
-
-        <span class="icon-btn navbar-right navbar-button"
-              ng-show="navbarCtrl.selected_user"
-              ng-click="navbarCtrl.goToHelp()">
-            <i class="fa fa-2x fa-book"></i>
-        </span>
-        <label class="icon-btn navbar-right navbar-button" ng-show="navbarCtrl.selected_user">
+    <div class="braid-navbar-right">
+        <label class="icon-btn braid-navbar-button" ng-show="navbarCtrl.selected_user">
             <input type="checkbox" ng-model="navbarCtrl.account_settings.sound_on"
                    ng-change="navbarCtrl.updateSoundOn()"
                    hidden>
@@ -45,5 +10,40 @@
             <i class="fa fa-2x fa-volume-off" ng-hide="navbarCtrl.account_settings.sound_on"></i>
         </label>
 
+        <span class="icon-btn braid-navbar-button"
+              ng-show="navbarCtrl.selected_user"
+              ng-click="navbarCtrl.goToHelp()">
+            <i class="fa fa-2x fa-book"></i>
+        </span>
+
+        <div class="navbar-divider" ng-show="navbarCtrl.selected_user">
+            <div class="navbar-divider-placeholder"></div>
+            <div class="navbar-divider-content"></div>
+        </div>
+
+        <a href="/profile">
+            <img class="navbar-profile-pic"
+                 ng-src="{{ navbarCtrl.account_settings.profile_pic_url || navbarCtrl.default_pic }}"
+                 err-src="{{ navbarCtrl.default_pic }}"
+                 ng-show="navbarCtrl.selected_user">
+        </a>
+
+        <div class="navbar-dropdown-container" ng-show="navbarCtrl.selected_user">
+            <span class="btn dropdown-toggle clickable username-link" data-toggle="dropdown">
+                {{ navbarCtrl.selected_user.username }} <i class="fa fa-bars"></i>
+            </span>
+            <ul class="dropdown-menu dropdown-menu-right">
+                <li><a class="braid-menu-btn" href="/"><i class="fa fa-lg fa-comments"></i>Chat</a></li>
+                <li><a class="braid-menu-btn" href="/profile"><i class="fa fa-lg fa-user"></i>Profile</a></li>
+                <li><a class="braid-menu-btn" href="/help"><i class="fa fa-lg fa-book"></i>Help</a></li>
+                <li>
+                    <a class="braid-menu-btn" href="" braid-logout selected_user="navbarCtrl.selected_user"
+                                                                   title_notifications="navbarCtrl.title_notifications">
+                        <i class="fa fa-lg fa-sign-out"></i>
+                        Logout
+                    </a>
+                </li>
+            </ul>
+        </div>
     </div>
-</nav>
+</div>

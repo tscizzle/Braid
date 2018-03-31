@@ -1,30 +1,14 @@
-html, body {
-    height: 100vh;
-    overflow-x: hidden;
+/* Media */
 
-    background: #FFF;
-    background: -webkit-linear-gradient(#FFF, #C8D7Dd);
-    background: -o-linear-gradient(#FFF, #C8D7Dd);
-    background: -moz-linear-gradient(#FFF, #C8D7Dd);
-    background: linear-gradient(#FFF, #C8D7Dd);
-}
+$mobileDesktopSplit: 480px;
 
-.main-content {
-    display: flex;
-    padding: 0 150px;
-}
-
-.main-view-container {
-    flex: 5;
-    margin: 0 15px;
-}
-
-.friendships-view-col {
-    flex: 1;
-}
-
-.main-view-container.ng-enter {
-    animation: fadeIn 0.3s ease-out;
+@mixin breakpoint($device-category) {
+  @if $device-category == mobile {
+    @media (max-width: $mobileDesktopSplit) { @content ; }
+  }
+  @else if $device-category == desktop {
+    @media (min-width: $mobileDesktopSplit+1)  { @content ; }
+  }
 }
 
 /* STYLES TO USE ANYWHERE */
@@ -59,4 +43,34 @@ textarea {
     to {
         opacity: 1;
     }
+}
+
+html, body {
+    height: 100vh;
+    overflow-x: hidden;
+
+    background: #FFF;
+    background: -webkit-linear-gradient(#FFF, #C8D7Dd);
+    background: -o-linear-gradient(#FFF, #C8D7Dd);
+    background: -moz-linear-gradient(#FFF, #C8D7Dd);
+    background: linear-gradient(#FFF, #C8D7Dd);
+}
+
+.main-content {
+    display: flex;
+    @include breakpoint(mobile) { flex-direction: column; }
+    @include breakpoint(desktop) { padding: 0 150px; }
+}
+
+.main-view-container {
+    flex: 5;
+    margin: 0 15px;
+}
+
+.friendships-view-col {
+    flex: 1;
+}
+
+.main-view-container.ng-enter {
+    animation: fadeIn 0.3s ease-out;
 }

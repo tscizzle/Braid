@@ -1,8 +1,11 @@
-.navbar {
-    height: 8vh;
-    min-height: 40px;
+.braid-navbar {
+    position: relative; // not sure why without this, other divs' shadows go over the navbar
+    display: flex;
+    justify-content: space-between;
+    height: 50px;
     margin-bottom: 0;
     color: #555;
+    z-index: 10;
 
     background: #AAA;
     background: -webkit-linear-gradient(to top, #AABBBB, #DDD);
@@ -11,49 +14,55 @@
     background: linear-gradient(to top, #AABBBB, #DDD);
 }
 
-.navbar-container {
-    height: 100%;
-}
-
 .navbar-logo {
     height: 100%;
 }
 
+.braid-navbar-right {
+    display: flex;
+    align-items: center;
+}
+
+.braid-navbar-button {
+    margin: 0 15px;
+}
+
 .navbar-dropdown-container {
-    margin-top: 10px;
-    margin-right: -15px;
-    padding: 0 10px;
+    position: relative;
 }
 
 .navbar-dropdown-container.open .username-link {
     background-color: #FFF;
 }
 
-.navbar .dropdown-menu .btn:active:focus {
+.braid-navbar .dropdown-menu .btn:active:focus {
     outline: #777 dotted thin;
     color: #999;
 }
 
-.navbar .dropdown-menu li {
+.braid-navbar .dropdown-menu li {
     text-align: center;
 }
 
-.navbar .dropdown-menu li:not(:first-child) {
+.braid-navbar .dropdown-menu li:not(:first-child) {
     border-top: solid 1px #AAA;
 }
 
-.navbar .dropdown-menu a {
+.braid-navbar .dropdown-menu a {
     position: relative;
 }
 
-.navbar .dropdown-menu i {
+.braid-navbar .dropdown-menu i {
     position: absolute;
-    top: 10px;
+    top: 0;
+    bottom: 0;
     left: 10px;
+    margin: auto;
+    display: flex;
+    align-items: center;
 }
 
 .navbar-profile-pic {
-    margin-top: 8px;
     height: 40px;
     width: 40px;
     margin-right: 15px;
