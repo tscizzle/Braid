@@ -5,14 +5,14 @@
     </div>
 
     <div class="queue-list-col">
-        <div class="pull-right preview-in-list"
+        <div class="preview-in-list"
              ng-click="queueCtrl.clickUnstrandedPreview(message)"
              ng-repeat="message in queueCtrl.unaddressed_unstranded_messages track by message._id">
             <div class="unstranded-preview">
                 {{ message.text | cutoffText }}
             </div>
         </div>
-        <div class="pull-right preview-in-list"
+        <div class="preview-in-list"
              ng-click="queueCtrl.selected_strand=strand"
              ng-repeat="strand in queueCtrl.unaddressed_strands track by strand._id">
             <div ng-style="{'background-color': queueCtrl.strandColor(strand)}">

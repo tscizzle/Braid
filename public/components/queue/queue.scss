@@ -1,3 +1,5 @@
+@import '../../index/index.scss';
+
 .queue-pane {
     text-align: right;
     font-size: 0.85em;
@@ -12,6 +14,10 @@
 }
 
 .queue-list-col {
+    display: flex;
+    @include breakpoint(desktop) { flex-direction: column; };
+    @include breakpoint(desktop) { align-items: flex-end; };
+    @include breakpoint(mobile) { flex-wrap: wrap; };
     max-height: 65vh;
     overflow-y: scroll;
 }
