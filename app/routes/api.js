@@ -318,7 +318,7 @@ module.exports = function(app, io) {
     app.get('/api/getUnreadMessageCounts/:user_id', resourceBelongsToUser(['params', 'user_id'], User));
     app.get('/api/getUnreadMessageCounts/:user_id', function(req, res) {
 
-        Message.aggregate([{
+        const cursor = Message.aggregate([{
             $match: {
                 receiver_id: ObjectId(req.user._id),
                 time_read: {$exists: false}
@@ -330,16 +330,16 @@ module.exports = function(app, io) {
                     $sum: 1
                 }
             }
-        }]).exec(function(err, message_counts) {
-            if (err) return res.status(500).send(err);
+        }]).cursor().exec();
 
-            var convo_unread_message_counts = {};
-            _.each(message_counts, function(message_count) {
+        var convo_unread_message_counts = {};
+        cursor.each(function(err, message_count) {
+            if (message_count) {
                 convo_unread_message_counts[message_count._id] = message_count.num_unread_messages;
-            });
-            return res.json(convo_unread_message_counts);
+            } else {
+                return res.json(convo_unread_message_counts);
+            }
         });
-
     });
 
     // --- create a message and send back the new message_id as well as messages for the convo after creation
