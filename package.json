@@ -13,16 +13,16 @@
     "url": "https://github.com/tscizzle/Braid"
   },
   "dependencies": {
-    "body-parser": "~1.5.2",
-    "bower": "~1.7.7",
+    "body-parser": "^1.19.0",
+    "bower": "^1.7.10",
     "connect-redis": "~3.0.2",
     "cookie-parser": "~1.4.1",
     "dotenv": "~2.0.0",
-    "express": "~4.7.2",
-    "express-session": "~1.13.0",
+    "express": "^4.17.1",
+    "express-session": "^1.16.2",
     "method-override": "^2.3.10",
     "mongoose": "~4.4.6",
-    "morgan": "~1.2.2",
+    "morgan": "^1.9.1",
     "node-sass": "^4.8.3",
     "passport": "~0.3.2",
     "passport-local": "~1.0.0",
@@ -37,6 +37,10 @@
     "npm-run-all": "^4.1.2"
   },
   "scripts": {
+    "start-mongo-dev:osx": "mongod",
+    "start-mongo-dev:linux": "sudo service mongod start",
+    "stop-mongo-dev:linux": "sudo service mongod stop",
+    "start-redis-dev": "redis-server",
     "build-css": "node-sass public/ -o public/stylesheets",
     "watch-css": "node-sass public/ -o public/stylesheets --watch --recursive",
     "start-dev": "npm-run-all -p watch-css start",
