@@ -50,8 +50,5 @@ public/stylesheets
 # General ignore folder
 ignore/
 
-# TODO tasks
-TODO.txt
-
 # Things To Remember
 REMEMBER.txt

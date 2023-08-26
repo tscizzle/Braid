@@ -1,0 +1,11 @@
+- Keyword company
+  - setting to display keyword company
+    - mongo field in AccountSettings
+    - api route to set the field
+    - frontend checkbox in the account settings page that calls the api call
+  - frontend that conditionally shows the keyword company section
+    - input for typing a keyword (~20 chars)
+    - a scrollable list of the most recent ~30 keyword bubbles
+    - bubble is colored if it's yours and gray if it's your partner's
+    - clicking the bubbles makes them faded (they are addressed)
+    - sorted to have the unaddressed (non-faded) at the top
